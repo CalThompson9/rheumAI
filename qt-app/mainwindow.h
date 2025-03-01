@@ -2,22 +2,37 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
+#include "windowbuilder.h"
+#include "llmclient.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    QWidget *centralWidget;
+
+    // UI Components
+    QPushButton *btnConnectDevice;
+    QPushButton *btnSettings;
+    QLabel *lblTitle;
+    QLabel *lblPatientName;
+    QComboBox *comboSelectPatient;
+    QPushButton *btnRecord;
+    QTextEdit *textTranscription;
+
+    // Backend LLM
+    LLMClient *llmClient;
+
+    // Layout
+    QVBoxLayout *mainLayout;
+
+private slots:
+    void handleLLMResponse(const QString &response);
 };
+
 #endif // MAINWINDOW_H
