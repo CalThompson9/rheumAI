@@ -48,6 +48,9 @@ CMakeLists.txt.user*
 # Vim temporary files
 .*.swp
 
+# Environment variables
+*.env
+
 # Visual Studio generated files
 *.ib_pdb_index
 *.idb
