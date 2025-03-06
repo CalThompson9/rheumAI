@@ -12,12 +12,14 @@ SOURCES += \
     llmclient.cpp \
     main.cpp \
     mainwindow.cpp \
-    windowbuilder.cpp
+    windowbuilder.cpp \
+    summary.cpp
 
 HEADERS += \
     llmclient.h \
     mainwindow.h \
-    windowbuilder.h
+    windowbuilder.h \
+    summary.h
 
 FORMS += \
     mainwindow.ui
