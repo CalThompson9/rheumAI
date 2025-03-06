@@ -13,13 +13,16 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     windowbuilder.cpp \
-    summary.cpp
+    summary.cpp \
+    detailedsummaryformatter.cpp
 
 HEADERS += \
     llmclient.h \
     mainwindow.h \
     windowbuilder.h \
-    summary.h
+    summary.h \
+    summaryformatter.h \
+    detailedsummaryformatter.h
 
 FORMS += \
     mainwindow.ui
