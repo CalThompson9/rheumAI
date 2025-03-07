@@ -8,7 +8,8 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QComboBox *&comboSelectPatient,
                             QPushButton *&btnRecord,
                             QTextEdit *&textTranscription,
-                            QVBoxLayout *&mainLayout)
+                            QVBoxLayout *&mainLayout,
+                            QPushButton *&btnAddPatient)
 {
     // Create UI elements
     btnConnectDevice = new QPushButton("Connect Device", centralWidget);
@@ -18,6 +19,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     comboSelectPatient = new QComboBox(centralWidget);
     btnRecord = new QPushButton("Record", centralWidget);
     textTranscription = new QTextEdit(centralWidget);
+    btnAddPatient = new QPushButton("Add Patient", centralWidget);
     textTranscription->setReadOnly(true);
 
     // Styling
@@ -42,6 +44,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     // Controls layout
     controlsLayout->addWidget(comboSelectPatient);
     controlsLayout->addWidget(btnRecord);
+    controlsLayout->addWidget(btnAddPatient);
 
     // Add layouts to main layout
     mainLayout->addLayout(topBarLayout);

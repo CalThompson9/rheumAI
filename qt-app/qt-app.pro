@@ -9,15 +9,19 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    filehandler.cpp \
     llmclient.cpp \
     main.cpp \
     mainwindow.cpp \
+    patientrecord.cpp \
     windowbuilder.cpp \
     summary.cpp
 
 HEADERS += \
+    filehandler.h \
     llmclient.h \
     mainwindow.h \
+    patientrecord.h \
     windowbuilder.h \
     summary.h
 
@@ -29,4 +33,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES +=
+RESOURCES += \
+    resources.qrc
