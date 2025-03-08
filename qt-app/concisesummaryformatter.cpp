@@ -17,7 +17,7 @@
  * @param[in] summary: Summary to create layout for
  * @param[in,out] summaryLayout: Layout to display summary in. Existing layout elements will be cleared.
  */
-void ConciseSummaryFormatter::generateLayout(Summary& summary, QVBoxLayout* summaryLayout) const
+void ConciseSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayout* summaryLayout) const
 {
     clearLayout(summaryLayout);  // Clear existing layout elements
 

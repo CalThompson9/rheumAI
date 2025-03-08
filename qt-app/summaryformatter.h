@@ -16,7 +16,7 @@
 class SummaryFormatter 
 {
     public:
-        virtual void generateLayout(Summary& summary, QVBoxLayout* summaryLayout) const = 0;
+        virtual void generateLayout(const Summary& summary, QVBoxLayout* summaryLayout) const = 0;
         virtual ~SummaryFormatter() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
 
         static void clearLayout(QVBoxLayout* layout);

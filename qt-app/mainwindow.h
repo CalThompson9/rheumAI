@@ -16,7 +16,7 @@ public:
     ~MainWindow();
 
     void setSummaryFormatter(SummaryFormatter* summaryFormatter);
-    void displaySummary(Summary& summary);
+    void displaySummary(const Summary& summary);
 
 private:
     QWidget *centralWidget;

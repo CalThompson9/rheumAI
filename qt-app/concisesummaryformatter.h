@@ -14,7 +14,7 @@
 class ConciseSummaryFormatter : public SummaryFormatter
 {
     public:
-        void generateLayout(Summary& summary, QVBoxLayout* summaryLayout) const override;
+        void generateLayout(const Summary& summary, QVBoxLayout* summaryLayout) const override;
         ~ConciseSummaryFormatter() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
 };
 

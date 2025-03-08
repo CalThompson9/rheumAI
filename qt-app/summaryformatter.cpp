@@ -21,7 +21,7 @@ void SummaryFormatter::clearLayout(QVBoxLayout* layout)
         return;
     }
 
-    while (QLayoutItem *item = layout->takeAt(0)) 
+    while (QLayoutItem *item = layout->takeAt(0))
     {
         if (QWidget *widget = item->widget())
         {
@@ -45,7 +45,7 @@ void SummaryFormatter::addSection(const QString& title, const QString& text, QVB
     QLabel* textWidget = new QLabel(!text.isEmpty() ? text : "Nothing to display.");
 
     // Set styling
-    titleWidget->setStyleSheet("font-weight: bold; font-size: 14px;");
+    titleWidget->setStyleSheet("font-weight: bold; font-size: 13px;");
     textWidget->setWordWrap(true);
 
     // Add elements to layout
