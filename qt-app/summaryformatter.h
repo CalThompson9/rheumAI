@@ -1,6 +1,6 @@
 /**
  * @file summaryformatter.h
- * @brief Declaration of SummaryFormatter interface
+ * @brief Declaration of SummaryFormatter class
  * TODO: Fix documentation for this, talk about design pattern
  * 
  * @author Joelene Hales (jhales5@uwo.ca)
@@ -16,8 +16,13 @@
 class SummaryFormatter 
 {
     public:
-        virtual QVBoxLayout* generateLayout(const Summary& summary) const = 0;
+        virtual void generateLayout(Summary& summary, QVBoxLayout* summaryLayout) const = 0;
         virtual ~SummaryFormatter() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
+
+        static void clearLayout(QVBoxLayout* layout);
+    
+    protected:
+        void addSection(const QString& title, const QString& text, QVBoxLayout* summaryLayout) const;
 };
 
 #endif

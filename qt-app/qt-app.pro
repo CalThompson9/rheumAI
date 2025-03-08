@@ -14,6 +14,7 @@ SOURCES += \
     mainwindow.cpp \
     windowbuilder.cpp \
     summary.cpp \
+    summaryformatter.cpp \
     detailedsummaryformatter.cpp
 
 HEADERS += \

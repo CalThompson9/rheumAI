@@ -8,6 +8,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QComboBox *&comboSelectPatient,
                             QPushButton *&btnRecord,
                             QTextEdit *&textTranscription,
+                            QVBoxLayout *&summarySection,
                             QVBoxLayout *&mainLayout)
 {
     // Create UI elements
@@ -31,6 +32,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     mainLayout = new QVBoxLayout(centralWidget);
     QHBoxLayout *topBarLayout = new QHBoxLayout();
     QHBoxLayout *controlsLayout = new QHBoxLayout();
+    summarySection = new QVBoxLayout();
 
     // Top bar layout
     topBarLayout->addWidget(btnConnectDevice);
@@ -48,6 +50,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     mainLayout->addWidget(lblPatientName);
     mainLayout->addLayout(controlsLayout);
     mainLayout->addWidget(textTranscription);
+    mainLayout->addLayout(summarySection);
 
     // Set layout to central widget
     centralWidget->setLayout(mainLayout);

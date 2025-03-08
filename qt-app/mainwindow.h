@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "windowbuilder.h"
 #include "llmclient.h"
+#include "summary.h"
+#include "summaryformatter.h"
 
 class MainWindow : public QMainWindow
 {
@@ -12,6 +14,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void setSummaryFormatter(SummaryFormatter* summaryFormatter);
+    void displaySummary(Summary& summary);
 
 private:
     QWidget *centralWidget;
@@ -24,12 +29,16 @@ private:
     QComboBox *comboSelectPatient;
     QPushButton *btnRecord;
     QTextEdit *textTranscription;
+    QVBoxLayout *summarySection;
 
     // Backend LLM
     LLMClient *llmClient;
 
     // Layout
     QVBoxLayout *mainLayout;
+
+    // Summary layout formatter
+    SummaryFormatter *summaryFormatter;
 
 private slots:
     void handleLLMResponse(const QString &response);

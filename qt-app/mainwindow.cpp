@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "llmclient.h"
+#include "detailedsummaryformatter.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,7 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     // Use WindowBuilder to set up UI
     WindowBuilder::setupUI(centralWidget, btnConnectDevice, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
-                           btnRecord, textTranscription, mainLayout);
+                           btnRecord, textTranscription, summarySection, mainLayout);
+
+    // Initialize summary layout formatter
+    summaryFormatter = new DetailedSummaryFormatter;
 
     // Initialize LLM client
     llmClient = new LLMClient(this);
@@ -29,6 +33,27 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::handleLLMResponse(const QString &response)
 {
     textTranscription->setPlainText(response);
+}
+
+/**
+ * @name setSummaryLayout
+ * @brief Set the formatter used to create the summary
+ * @param[in] summaryFormatter: Summary layout formatter
+ */
+void MainWindow::setSummaryFormatter(SummaryFormatter* newSummaryFormatter)
+{
+    delete summaryFormatter;
+    summaryFormatter = newSummaryFormatter;
+}
+
+/**
+ * @name displaySummary
+ * @brief Display summary using the configured layout
+ * @param[in] summary: Summary to display
+ */
+void MainWindow::displaySummary(Summary& summary)
+{
+    summaryFormatter->generateLayout(summary, summarySection);
 }
 
 MainWindow::~MainWindow()
