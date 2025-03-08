@@ -19,10 +19,10 @@ class Summary : public QObject
         explicit Summary(QObject *parent = nullptr);
         ~Summary();
 
-        const QString& getSymptoms();
-        const QString& getDiagnoses();
-        const QString& getMedicalHistory();
-        const QString& getTreatmentPlans();
+        const QString& getSymptoms() const;
+        const QString& getDiagnoses() const;
+        const QString& getMedicalHistory() const;
+        const QString& getTreatmentPlans() const;
 
         void setSymptoms(const QString& symptoms);
         void setDiagnoses(const QString& diagnoses);

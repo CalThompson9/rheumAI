@@ -23,7 +23,7 @@ Summary::~Summary()
  * @brief Get summary of symptoms
  * @return Summary of symptoms
  */
-const QString& Summary::getSymptoms()
+const QString& Summary::getSymptoms() const
 {
     return symptoms;
 }
@@ -33,7 +33,7 @@ const QString& Summary::getSymptoms()
  * @brief Get summary of diagnoses
  * @return Summary of diagnoses
  */
-const QString& Summary::getDiagnoses()
+const QString& Summary::getDiagnoses() const
 {
     return diagnoses;
 }
@@ -43,7 +43,7 @@ const QString& Summary::getDiagnoses()
  * @brief Get summary of medical history
  * @return Summary of medical history
  */
-const QString& Summary::getMedicalHistory()
+const QString& Summary::getMedicalHistory() const
 {
     return medicalHistory;
 }
@@ -53,7 +53,7 @@ const QString& Summary::getMedicalHistory()
  * @brief Get summary of treatment plans
  * @return Summary of treatment plans
  */
-const QString& Summary::getTreatmentPlans()
+const QString& Summary::getTreatmentPlans() const
 {
     return treatmentPlans;
 }
