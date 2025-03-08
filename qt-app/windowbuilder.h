@@ -20,7 +20,9 @@ public:
                         QPushButton *&btnRecord,
                         QTextEdit *&textTranscription,
                         QVBoxLayout *&summarySection,
-                        QVBoxLayout *&mainLayout);
+                        QVBoxLayout *&mainLayout,
+                        QPushButton *&btnAddPatient);
+
 };
 
 #endif // WINDOWBUILDER_H

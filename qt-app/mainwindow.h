@@ -28,8 +28,10 @@ private:
     QLabel *lblPatientName;
     QComboBox *comboSelectPatient;
     QPushButton *btnRecord;
+    QPushButton *btnAddPatient;
     QTextEdit *textTranscription;
     QVBoxLayout *summarySection;
+
 
     // Backend LLM
     LLMClient *llmClient;
@@ -42,6 +44,8 @@ private:
 
 private slots:
     void handleLLMResponse(const QString &response);
+    void on_addPatientButton_clicked();
+
 };
 
 #endif // MAINWINDOW_H

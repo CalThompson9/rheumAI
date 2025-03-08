@@ -1,0 +1,4 @@
+Doctor: How are you feeling today?
+Patient: I feel a bit better, but my back still hurts.
+Doctor: Have you been taking the medication?
+Patient: Yes, but not every day.
