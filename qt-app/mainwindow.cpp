@@ -23,16 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
                            btnRecord, textTranscription, selectSummaryLayout, 
                            summarySection, mainLayout, btnAddPatient);
 
-    // FIXME: For testing only, remove once actual functionality is implemented 
-    /////////////////////////////////////////////////////////////     
-    testSummary.setSymptoms("Symptoms...");
-    testSummary.setMedicalHistory("Medical history....");
-    testSummary.setTreatmentPlans("Treatment plans....");
-    testSummary.setDiagnoses("Diagnoses....");
-    displaySummary(testSummary);
-    /////////////////////////////////////////////////////////////
-
-    // Add layout options
+    // Add summary layout options
     QMenu* summaryLayoutOptions = new QMenu(this);
     QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
     QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
@@ -60,6 +51,15 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialize summary layout formatter
     summaryFormatter = new DetailedSummaryFormatter;
     optionDetailedLayout->setEnabled(false);
+
+    // FIXME: For testing only, remove once actual functionality is implemented 
+    /////////////////////////////////////////////////////////////     
+    testSummary.setSymptoms("Symptoms...");
+    testSummary.setMedicalHistory("Medical history....");
+    testSummary.setTreatmentPlans("Treatment plans....");
+    testSummary.setDiagnoses("Diagnoses....");
+    displaySummary(testSummary);
+    /////////////////////////////////////////////////////////////
 
     // Initialize LLM client
     llmClient = new LLMClient(this);
