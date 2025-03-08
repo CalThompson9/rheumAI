@@ -30,8 +30,8 @@ private:
     QPushButton *btnRecord;
     QPushButton *btnAddPatient;
     QTextEdit *textTranscription;
+    QPushButton *selectSummaryLayout;    
     QVBoxLayout *summarySection;
-
 
     // Backend LLM
     LLMClient *llmClient;
@@ -39,8 +39,9 @@ private:
     // Layout
     QVBoxLayout *mainLayout;
 
-    // Summary layout formatter
-    SummaryFormatter *summaryFormatter;
+    SummaryFormatter *summaryFormatter;  // Summary layout formatter strategy
+
+    Summary testSummary; // FIXME: For testing only. Remove once actual summary in patient file is implemented
 
 private slots:
     void handleLLMResponse(const QString &response);

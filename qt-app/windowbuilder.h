@@ -19,6 +19,7 @@ public:
                         QComboBox *&comboSelectPatient,
                         QPushButton *&btnRecord,
                         QTextEdit *&textTranscription,
+                        QPushButton *&selectSummaryLayout,
                         QVBoxLayout *&summarySection,
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient);
