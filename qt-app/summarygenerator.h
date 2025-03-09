@@ -11,6 +11,7 @@
 #define SUMMARYGENERATOR_H
 
 #include <QObject>
+#include "transcript.h"
 #include "summary.h"
 
 class SummaryGenerator : public QObject
@@ -18,7 +19,7 @@ class SummaryGenerator : public QObject
     Q_OBJECT
 
     public:
-        explicit SummaryGenerator(QObject *parent = nullptr);
+        explicit SummaryGenerator(Transcript& transcript, QObject *parent = nullptr);
         virtual ~SummaryGenerator();
 
         SummaryGenerator& summarizeSymptoms();
@@ -28,6 +29,7 @@ class SummaryGenerator : public QObject
         Summary getSummary();
 
     private:
+        Transcript& transcript;
         Summary summary;
 
 };
