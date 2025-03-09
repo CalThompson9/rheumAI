@@ -1,7 +1,6 @@
 /**
  * @name summarygenerator.h
  * @brief Declaration of SummaryGenerator builder class
- * TODO: Add to documentation explaining design patterns
  * 
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 9, 2025
@@ -20,7 +19,7 @@ class SummaryGenerator : public QObject
 
     public:
         explicit SummaryGenerator(Transcript& transcript, QObject *parent = nullptr);
-        virtual ~SummaryGenerator();
+        virtual ~SummaryGenerator() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
 
         SummaryGenerator& summarizeSymptoms();
         SummaryGenerator& summarizeDiagnoses();

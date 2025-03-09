@@ -13,6 +13,7 @@ Transcript::Transcript(const QTime& timestamp, const QString& content) : timesta
     // No logic body
 }
 
+
 /**
  * @name getTimestamp
  * @brief Get a read-only version of the transcript timestamp
@@ -22,6 +23,7 @@ const QTime& Transcript::getTimestamp() const
 {
     return timestamp;
 }
+
 
 /**
  * @name getContent
