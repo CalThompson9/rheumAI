@@ -11,12 +11,11 @@
 
 #include <QObject>
 
-class Summary : public QObject
+class Summary
 {
-    Q_OBJECT
 
     public:
-        explicit Summary(QObject *parent = nullptr);
+        Summary();
         ~Summary();
 
         const QString& getSymptoms();

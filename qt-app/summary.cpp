@@ -8,7 +8,7 @@
 
 #include "summary.h"
 
-Summary::Summary(QObject *parent) : QObject(parent)
+Summary::Summary()
 {
     // No logic body; QStrings get initialized to null by default
 }
