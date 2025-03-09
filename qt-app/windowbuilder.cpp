@@ -1,4 +1,7 @@
 #include "windowbuilder.h"
+#include <QDialog>
+#include <QLabel>
+#include <QVBoxLayout>
 
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnConnectDevice,
@@ -28,12 +31,40 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     selectSummaryLayout->setCheckable(true);  // Makes it toggle between states
     selectSummaryLayout->setText("Select Summary Layout");
 
-    // Styling
+    // Style
     lblTitle->setAlignment(Qt::AlignCenter);
-    lblTitle->setStyleSheet("font-weight: bold; font-size: 18px;");
+    lblTitle->setStyleSheet("font-weight: bold; font-size: 20px; color: #333;");
 
     lblPatientName->setAlignment(Qt::AlignCenter);
-    lblPatientName->setStyleSheet("font-weight: bold; font-size: 14px;");
+    lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
+
+    QString buttonStyle = "QPushButton {"
+                          "background-color: #5371ff;"
+                          "border-radius: 8px;"
+                          "color: white;"
+                          "padding: 10px;"
+                          "font-size: 14px;"
+                          "} "
+                          "QPushButton:hover {"
+                          "background-color: #425BD0;"
+                          "}";
+    QString recordStyle = "QPushButton {"
+                          "background-color: #FF914D;"
+                          "border-radius: 8px;"
+                          "color: white;"
+                          "padding: 10px;"
+                          "font-size: 14px;"
+                          "} "
+                          "QPushButton:hover {"
+                          "background-color: #C56E39;"
+                          "}";
+
+    btnConnectDevice->setStyleSheet(buttonStyle);
+    btnSettings->setStyleSheet(buttonStyle);
+    btnRecord->setStyleSheet(recordStyle);
+    btnAddPatient->setStyleSheet(buttonStyle);
+
+    textTranscription->setStyleSheet("background-color: #f5f5f5; padding: 10px; border-radius: 5px;");
 
     summaryTitle->setAlignment(Qt::AlignLeft);
     summaryTitle->setStyleSheet("font-weight: bold; font-size: 14px;");
@@ -61,9 +92,19 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     summaryHeader->addWidget(summaryTitle);
     summaryHeader->addWidget(selectSummaryLayout);
 
+    // Create Horizontal dividers
+    QFrame *line1 = new QFrame(centralWidget);
+    QFrame *line2 = new QFrame(centralWidget);
+    line1->setFrameShape(QFrame::HLine);
+    line1->setFrameShadow(QFrame::Sunken);
+    line2->setFrameShape(QFrame::HLine);
+    line2->setFrameShadow(QFrame::Sunken);
+
     // Add layouts to main layout
     mainLayout->addLayout(topBarLayout);
+    mainLayout->addWidget(line1);
     mainLayout->addWidget(lblPatientName);
+    mainLayout->addWidget(line2);
     mainLayout->addLayout(controlsLayout);
     mainLayout->addWidget(textTranscription);
     mainLayout->addLayout(summaryHeader);
@@ -71,4 +112,17 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
 
     // Set layout to central widget
     centralWidget->setLayout(mainLayout);
+
+    // 🎛 Connect settings button to pop-up
+    QObject::connect(btnSettings, &QPushButton::clicked, [centralWidget]() {
+        QDialog *settingsDialog = new QDialog(centralWidget);
+        settingsDialog->setWindowTitle("Settings");
+
+        QVBoxLayout *layout = new QVBoxLayout(settingsDialog);
+        QLabel *label = new QLabel("Settings options will go here.", settingsDialog);
+        layout->addWidget(label);
+
+        settingsDialog->setLayout(layout);
+        settingsDialog->exec();
+    });
 }
