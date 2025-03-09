@@ -10,13 +10,14 @@
 #ifndef SUMMARYGENERATOR_H
 #define SUMMARYGENERATOR_H
 
+#include "transcript.h"
 #include "summary.h"
 
 class SummaryGenerator
 {
 
     public:
-        SummaryGenerator();
+        SummaryGenerator(const Transcript& transcript);
         ~SummaryGenerator() = default;
 
         SummaryGenerator& summarizeSymptoms();
@@ -26,6 +27,7 @@ class SummaryGenerator
         Summary getSummary();
 
     private:
+        Transcript transcript;
         Summary summary;
 
 };

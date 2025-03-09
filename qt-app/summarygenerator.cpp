@@ -8,7 +8,7 @@
 
 #include "summarygenerator.h"
 
-SummaryGenerator::SummaryGenerator()
+SummaryGenerator::SummaryGenerator(const Transcript& transcript) : transcript(transcript)
 {
     // No logic body
 }
