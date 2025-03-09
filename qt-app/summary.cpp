@@ -13,14 +13,9 @@ Summary::Summary()
     // No logic body; QStrings get initialized to null by default
 }
 
-Summary::~Summary()
-{
-    // Qt automatically manages memory of QObjects, no need for manual deletion
-}
-
 /**
  * @name getSymptoms
- * @brief Get summary of symptoms
+ * @brief Get a read-only summary of symptoms
  * @return Summary of symptoms
  */
 const QString& Summary::getSymptoms()
@@ -30,7 +25,7 @@ const QString& Summary::getSymptoms()
 
 /**
  * @name getDiagnoses
- * @brief Get summary of diagnoses
+ * @brief Get a read-only summary of diagnoses
  * @return Summary of diagnoses
  */
 const QString& Summary::getDiagnoses()
@@ -40,7 +35,7 @@ const QString& Summary::getDiagnoses()
 
 /**
  * @name getMedicalHistory
- * @brief Get summary of medical history
+ * @brief Get a read-only summary of medical history
  * @return Summary of medical history
  */
 const QString& Summary::getMedicalHistory()
@@ -50,7 +45,7 @@ const QString& Summary::getMedicalHistory()
 
 /**
  * @name getTreatmentPlans
- * @brief Get summary of treatment plans
+ * @brief Get a read-only summary of treatment plans
  * @return Summary of treatment plans
  */
 const QString& Summary::getTreatmentPlans()

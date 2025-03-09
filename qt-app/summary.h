@@ -9,14 +9,14 @@
 #ifndef SUMMARY_H
 #define SUMMARY_H
 
-#include <QObject>
+#include <QString>
 
 class Summary
 {
 
     public:
         Summary();
-        ~Summary();
+        ~Summary() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
 
         const QString& getSymptoms();
         const QString& getDiagnoses();
@@ -36,4 +36,4 @@ class Summary
 
 };
 
-#endif
+#endif // SUMMARY_H
