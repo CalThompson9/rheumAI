@@ -8,7 +8,8 @@
 
 #include "summarygenerator.h"
 
-SummaryGenerator::SummaryGenerator(const Transcript& transcript) : transcript(transcript)
+SummaryGenerator::SummaryGenerator(QObject *parent) 
+    : QObject(parent)
 {
     // No logic body
 }
@@ -40,4 +41,9 @@ SummaryGenerator& SummaryGenerator::summarizeTreatmentPlans()
 Summary SummaryGenerator::getSummary()
 {
     return summary;
+}
+
+SummaryGenerator::~SummaryGenerator()
+{
+    // Qt automatically manages memory of QObjects, no need for manual deletion
 }

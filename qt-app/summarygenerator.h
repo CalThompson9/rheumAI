@@ -10,15 +10,16 @@
 #ifndef SUMMARYGENERATOR_H
 #define SUMMARYGENERATOR_H
 
-#include "transcript.h"
+#include <QObject>
 #include "summary.h"
 
-class SummaryGenerator
+class SummaryGenerator : public QObject
 {
+    Q_OBJECT
 
     public:
-        SummaryGenerator(const Transcript& transcript);
-        ~SummaryGenerator() = default;
+        explicit SummaryGenerator(QObject *parent = nullptr);
+        virtual ~SummaryGenerator();
 
         SummaryGenerator& summarizeSymptoms();
         SummaryGenerator& summarizeDiagnoses();
@@ -27,7 +28,6 @@ class SummaryGenerator
         Summary getSummary();
 
     private:
-        Transcript transcript;
         Summary summary;
 
 };
