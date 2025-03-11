@@ -10,6 +10,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QLabel *&lblPatientName,
                             QComboBox *&comboSelectPatient,
                             QPushButton *&btnRecord,
+                            QPushButton *&btnSummarize,
                             QTextEdit *&textTranscription,
                             QPushButton *&selectSummaryLayout,
                             QVBoxLayout *&summarySection,
@@ -23,6 +24,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     lblPatientName = new QLabel("[Patient Name]", centralWidget);
     comboSelectPatient = new QComboBox(centralWidget);
     btnRecord = new QPushButton("Record", centralWidget);
+    btnSummarize = new QPushButton("Summarize", centralWidget);
     textTranscription = new QTextEdit(centralWidget);
     btnAddPatient = new QPushButton("Add Patient", centralWidget);
     textTranscription->setReadOnly(true);
@@ -38,31 +40,32 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     lblPatientName->setAlignment(Qt::AlignCenter);
     lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
 
-    QString buttonStyle = "QPushButton {"
-                          "background-color: #5371ff;"
-                          "border-radius: 8px;"
-                          "color: white;"
-                          "padding: 10px;"
-                          "font-size: 14px;"
-                          "} "
-                          "QPushButton:hover {"
-                          "background-color: #425BD0;"
-                          "}";
-    QString recordStyle = "QPushButton {"
-                          "background-color: #FF914D;"
-                          "border-radius: 8px;"
-                          "color: white;"
-                          "padding: 10px;"
-                          "font-size: 14px;"
-                          "} "
-                          "QPushButton:hover {"
-                          "background-color: #C56E39;"
-                          "}";
+    QString blueButtonStyle = "QPushButton {"
+                               "background-color: #5371ff;"
+                               "border-radius: 8px;"
+                               "color: white;"
+                               "padding: 10px;"
+                               "font-size: 14px;"
+                               "} "
+                               "QPushButton:hover {"
+                               "background-color: #425BD0;"
+                               "}";
+    QString orangeButtonStyle = "QPushButton {"
+                                "background-color: #FF914D;"
+                                "border-radius: 8px;"
+                                "color: white;"
+                                "padding: 10px;"
+                                "font-size: 14px;"
+                                "} "
+                                "QPushButton:hover {"
+                                "background-color: #C56E39;"
+                                "}";
 
-    btnConnectDevice->setStyleSheet(buttonStyle);
-    btnSettings->setStyleSheet(buttonStyle);
-    btnRecord->setStyleSheet(recordStyle);
-    btnAddPatient->setStyleSheet(buttonStyle);
+    btnConnectDevice->setStyleSheet(blueButtonStyle);
+    btnSettings->setStyleSheet(blueButtonStyle);
+    btnRecord->setStyleSheet(orangeButtonStyle);
+    btnSummarize->setStyleSheet(orangeButtonStyle);
+    btnAddPatient->setStyleSheet(blueButtonStyle);
 
     textTranscription->setStyleSheet("background-color: #f5f5f5; padding: 10px; border-radius: 5px;");
 
@@ -86,6 +89,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     // Controls layout
     controlsLayout->addWidget(comboSelectPatient);
     controlsLayout->addWidget(btnRecord);
+    controlsLayout->addWidget(btnSummarize);
     controlsLayout->addWidget(btnAddPatient);
 
     // Summary layout header and format selection

@@ -28,6 +28,7 @@ private:
     QLabel *lblPatientName;
     QComboBox *comboSelectPatient;
     QPushButton *btnRecord;
+    QPushButton *btnSummarize;
     QPushButton *btnAddPatient;
     QTextEdit *textTranscription;
     QPushButton *selectSummaryLayout;    

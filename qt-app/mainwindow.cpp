@@ -20,8 +20,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Use WindowBuilder to set up UI
     WindowBuilder::setupUI(centralWidget, btnConnectDevice, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
-                           btnRecord, textTranscription, selectSummaryLayout, 
-                           summarySection, mainLayout, btnAddPatient);
+                           btnRecord, btnSummarize, textTranscription, 
+                           selectSummaryLayout, summarySection,
+                           mainLayout, btnAddPatient);
 
     // Add summary layout options
     QMenu* summaryLayoutOptions = new QMenu(this);

@@ -18,6 +18,7 @@ public:
                         QLabel *&lblPatientName,
                         QComboBox *&comboSelectPatient,
                         QPushButton *&btnRecord,
+                        QPushButton *&btnSummarize,
                         QTextEdit *&textTranscription,
                         QPushButton *&selectSummaryLayout,
                         QVBoxLayout *&summarySection,
