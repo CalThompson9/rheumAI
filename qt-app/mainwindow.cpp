@@ -1,5 +1,3 @@
-#include <QMenu>
-
 #include "mainwindow.h"
 #include "llmclient.h"
 #include "detailedsummaryformatter.h"
@@ -27,42 +25,24 @@ MainWindow::MainWindow(QWidget *parent)
                            mainLayout, btnAddPatient);
 
     // Add summary layout options
-    QMenu* summaryLayoutOptions = new QMenu(this);
+    summaryLayoutOptions = new QMenu(this);
     QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
     QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
 
     selectSummaryLayout->setMenu(summaryLayoutOptions);
 
-    // Connect actions to slot
+    // Connect selection of each option to update summary layout format
     connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
-        setSummaryFormatter(new DetailedSummaryFormatter);
-        displaySummary(testSummary);
-        for (QAction* layoutAction : summaryLayoutOptions->actions())
-        {
-            layoutAction->setEnabled(layoutAction != optionDetailedLayout);
-        }
+        handleSummaryLayoutChanged(new DetailedSummaryFormatter);
     });
     connect(optionConciseLayout, &QAction::triggered, this, [=]() {
-        setSummaryFormatter(new ConciseSummaryFormatter);
-        displaySummary(testSummary);
-        for (QAction* layoutAction : summaryLayoutOptions->actions())
-        {
-            layoutAction->setEnabled(layoutAction != optionConciseLayout);
-        }
+        handleSummaryLayoutChanged(new ConciseSummaryFormatter);
     });
 
     // Initialize summary layout formatter
     summaryFormatter = new DetailedSummaryFormatter;
-    optionDetailedLayout->setEnabled(false);
-
-    // FIXME: For testing only, remove once actual functionality is implemented 
-    /////////////////////////////////////////////////////////////     
-    testSummary.setSymptoms("Symptoms...");
-    testSummary.setMedicalHistory("Medical history....");
-    testSummary.setTreatmentPlans("Treatment plans....");
-    testSummary.setDiagnoses("Diagnoses....");
     displaySummary(testSummary);
-    /////////////////////////////////////////////////////////////
+    optionDetailedLayout->setEnabled(false);
 
     // Initialize LLM client
     llmClient = new LLMClient(this);
@@ -83,6 +63,34 @@ void MainWindow::handleLLMResponse(const QString &response)
     textTranscription->setPlainText(response);
 }
 
+/**
+ * @name handleSummaryLayoutChanged
+ * @brief Handler function called when a new summary layout format is selected
+ * @details Updates the window to display the summary with the selected format.
+ * Does not regenerate the summary. Updates the layout selection menu to disable
+ * the currently selected option.
+ * @param[in] summaryFormatter: Summary formatter corresponding to the selected
+ * layout style
+ */
+void MainWindow::handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter)
+{
+    // Display summary with selected layout format
+    setSummaryFormatter(summaryFormatter);
+    displaySummary(testSummary);
+
+    // Update options menu
+    QAction* selectedOption = qobject_cast<QAction*>(sender());
+    for (QAction* layoutAction : summaryLayoutOptions->actions())
+    {
+        layoutAction->setEnabled(layoutAction != selectedOption);
+    }
+}
+
+/**
+ * @name handleSummarizeButtonClicked
+ * @brief Handler function called when summarize button is clicked
+ * @details Regenerates the summary and displays in the window
+ */
 void MainWindow::handleSummarizeButtonClicked()
 {
     // Regenerate summary

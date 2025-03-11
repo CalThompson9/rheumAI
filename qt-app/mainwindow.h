@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMenu>
 #include "windowbuilder.h"
 #include "llmclient.h"
 #include "summary.h"
@@ -31,7 +32,8 @@ private:
     QPushButton *btnSummarize;
     QPushButton *btnAddPatient;
     QTextEdit *textTranscription;
-    QPushButton *selectSummaryLayout;    
+    QPushButton *selectSummaryLayout;
+    QMenu* summaryLayoutOptions;
     QVBoxLayout *summarySection;
 
     // Backend LLM
@@ -46,6 +48,7 @@ private:
 
 private slots:
     void handleLLMResponse(const QString &response);
+    void handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter);
     void handleSummarizeButtonClicked();
     void on_addPatientButton_clicked();
 

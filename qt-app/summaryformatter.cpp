@@ -32,6 +32,17 @@ void SummaryFormatter::clearLayout(QVBoxLayout* layout)
 }
 
 /**
+ * @name displayEmptyText
+ * @brief Displays a message indicating that there is no summary data to display
+ * @param[in, out] summaryLayout: Layout to add message to
+ */
+void SummaryFormatter::displayNoSummaryText(QVBoxLayout* summaryLayout) const
+{
+    QLabel* textWidget = new QLabel("No data to display. Try generating a summary!");
+    summaryLayout->addWidget(textWidget);
+}
+
+/**
  * @name addSection
  * @brief Adds a section to the summary layout
  * @param[in] title: Section title

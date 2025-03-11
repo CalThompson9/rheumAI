@@ -21,6 +21,15 @@ void DetailedSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayou
 {
     clearLayout(summaryLayout);  // Clear existing layout elements
 
+    if (summary.getMedicalHistory().isEmpty() &&  // No relevant summary data to display
+        summary.getTreatmentPlans().isEmpty() &&
+        summary.getDiagnoses().isEmpty() &&
+        summary.getSymptoms().isEmpty())
+    {
+        displayNoSummaryText(summaryLayout);
+        return;
+    }
+
     // Add sections
     addSection(QString("Symptoms"), summary.getSymptoms(), summaryLayout);
     addSection(QString("Medical History"), summary.getMedicalHistory(), summaryLayout);

@@ -22,6 +22,7 @@ class SummaryFormatter
         static void clearLayout(QVBoxLayout* layout);
     
     protected:
+        void displayNoSummaryText(QVBoxLayout* summaryLayout) const;
         void addSection(const QString& title, const QString& text, QVBoxLayout* summaryLayout) const;
 };
 
