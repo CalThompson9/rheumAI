@@ -14,6 +14,23 @@ Summary::Summary()
 }
 
 /**
+ * @name operator =
+ * @brief Creates a copy of a Summary
+ * @param[in] original: Summary to copy
+ */
+Summary& Summary::operator=(const Summary& original)
+{
+    if (this != &original) // Check for self-assignment
+    {
+        symptoms = original.getSymptoms();
+        diagnoses = original.getDiagnoses();
+        medicalHistory = original.getMedicalHistory();
+        treatmentPlans = original.getTreatmentPlans();
+    }
+    return *this;
+}
+
+/**
  * @name getSymptoms
  * @brief Get a read-only summary of symptoms
  * @return Summary of symptoms

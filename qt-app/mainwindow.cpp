@@ -6,6 +6,8 @@
 #include "concisesummaryformatter.h"
 #include "filehandler.h"
 #include "patientrecord.h"
+#include "transcript.h"
+#include "summarygenerator.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -71,11 +73,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(btnRecord, &QPushButton::clicked, this, [this]() {
         llmClient->sendRequest("Hello, AI! How are you?");
     });
+
+    // Connect "Summarize" button to summarize transcripts and update window
+    connect(btnSummarize, &QPushButton::clicked, this, &MainWindow::handleSummarizeButtonClicked);
 }
 
 void MainWindow::handleLLMResponse(const QString &response)
 {
     textTranscription->setPlainText(response);
+}
+
+void MainWindow::handleSummarizeButtonClicked()
+{
+    // Regenerate summary
+    Transcript testTranscript(QTime::currentTime(), QString("Test Transcript"));  // FIXME: Replace this dummy transcript with list of actual transcripts, in patient file
+    SummaryGenerator summaryGenerator(testTranscript);
+
+    testSummary = summaryGenerator.summarizeSymptoms().summarizeDiagnoses().summarizeMedicalHistory().summarizeTreatmentPlans().getSummary();
+
+    displaySummary(testSummary);  // Update window
 }
 
 void MainWindow::on_addPatientButton_clicked() {

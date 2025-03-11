@@ -42,10 +42,11 @@ private:
 
     SummaryFormatter *summaryFormatter;  // Summary layout formatter strategy
 
-    Summary testSummary; // FIXME: For testing only. Remove once actual summary in patient file is implemented
+    Summary testSummary; // FIXME: For testing only. Summary should eventually be located in PatientFile instead
 
 private slots:
     void handleLLMResponse(const QString &response);
+    void handleSummarizeButtonClicked();
     void on_addPatientButton_clicked();
 
 };
