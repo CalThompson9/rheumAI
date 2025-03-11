@@ -134,6 +134,7 @@ compile_commands.json
 
 # Project configuration settings like predefined Macros
 *.config
+*.vscode/*
 
 # Qt Creator settings
 *.creator

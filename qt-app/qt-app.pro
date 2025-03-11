@@ -15,7 +15,9 @@ SOURCES += \
     mainwindow.cpp \
     patientrecord.cpp \
     windowbuilder.cpp \
+    transcript.cpp \
     summary.cpp \
+    summarygenerator.cpp \
     summaryformatter.cpp \
     detailedsummaryformatter.cpp \
     concisesummaryformatter.cpp
@@ -26,7 +28,9 @@ HEADERS += \
     mainwindow.h \
     patientrecord.h \
     windowbuilder.h \
+    transcript.h \
     summary.h \
+    summarygenerator.h \
     summaryformatter.h \
     detailedsummaryformatter.h \
     concisesummaryformatter.h
