@@ -1,14 +1,11 @@
 #include "audiohandler.h"
-#include <iostream>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QHttpMultiPart>
-#include <QJsonDocument>
-#include <QJsonObject>
+
+// Replace with your Google Cloud API key and endpoint
+const std::string API_URL = "https://speech.googleapis.com/v1/speech:recognize";
 
 AudioHandler *AudioHandler::instance = nullptr;
 
-AudioHandler::AudioHandler()
+AudioHandler::AudioHandler() : QObject(nullptr)
 {
     networkManager = new QNetworkAccessManager(this);
 }
@@ -24,28 +21,77 @@ AudioHandler *AudioHandler::getInstance()
 
 Transcript AudioHandler::transcribe(const std::string &filename)
 {
-    std::string response = sendToGeminiAPI(filename);
-    return Transcript(getCurrentTime(), response);
+    std::string response = sendToGoogleSpeechAPI(filename);
+    if (response.empty())
+    {
+        emit transcriptionCompleted("Transcription failed");
+        return Transcript(getCurrentTime(), "");
+    }
+
+    // Parse JSON response from Google Speech-to-Text
+    QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromStdString(response));
+    if (!doc.isObject())
+    {
+        std::cerr << "Invalid JSON response" << std::endl;
+        emit transcriptionCompleted("Invalid response format");
+        return Transcript(getCurrentTime(), "");
+    }
+
+    QJsonObject jsonObj = doc.object();
+    QJsonArray results = jsonObj["results"].toArray();
+    std::string transcribedText;
+    for (const QJsonValue &result : results)
+    {
+        QJsonObject resObj = result.toObject();
+        QJsonArray alternatives = resObj["alternatives"].toArray();
+        if (!alternatives.isEmpty())
+        {
+            transcribedText += alternatives[0].toObject()["transcript"].toString().toStdString();
+        }
+    }
+
+    QString qText = QString::fromStdString(transcribedText);
+    emit transcriptionCompleted(qText);
+    return Transcript(getCurrentTime(), transcribedText);
 }
 
-std::string AudioHandler::sendToGeminiAPI(const std::string &audioPath)
+std::string AudioHandler::sendToGoogleSpeechAPI(const std::string &audioPath)
 {
-    QUrl url(QString::fromStdString(API_URL + "?key=" + GEMINI_API_KEY));
+    QUrl url(QString::fromStdString(API_URL + "?key=" + AUDIO_API_KEY));
     QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-    QHttpPart audioPart;
-    audioPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("audio/wav"));
-    audioPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"" + QString::fromStdString(audioPath) + "\""));
+    // Read audio file
+    QFile file(QString::fromStdString(audioPath));
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        std::cerr << "Could not open audio file: " << audioPath << std::endl;
+        return "";
+    }
+    QByteArray audioData = file.readAll();
+    file.close();
 
-    QFile *file = new QFile(QString::fromStdString(audioPath));
-    file->open(QIODevice::ReadOnly);
-    audioPart.setBodyDevice(file);
-    file->setParent(multiPart);
-    multiPart->append(audioPart);
+    // Base64 encode the audio data (Google expects this for small files)
+    QString base64Audio = audioData.toBase64();
 
-    QNetworkReply *reply = networkManager->post(request, multiPart);
-    multiPart->setParent(reply);
+    // Construct JSON payload
+    QJsonObject configObj;
+    configObj["encoding"] = "LINEAR16"; // Adjust based on your WAV file
+    configObj["sampleRateHertz"] = 16000;
+    configObj["languageCode"] = "en-US";
+
+    QJsonObject audioObj;
+    audioObj["content"] = base64Audio;
+
+    QJsonObject requestBody;
+    requestBody["config"] = configObj;
+    requestBody["audio"] = audioObj;
+
+    QJsonDocument doc(requestBody);
+    QByteArray jsonData = doc.toJson();
+
+    // Send POST request
+    QNetworkReply *reply = networkManager->post(request, jsonData);
 
     QEventLoop loop;
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
@@ -55,6 +101,7 @@ std::string AudioHandler::sendToGeminiAPI(const std::string &audioPath)
     if (reply->error() == QNetworkReply::NoError)
     {
         response = reply->readAll().toStdString();
+        std::cout << "API Response: " << response << std::endl;
     }
     else
     {

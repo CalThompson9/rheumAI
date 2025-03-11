@@ -11,6 +11,7 @@
 #include <QUrl>
 #include <QDebug>
 #include <QFile>
+#include <api.h>
 
 class LLMClient : public QObject
 {
@@ -28,7 +29,6 @@ private slots:
 private:
     QNetworkAccessManager *networkManager;
     QString apiKey;
-
 };
 
 #endif // LLMCLIENT_H

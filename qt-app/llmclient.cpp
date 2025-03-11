@@ -1,21 +1,22 @@
 #include "llmclient.h"
 
-LLMClient::LLMClient(QObject *parent) 
+LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
-    apiKey = "";  // ⚠️Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY.
+    apiKey = QString::fromStdString(GEMINI_API_KEY); // ⚠️Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY.
 
-    if (apiKey.isEmpty()) {
+    if (apiKey.isEmpty())
+    {
         qWarning() << "API Key is empty! Request aborted.";
     }
 
     connect(networkManager, &QNetworkAccessManager::finished, this, &LLMClient::handleNetworkReply);
 }
 
-
 void LLMClient::sendRequest(const QString &prompt)
 {
-    if (apiKey.isEmpty()) {
+    if (apiKey.isEmpty())
+    {
         qWarning() << "API Key is empty! Request aborted.";
         return;
     }
@@ -38,31 +39,40 @@ void LLMClient::sendRequest(const QString &prompt)
     QJsonDocument jsonDoc(requestBody);
     QByteArray jsonData = jsonDoc.toJson();
 
+    qWarning() << requestBody;
+
     // Send POST request
     networkManager->post(request, jsonData);
 }
-
 
 void LLMClient::handleNetworkReply(QNetworkReply *reply)
 {
     QByteArray responseData = reply->readAll();
 
-    if (reply->error() == QNetworkReply::NoError) {
+    if (reply->error() == QNetworkReply::NoError)
+    {
         QJsonDocument jsonResponse = QJsonDocument::fromJson(responseData);
 
-        if (jsonResponse.isObject()) {
+        if (jsonResponse.isObject())
+        {
             QJsonObject jsonObj = jsonResponse.object();
-            if (jsonObj.contains("candidates") && jsonObj["candidates"].isArray()) {
+            if (jsonObj.contains("candidates") && jsonObj["candidates"].isArray())
+            {
                 QJsonArray candidates = jsonObj["candidates"].toArray();
-                if (!candidates.isEmpty() && candidates[0].isObject()) {
+                if (!candidates.isEmpty() && candidates[0].isObject())
+                {
                     QJsonObject candidate = candidates[0].toObject();
-                    if (candidate.contains("content") && candidate["content"].isObject()) {
+                    if (candidate.contains("content") && candidate["content"].isObject())
+                    {
                         QJsonObject contentObj = candidate["content"].toObject();
-                        if (contentObj.contains("parts") && contentObj["parts"].isArray()) {
+                        if (contentObj.contains("parts") && contentObj["parts"].isArray())
+                        {
                             QJsonArray parts = contentObj["parts"].toArray();
-                            if (!parts.isEmpty() && parts[0].isObject()) {
+                            if (!parts.isEmpty() && parts[0].isObject())
+                            {
                                 QString responseText = parts[0].toObject().value("text").toString();
-                                if (!responseText.isEmpty()) {
+                                if (!responseText.isEmpty())
+                                {
                                     emit responseReceived(responseText);
                                     reply->deleteLater();
                                     return;
@@ -74,7 +84,6 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
             }
         }
     }
-    
+
     reply->deleteLater();
 }
-

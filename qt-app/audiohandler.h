@@ -1,11 +1,18 @@
 #ifndef AUDIO_HANDLER_H
 #define AUDIO_HANDLER_H
 
+#include <QJsonArray>
 #include <string>
 #include <QObject>
 #include <QFile>
 #include <QEventLoop>
 #include <QNetworkAccessManager>
+#include <iostream>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QHttpMultiPart>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include "transcript.h"
 #include "api.h"
 
@@ -21,13 +28,16 @@ public:
     static AudioHandler *getInstance();
     Transcript transcribe(const std::string &filename);
 
+signals:
+    void transcriptionCompleted(const QString &transcribedText);
+
 private:
-    const std::string API_KEY = "YOUR_GEMINI_API_KEY";
-    const std::string API_URL = "https://api.google.dev/v1/audio:transcribe";
+    const std::string API_KEY = GEMINI_API_KEY;
+    const std::string API_URL = "https://speech.googleapis.com/v1/speech:recognize";
     QNetworkAccessManager *networkManager;
 
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *output);
-    std::string sendToGeminiAPI(const std::string &audioPath);
+    std::string sendToGoogleSpeechAPI(const std::string &audioPath);
     time_t getCurrentTime();
 };
 

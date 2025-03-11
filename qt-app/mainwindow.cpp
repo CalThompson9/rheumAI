@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "llmclient.h"
+#include "audiohandler.h"
 #include "filehandler.h"
 #include "patientrecord.h"
 
@@ -8,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // Set screen bounds
     setGeometry(0, 0, 1200, 800);
-    
+
     // Create central widget
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
@@ -23,11 +24,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
 
+    // Initialize AudioHandler and connect transcription signal to LLMClient
+    AudioHandler *audioHandler = AudioHandler::getInstance();
+    connect(audioHandler, &AudioHandler::transcriptionCompleted, llmClient, &LLMClient::sendRequest);
 
-    // Connect "Record" button to LLM API request
-    connect(btnRecord, &QPushButton::clicked, this, [this]() {
-        llmClient->sendRequest("Hello, AI! How are you?");
-    });
+    // Connect "Record" button to start transcription
+    connect(btnRecord, &QPushButton::clicked, this, [audioHandler]()
+            { audioHandler->transcribe(":/audio/test.wav"); });
 }
 
 void MainWindow::handleLLMResponse(const QString &response)
@@ -35,8 +38,9 @@ void MainWindow::handleLLMResponse(const QString &response)
     textTranscription->setPlainText(response);
 }
 
-void MainWindow::on_addPatientButton_clicked() {
-    int patientID = 12345;  // Temporary for testing
+void MainWindow::on_addPatientButton_clicked()
+{
+    int patientID = 12345; // Temporary for testing
     QString firstName = "John";
     QString lastName = "Doe";
     QString dateOfBirth = "1990-01-01";
@@ -46,7 +50,6 @@ void MainWindow::on_addPatientButton_clicked() {
 
     qDebug() << "New patient added!";
 }
-
 
 MainWindow::~MainWindow()
 {
