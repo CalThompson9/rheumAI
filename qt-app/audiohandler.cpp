@@ -8,6 +8,7 @@ AudioHandler *AudioHandler::instance = nullptr;
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
     networkManager = new QNetworkAccessManager(this);
+    audioRecorder = new QAudioRecorder(this);
 }
 
 AudioHandler *AudioHandler::getInstance()
@@ -110,6 +111,26 @@ std::string AudioHandler::sendToGoogleSpeechAPI(const std::string &audioPath)
 
     reply->deleteLater();
     return response;
+}
+
+void AudioHandler::startRecording(const QString &outputFile)
+{
+    QAudioEncoderSettings audioSettings;
+    audioSettings.setCodec("audio/pcm");
+    audioSettings.setSampleRate(16000);
+    audioSettings.setBitRate(128000);
+    audioSettings.setChannelCount(1);
+    audioSettings.setQuality(QMultimedia::HighQuality);
+    audioSettings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
+
+    audioRecorder->setEncodingSettings(audioSettings);
+    audioRecorder->setOutputLocation(QUrl::fromLocalFile(outputFile));
+    audioRecorder->record();
+}
+
+void AudioHandler::stopRecording()
+{
+    audioRecorder->stop();
 }
 
 time_t AudioHandler::getCurrentTime()

@@ -28,9 +28,22 @@ MainWindow::MainWindow(QWidget *parent)
     AudioHandler *audioHandler = AudioHandler::getInstance();
     connect(audioHandler, &AudioHandler::transcriptionCompleted, llmClient, &LLMClient::sendRequest);
 
-    // Connect "Record" button to start transcription
-    connect(btnRecord, &QPushButton::clicked, this, [audioHandler]()
-            { audioHandler->transcribe(":/audio/test.wav"); });
+    // Connect "Record" button to start and stop recording
+    connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
+            {
+        static bool isRecording = false;
+        if (isRecording)
+        {
+            audioHandler->stopRecording();
+            audioHandler->transcribe("output.wav");
+            btnRecord->setText("Start Recording");
+        }
+        else
+        {
+            audioHandler->startRecording("output.wav");
+            btnRecord->setText("Stop Recording");
+        }
+        isRecording = !isRecording; });
 }
 
 void MainWindow::handleLLMResponse(const QString &response)
