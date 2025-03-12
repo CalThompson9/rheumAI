@@ -98,8 +98,6 @@ void MainWindow::handleSummarizeButtonClicked()
  */
 void MainWindow::handleSummaryReady()
 {
-    qDebug() << "Summary Ready in MainWindow! Retrieving structured summary...";
-
     // Retrieve structured summary from SummaryGenerator
     Summary summary = summaryGenerator->getSummary();
 
@@ -119,8 +117,6 @@ void MainWindow::on_addPatientButton_clicked() {
 
     PatientRecord newPatient(patientID, firstName, lastName, dateOfBirth);
     FileHandler::getInstance()->savePatientRecord(newPatient);
-
-    qDebug() << "New patient added!";
 }
 
 /**

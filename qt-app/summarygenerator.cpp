@@ -39,8 +39,6 @@
   */
  void SummaryGenerator::handleLLMResponse(const QString &response)
  {
-     qDebug() << "🔍 Raw LLM Response:\n" << response;
- 
      summary.setSymptoms(
          extractSectionFromResponse(response, "GENERAL") + "\n" +
          extractSectionFromResponse(response, "ARTHRITIS") + "\n" +
@@ -93,14 +91,6 @@
      if (!livingSituation.trimmed().isEmpty()) {
          summary.setMedicalHistory(summary.getMedicalHistory() + "\n\n**SOCIAL HISTORY:**\n" + livingSituation);
      }
- 
-     // ✅ Debug output
-     qDebug() << "✅ Symptoms:\n" << summary.getSymptoms();
-     qDebug() << "✅ Diagnoses:\n" << summary.getDiagnoses();
-     qDebug() << "✅ Medical History:\n" << summary.getMedicalHistory();
-     qDebug() << "✅ Physical Examination:\n" << summary.getPhysicalExamination();
-     qDebug() << "✅ Treatment Plans:\n" << summary.getTreatmentPlans();
- 
      emit summaryReady();
  }
  
@@ -123,8 +113,6 @@
          return "No " + sectionName.toLower() + " found.";
      }
  
-     qDebug() << "🔍 Found section: " << sectionName << " at index: " << startIndex;
- 
      // Locate the next major section header (starting with "**")
      int endIndex = response.indexOf("\n**", startIndex + searchPattern.length());
      if (endIndex == -1) endIndex = response.length(); // If last section
@@ -136,8 +124,7 @@
      if (extractedText.isEmpty() || extractedText.contains("(No details provided in the prompt)")) {
          return "No " + sectionName.toLower() + " found.";
      }
- 
-     qDebug() << "✅ Extracted " << sectionName << ":\n" << extractedText;
+
      return extractedText;
  }
  
