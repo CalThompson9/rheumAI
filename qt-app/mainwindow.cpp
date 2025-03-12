@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // Set screen bounds
     setGeometry(0, 0, 1200, 800);
-    
+
     // Create central widget
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
@@ -26,7 +26,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect "Record" button to LLM API request
     connect(btnRecord, &QPushButton::clicked, this, [this]() {
-        llmClient->sendRequest("Hello, AI! How are you?");
+        QFile file(":/sample_transcript.txt");
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qWarning() << "Failed to open sample_transcript.txt. Request aborted.";
+            return;
+        }
+        QString prompt = QTextStream(&file).readAll().trimmed();
+        llmClient->sendRequest(prompt);
+        file.close();
     });
 }
 
