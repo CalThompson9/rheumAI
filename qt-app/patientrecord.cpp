@@ -1,29 +1,29 @@
 #include "patientrecord.h"
 
-PatientRecord::PatientRecord() : patientID(0) {}
+PatientRecord::PatientRecord(int id, const QString &firstName, const QString &lastName, const QString &dob)
+    : patientID(id), firstName(firstName), lastName(lastName), dateOfBirth(dob) {}
 
-PatientRecord::PatientRecord(int id, QString first, QString last, QString dob)
-    : patientID(id), firstName(first), lastName(last), dateOfBirth(dob) {}
+PatientRecord::PatientRecord() : patientID(-1), firstName(""), lastName(""), dateOfBirth("") {}
 
-int PatientRecord::getPatientID() const { return patientID; }
+int PatientRecord::getID() const { return patientID; }
 QString PatientRecord::getFirstName() const { return firstName; }
 QString PatientRecord::getLastName() const { return lastName; }
 QString PatientRecord::getDateOfBirth() const { return dateOfBirth; }
 
-QJsonObject PatientRecord::toJSON() const {
-    QJsonObject obj;
-    obj["patientID"] = patientID;
-    obj["firstName"] = firstName;
-    obj["lastName"] = lastName;
-    obj["dateOfBirth"] = dateOfBirth;
-    return obj;
+QJsonObject PatientRecord::toJson() const {
+    QJsonObject json;
+    json["patientID"] = patientID;
+    json["firstName"] = firstName;
+    json["lastName"] = lastName;
+    json["dateOfBirth"] = dateOfBirth;
+    return json;
 }
 
-PatientRecord PatientRecord::fromJSON(const QJsonObject &obj) {
+PatientRecord PatientRecord::fromJson(const QJsonObject &json) {
     return PatientRecord(
-        obj["patientID"].toInt(),
-        obj["firstName"].toString(),
-        obj["lastName"].toString(),
-        obj["dateOfBirth"].toString()
+        json["patientID"].toInt(),
+        json["firstName"].toString(),
+        json["lastName"].toString(),
+        json["dateOfBirth"].toString()
         );
 }
