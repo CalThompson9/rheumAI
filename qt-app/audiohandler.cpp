@@ -121,8 +121,14 @@ void AudioHandler::startRecording(const QString &outputFile)
 
 
     recorder.setQuality(QMediaRecorder::HighQuality);
-    recorder.setOutputLocation(QUrl::fromLocalFile("output.wav"));
 
+    QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
+    if (projectDir.endsWith("debug")) {  // Adjust for shadow builds
+        projectDir = QDir(projectDir).filePath("../../../audio");
+    }
+    QString filePath = QDir(projectDir).filePath(outputFile); // Absolute path to output.wav
+
+    recorder.setOutputLocation(QUrl::fromLocalFile(filePath));
     QMediaFormat format;
     format.setFileFormat(QMediaFormat::Wave);
     recorder.setMediaFormat(format);

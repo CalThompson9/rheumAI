@@ -22,6 +22,8 @@
 #include <QAudioInput>
 #include <QMediaRecorder>
 #include <QMediaFormat>
+#include <QDir>
+#include <QCoreApplication>
 #include "transcript.h"
 #include "api.h"
 

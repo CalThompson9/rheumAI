@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>sample_transcript.txt</file>
         <file>audio/test.wav</file>
+        <file>audio/output.wav</file>
     </qresource>
 </RCC>
