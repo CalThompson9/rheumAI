@@ -17,11 +17,12 @@ class Summary
     public:
         Summary();
         ~Summary() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
+        Summary& operator=(const Summary& original);
 
-        const QString& getSymptoms();
-        const QString& getDiagnoses();
-        const QString& getMedicalHistory();
-        const QString& getTreatmentPlans();
+        const QString& getSymptoms() const;
+        const QString& getDiagnoses() const;
+        const QString& getMedicalHistory() const;
+        const QString& getTreatmentPlans() const;
 
         void setSymptoms(const QString& symptoms);
         void setDiagnoses(const QString& diagnoses);

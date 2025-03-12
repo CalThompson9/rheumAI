@@ -17,7 +17,10 @@ SOURCES += \
     windowbuilder.cpp \
     transcript.cpp \
     summary.cpp \
-    summarygenerator.cpp
+    summarygenerator.cpp \
+    summaryformatter.cpp \
+    detailedsummaryformatter.cpp \
+    concisesummaryformatter.cpp
 
 HEADERS += \
     filehandler.h \
@@ -27,7 +30,10 @@ HEADERS += \
     windowbuilder.h \
     transcript.h \
     summary.h \
-    summarygenerator.h
+    summarygenerator.h \
+    summaryformatter.h \
+    detailedsummaryformatter.h \
+    concisesummaryformatter.h
 
 FORMS += \
     mainwindow.ui
