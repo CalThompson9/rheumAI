@@ -1,4 +1,6 @@
 #include "audiohandler.h"
+#include <QAudioSource>
+#include <QDebug>
 
 // Replace with your Google Cloud API key and endpoint
 const std::string API_URL = "https://speech.googleapis.com/v1/speech:recognize";
@@ -8,7 +10,8 @@ AudioHandler *AudioHandler::instance = nullptr;
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
     networkManager = new QNetworkAccessManager(this);
-    audioRecorder = new QAudioRecorder(this);
+    captureSession.setAudioInput(&audioInput); // Add this line
+    captureSession.setRecorder(&recorder);     // Add this line
 }
 
 AudioHandler *AudioHandler::getInstance()
@@ -115,22 +118,32 @@ std::string AudioHandler::sendToGoogleSpeechAPI(const std::string &audioPath)
 
 void AudioHandler::startRecording(const QString &outputFile)
 {
-    QAudioEncoderSettings audioSettings;
-    audioSettings.setCodec("audio/pcm");
-    audioSettings.setSampleRate(16000);
-    audioSettings.setBitRate(128000);
-    audioSettings.setChannelCount(1);
-    audioSettings.setQuality(QMultimedia::HighQuality);
-    audioSettings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
 
-    audioRecorder->setEncodingSettings(audioSettings);
-    audioRecorder->setOutputLocation(QUrl::fromLocalFile(outputFile));
-    audioRecorder->record();
+
+    recorder.setQuality(QMediaRecorder::HighQuality);
+    recorder.setOutputLocation(QUrl::fromLocalFile("output.wav"));
+
+    QMediaFormat format;
+    format.setFileFormat(QMediaFormat::Wave);
+    recorder.setMediaFormat(format);
+
+    recorder.record();
+}
+
+void AudioHandler::pauseRecording()
+{
+    recorder.pause();
+}
+
+void AudioHandler::resumeRecording()
+{
+    recorder.record();
 }
 
 void AudioHandler::stopRecording()
 {
-    audioRecorder->stop();
+
+    recorder.stop();
 }
 
 time_t AudioHandler::getCurrentTime()

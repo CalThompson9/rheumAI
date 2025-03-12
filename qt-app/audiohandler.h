@@ -6,9 +6,7 @@
 #include <QObject>
 #include <QFile>
 #include <QEventLoop>
-#include <QNetworkAccessManager>
-#include <QAudioRecorder>
-#include <QAudioEncoderSettings>
+#include <QtNetwork/QNetworkAccessManager>
 #include <iostream>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -16,6 +14,14 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QUrl>
+#include <QAudioSource>
+#include <QBuffer>
+#include <QMediaDevices>
+#include <QStandardPaths>
+#include <QMediaCaptureSession>
+#include <QAudioInput>
+#include <QMediaRecorder>
+#include <QMediaFormat>
 #include "transcript.h"
 #include "api.h"
 
@@ -32,19 +38,24 @@ public:
     Transcript transcribe(const std::string &filename);
     void startRecording(const QString &outputFile);
     void stopRecording();
+    void pauseRecording();
+    void resumeRecording();
 
 signals:
     void transcriptionCompleted(const QString &transcribedText);
 
 private:
-    const std::string API_KEY = GEMINI_API_KEY;
+    const std::string API_KEY = AUDIO_API_KEY;
     const std::string API_URL = "https://speech.googleapis.com/v1/speech:recognize";
     QNetworkAccessManager *networkManager;
-    QAudioRecorder *audioRecorder;
 
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *output);
     std::string sendToGoogleSpeechAPI(const std::string &audioPath);
     time_t getCurrentTime();
+    QString outputFilePath;
+    QMediaRecorder recorder;
+    QMediaCaptureSession captureSession;
+    QAudioInput audioInput;
 };
 
 #endif // AUDIO_HANDLER_H
