@@ -41,33 +41,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Initialize summary layout formatter
     summaryFormatter = new DetailedSummaryFormatter;
-    displaySummary(testSummary);
     optionDetailedLayout->setEnabled(false);
 
-    // Initialize LLM client
-    llmClient = new LLMClient(this);
-    connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
-    connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
-
-    // Connect "Record" button to LLM API request
-    connect(btnRecord, &QPushButton::clicked, this, [this]() {
-        QFile file(":/sample_transcript.txt");
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qWarning() << "Failed to open sample_transcript.txt. Request aborted.";
-            return;
-        }
-        QString prompt = QTextStream(&file).readAll().trimmed();
-        llmClient->sendRequest(prompt);
-        file.close();
-    });
-
-    // Connect "Summarize" button to summarize transcripts and update window
-    connect(btnSummarize, &QPushButton::clicked, this, &MainWindow::handleSummarizeButtonClicked);
-}
-
-void MainWindow::handleLLMResponse(const QString &response)
-{
-    textTranscription->setPlainText(response);
+    handleSummarizeButtonClicked();
 }
 
 /**
@@ -96,19 +72,45 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter)
 /**
  * @name handleSummarizeButtonClicked
  * @brief Handler function called when summarize button is clicked
- * @details Regenerates the summary and displays in the window
+ * @details Starts a new summary generation process via the LLM
  */
 void MainWindow::handleSummarizeButtonClicked()
 {
-    // Regenerate summary
-    Transcript testTranscript(QTime::currentTime(), QString("Test Transcript"));  // FIXME: Replace this dummy transcript with list of actual transcripts, in patient file
-    SummaryGenerator summaryGenerator(testTranscript);
+    // Create a new transcript for LLM summarization
+    QFile file(":/sample_transcript.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open. Request aborted.";
+        return;
+    }
+    QString sample_transcript = QTextStream(&file).readAll().trimmed();
+    file.close();
 
-    testSummary = summaryGenerator.summarizeSymptoms().summarizeDiagnoses().summarizeMedicalHistory().summarizeTreatmentPlans().getSummary();
+    Transcript* testTranscript = new Transcript(QTime::currentTime(), sample_transcript);
+    summaryGenerator = new SummaryGenerator(*testTranscript, this);
 
-    displaySummary(testSummary);  // Update window
+    // Connect the signal to process the generated summary when ready
+    connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
 }
 
+/**
+ * @name handleSummaryReady
+ * @brief Processes and displays the structured summary after LLM response
+ */
+void MainWindow::handleSummaryReady()
+{
+    qDebug() << "Summary Ready in MainWindow! Retrieving structured summary...";
+
+    // Retrieve structured summary from SummaryGenerator
+    Summary summary = summaryGenerator->getSummary();
+
+    // Update the UI with the summary
+    displaySummary(summary);
+}
+
+/**
+ * @name on_addPatientButton_clicked
+ * @brief Handles adding a new patient record
+ */
 void MainWindow::on_addPatientButton_clicked() {
     int patientID = 12345;  // Temporary for testing
     QString firstName = "John";

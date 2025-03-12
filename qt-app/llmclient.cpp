@@ -72,6 +72,7 @@ void LLMClient::sendLLMRequest(const QString &inputPrompt)
     QJsonDocument jsonDoc(requestBody);
     QByteArray jsonData = jsonDoc.toJson();
 
+
     // Send POST request
     networkManager->post(request, jsonData);
 }

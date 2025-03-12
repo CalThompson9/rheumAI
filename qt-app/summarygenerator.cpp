@@ -1,109 +1,155 @@
 /**
- * @name summarygenerator.cpp
+ * @file summarygenerator.cpp
  * @brief Definition of SummaryGenerator builder class
  * 
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 9, 2025
+ * 
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @date Mar. 12, 2025
  */
 
-#include <QDebug>
-#include "summarygenerator.h"
-
-/**
- * @name SummaryGenerator
- * @brief Constructor for the SummaryGenerator class
- * @details Implements the Builder design pattern to create a Summary object.
- *          Add desired elements to the summary by calling the corresponding method.
- * @param[in] transcript: Transcript to summarize
- *                        TODO: This functionality is currently not implemented.
- *                        Summaries are simply placeholder text
- * @param[in] parent: Parent object in Qt application
- */
-SummaryGenerator::SummaryGenerator(Transcript& transcript, QObject *parent)
-    : QObject(parent), transcript(transcript)
-{
-    // No logic body
-}
-
-
-/**
- * @name summarizeSymptoms
- * @brief Summarizes symptoms discussed in the transcript
- * @return Reference to the builder. This allows methods to be chained together.
- */
-SummaryGenerator& SummaryGenerator::summarizeSymptoms()
-{
-    // TODO: Implement LLM summarization and replace this placeholder string
-    QString currentTime = QTime::currentTime().toString("hh:mm:ss");
-    QString placeholderText = "Symptoms summary... (Generated at: " + currentTime + ")";
-    
-    qDebug() << "Generated summary of symptoms at " << currentTime;
-    summary.setSymptoms(placeholderText);
-
-    return *this;
-}
-
-
-/**
- * @name summarizeDiagnoses
- * @brief Summarizes diagnoses discussed in the transcript
- * @return Reference to the builder. This allows methods to be chained together.
- */
-SummaryGenerator& SummaryGenerator::summarizeDiagnoses()
-{
-    // TODO: Implement LLM summarization and replace this placeholder string
-    QString currentTime = QTime::currentTime().toString("hh:mm:ss");
-    QString placeholderText = "Diagnoses summary... (Generated at: " + currentTime + ")";
-    
-    qDebug() << "Generated summary of diagnoses at " << currentTime;
-    summary.setDiagnoses(placeholderText);
-    
-    return *this;
-}
-
-
-/**
- * @name summarizeMedicalHistory
- * @brief Summarizes medical history discussed in the transcript
- * @return Reference to the builder. This allows methods to be chained together.
- */
-SummaryGenerator& SummaryGenerator::summarizeMedicalHistory()
-{
-    // TODO: Implement LLM summarization and replace this placeholder string
-    QString currentTime = QTime::currentTime().toString("hh:mm:ss");
-    QString placeholderText = "Medical history summary... (Generated at: " + currentTime + ")";
-    
-    qDebug() << "Generated summary of medical history at " << currentTime;
-    summary.setMedicalHistory(placeholderText);
-
-    return *this;
-}
-
-
-/**
- * @name summarizeTreatmentPlans
- * @brief Summarizes treatment plans discussed in the transcript
- * @return Reference to the builder. This allows methods to be chained together.
- */
-SummaryGenerator& SummaryGenerator::summarizeTreatmentPlans()
-{
-    // TODO: Implement LLM summarization and replace this placeholder string
-    QString currentTime = QTime::currentTime().toString("hh:mm:ss");
-    QString placeholderText = "Treatment plans summary... (Generated at: " + currentTime + ")";
-    
-    qDebug() << "Generated summary of treatment plans at " << currentTime;
-    summary.setTreatmentPlans(placeholderText);
-
-    return *this;
-}
-
-
-/**
- * @brief getSummary
- * @brief Get the summary generated
- * @return Generated summary
- */
-Summary SummaryGenerator::getSummary()
-{
-    return summary;
-}
+ #include <QDebug>
+ #include "summarygenerator.h"
+ 
+ /**
+  * @name SummaryGenerator
+  * @brief Constructor for the SummaryGenerator class
+  * @details Sends the transcript to the LLM and stores the structured response.
+  * @param[in] transcript: Transcript to summarize
+  * @param[in] parent: Parent object in Qt application
+  */
+ SummaryGenerator::SummaryGenerator(Transcript& transcript, QObject *parent)
+     : QObject(parent), transcript(transcript)
+ {
+     // Create an LLMClient object
+     llmClient = new LLMClient(this);
+ 
+     // Connect the LLMClient signal to the handler
+     connect(llmClient, &LLMClient::responseReceived, this, &SummaryGenerator::handleLLMResponse);
+ 
+     // Send a request to the LLMClient 
+     llmClient->sendRequest(transcript.getContent());
+ }
+ 
+ /**
+  * @name handleLLMResponse
+  * @brief Handles the LLM response and updates Summary object
+  * @param[in] response: Full LLM-generated summary
+  */
+ void SummaryGenerator::handleLLMResponse(const QString &response)
+ {
+     qDebug() << "🔍 Raw LLM Response:\n" << response;
+ 
+     summary.setSymptoms(
+         extractSectionFromResponse(response, "GENERAL") + "\n" +
+         extractSectionFromResponse(response, "ARTHRITIS") + "\n" +
+         extractSectionFromResponse(response, "CARDIAC") + "\n" +
+         extractSectionFromResponse(response, "RESPIRATORY") + "\n" +
+         extractSectionFromResponse(response, "OCULAR") + "\n" +
+         extractSectionFromResponse(response, "GASTROINTESTINAL") + "\n" +
+         extractSectionFromResponse(response, "GLANDULAR ENLARGEMENT") + "\n" +
+         extractSectionFromResponse(response, "SKIN") + "\n" +
+         extractSectionFromResponse(response, "CNS") + "\n" +
+         extractSectionFromResponse(response, "CANCER")
+     );
+ 
+     summary.setMedicalHistory(
+         extractSectionFromResponse(response, "MEDICATIONS") + "\n" +
+         extractSectionFromResponse(response, "BLOODWORK") + "\n" +
+         extractSectionFromResponse(response, "SEROLOGY") + "\n" +
+         extractSectionFromResponse(response, "IMAGING") + "\n" +
+         extractSectionFromResponse(response, "HEALTH CHANGES") + "\n" +
+         extractSectionFromResponse(response, "LIFE CHANGES") + "\n" +
+         extractSectionFromResponse(response, "BONE HEALTH")
+     );
+ 
+     summary.setDiagnoses(extractSectionFromResponse(response, "CLINICAL IMPRESSION"));
+ 
+     summary.setTreatmentPlans(
+         extractSectionFromResponse(response, "PLAN") + "\n" +
+         extractSectionFromResponse(response, "Patient Education") + "\n" +
+         extractSectionFromResponse(response, "Follow-up")
+     );
+ 
+     // Extract and store physical examination separately
+     QString physicalExam =
+         extractSectionFromResponse(response, "VITAL SIGNS") + "\n" +
+         extractSectionFromResponse(response, "HEAD & NECK") + "\n" +
+         extractSectionFromResponse(response, "SKIN") + "\n" +
+         extractSectionFromResponse(response, "CARDIAC") + "\n" +
+         extractSectionFromResponse(response, "RESPIRATORY") + "\n" +
+         extractSectionFromResponse(response, "ABDOMEN") + "\n" +
+         extractSectionFromResponse(response, "NEUROLOGIC") + "\n" +
+         extractSectionFromResponse(response, "JOINT EXAM");
+ 
+     summary.setPhysicalExamination(physicalExam);
+ 
+     // Extract work/living situation details
+     QString livingSituation =
+         extractSectionFromResponse(response, "LIVING/FAMILY SITUATION") + "\n" +
+         extractSectionFromResponse(response, "WORK/EDUCATION");
+ 
+     if (!livingSituation.trimmed().isEmpty()) {
+         summary.setMedicalHistory(summary.getMedicalHistory() + "\n\n**SOCIAL HISTORY:**\n" + livingSituation);
+     }
+ 
+     // ✅ Debug output
+     qDebug() << "✅ Symptoms:\n" << summary.getSymptoms();
+     qDebug() << "✅ Diagnoses:\n" << summary.getDiagnoses();
+     qDebug() << "✅ Medical History:\n" << summary.getMedicalHistory();
+     qDebug() << "✅ Physical Examination:\n" << summary.getPhysicalExamination();
+     qDebug() << "✅ Treatment Plans:\n" << summary.getTreatmentPlans();
+ 
+     emit summaryReady();
+ }
+ 
+ 
+ /**
+  * @name extractSectionFromResponse
+  * @brief Extracts a specific section from the LLM response
+  * @param[in] response: Full text response from LLM
+  * @param[in] sectionName: Section name to extract
+  * @return Extracted text of the section
+  */
+ QString SummaryGenerator::extractSectionFromResponse(const QString &response, const QString &sectionName)
+ {
+     // Ensure correct search pattern format
+     QString searchPattern = "**" + sectionName + ":**";
+     int startIndex = response.indexOf(searchPattern);
+ 
+     if (startIndex == -1) {
+         qWarning() << "🔍 Section not found in LLM response: " << sectionName;
+         return "No " + sectionName.toLower() + " found.";
+     }
+ 
+     qDebug() << "🔍 Found section: " << sectionName << " at index: " << startIndex;
+ 
+     // Locate the next major section header (starting with "**")
+     int endIndex = response.indexOf("\n**", startIndex + searchPattern.length());
+     if (endIndex == -1) endIndex = response.length(); // If last section
+ 
+     // Extract the section content
+     QString extractedText = response.mid(startIndex + searchPattern.length(), endIndex - startIndex - searchPattern.length()).trimmed();
+ 
+     // ✅ Remove placeholders and handle empty sections
+     if (extractedText.isEmpty() || extractedText.contains("(No details provided in the prompt)")) {
+         return "No " + sectionName.toLower() + " found.";
+     }
+ 
+     qDebug() << "✅ Extracted " << sectionName << ":\n" << extractedText;
+     return extractedText;
+ }
+ 
+ 
+ 
+ /**
+  * @brief getSummary
+  * @brief Get the summary generated
+  * @return Generated summary
+  */
+ Summary SummaryGenerator::getSummary()
+ {
+     return summary;
+ }
+ 
