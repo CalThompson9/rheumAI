@@ -7,6 +7,7 @@
 #include "llmclient.h"
 #include "summary.h"
 #include "summaryformatter.h"
+#include "summarygenerator.h"
 
 class MainWindow : public QMainWindow
 {
@@ -36,22 +37,18 @@ private:
     QMenu* summaryLayoutOptions;
     QVBoxLayout *summarySection;
 
-    // Backend LLM
-    LLMClient *llmClient;
-
     // Layout
     QVBoxLayout *mainLayout;
 
-    SummaryFormatter *summaryFormatter;  // Summary layout formatter strategy
-
-    Summary testSummary; // FIXME: For testing only. Summary should eventually be located in PatientFile instead
+    SummaryFormatter *summaryFormatter;
+    SummaryGenerator *summaryGenerator;
+    Summary testSummary;
 
 private slots:
-    void handleLLMResponse(const QString &response);
     void handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter);
     void handleSummarizeButtonClicked();
+    void handleSummaryReady();
     void on_addPatientButton_clicked();
-
 };
 
 #endif // MAINWINDOW_H

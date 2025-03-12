@@ -8,26 +8,56 @@
 
 #include "summary.h"
 
-Summary::Summary()
+Summary::Summary() 
+    : symptoms(""), diagnoses(""), medicalHistory(""), treatmentPlans(""), physicalExamination("")
 {
-    // No logic body; QStrings get initialized to null by default
+    // Default constructor initializes empty strings
 }
 
 /**
- * @name operator =
+ * @name Summary (Copy Constructor)
  * @brief Creates a copy of a Summary
+ * @param[in] other: Summary object to copy
+ */
+Summary::Summary(const Summary& other)
+    : symptoms(other.symptoms), 
+      diagnoses(other.diagnoses), 
+      medicalHistory(other.medicalHistory), 
+      treatmentPlans(other.treatmentPlans),
+      physicalExamination(other.physicalExamination)
+{
+}
+
+/**
+ * @name operator=
+ * @brief Assigns one Summary to another
  * @param[in] original: Summary to copy
+ * @return Reference to the updated Summary object
  */
 Summary& Summary::operator=(const Summary& original)
 {
-    if (this != &original) // Check for self-assignment
+    if (this != &original) // Prevent self-assignment
     {
-        symptoms = original.getSymptoms();
-        diagnoses = original.getDiagnoses();
-        medicalHistory = original.getMedicalHistory();
-        treatmentPlans = original.getTreatmentPlans();
+        symptoms = original.symptoms;
+        diagnoses = original.diagnoses;
+        medicalHistory = original.medicalHistory;
+        treatmentPlans = original.treatmentPlans;
+        physicalExamination = original.physicalExamination;
     }
     return *this;
+}
+
+/**
+ * @name clear
+ * @brief Clears all fields of the summary
+ */
+void Summary::clear()
+{
+    symptoms.clear();
+    diagnoses.clear();
+    medicalHistory.clear();
+    treatmentPlans.clear();
+    physicalExamination.clear();
 }
 
 /**
@@ -71,6 +101,16 @@ const QString& Summary::getTreatmentPlans() const
 }
 
 /**
+ * @name getPhysicalExamination
+ * @brief Get a read-only summary of physical examination
+ * @return Summary of physical examination
+ */
+const QString& Summary::getPhysicalExamination() const
+{
+    return physicalExamination;
+}
+
+/**
  * @name setSymptoms
  * @brief Sets the symptoms summary
  * @param[in] newSymptoms: Symptoms summary
@@ -108,4 +148,14 @@ void Summary::setMedicalHistory(const QString& newMedicalHistory)
 void Summary::setTreatmentPlans(const QString& newTreatmentPlans)
 {
     treatmentPlans = newTreatmentPlans;
+}
+
+/**
+ * @name setPhysicalExamination
+ * @brief Sets the physical examination summary
+ * @param[in] newPhysicalExamination: Physical examination summary
+ */
+void Summary::setPhysicalExamination(const QString& newPhysicalExamination)
+{
+    physicalExamination = newPhysicalExamination;
 }

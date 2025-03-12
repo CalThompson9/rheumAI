@@ -28,13 +28,11 @@ void FileHandler::setJsonFilename(const QString &filepath) {
 // Read the transcript from the file
 QString FileHandler::readTranscript() {
     if (transcriptFilename.isEmpty()) {
-        qDebug() << "Transcript file is not set!";
         return "";
     }
 
     QFile file(transcriptFilename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Could not open transcript file for reading";
         return "";
     }
 
@@ -42,7 +40,6 @@ QString FileHandler::readTranscript() {
     QString content = in.readAll();
     file.close();
 
-    qDebug() << "Transcript Read:\n" << content;
     return content;
 }
 
@@ -52,21 +49,18 @@ void FileHandler::savePatientRecord(const PatientRecord &record) {
 
     QFile file(patientPath + "/patient_info.json");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Could not save patient record!";
         return;
     }
 
     QJsonDocument doc(record.toJSON());
     file.write(doc.toJson());
     file.close();
-    qDebug() << "Patient record saved to:" << file.fileName();
 }
 
 PatientRecord FileHandler::loadPatientRecord(int patientID) {
     QString filePath = patientDatabasePath + "/" + QString::number(patientID) + "/patient_info.json";
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Could not load patient record!";
         return PatientRecord();
     }
 
@@ -93,13 +87,11 @@ void FileHandler::saveTranscriptToJson() {
 
     QFile jsonFile(jsonFilename);
     if (!jsonFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Could not open JSON file for writing";
         return;
     }
 
     jsonFile.write(jsonDoc.toJson());
     jsonFile.close();
-    qDebug() << "Transcript saved as JSON to:" << jsonFilename;
 }
 
 
@@ -116,7 +108,6 @@ void FileHandler::saveTranscriptToJson() {
 void FileHandler::loadPatientJson() {
     QFile jsonFile(jsonFilename);
     if (!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Could not open JSON file for reading";
         return;
     }
 
@@ -125,6 +116,4 @@ void FileHandler::loadPatientJson() {
 
     QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
     QJsonObject jsonObj = jsonDoc.object();
-
-    qDebug() << "Loaded JSON:\n" << jsonDoc.toJson(QJsonDocument::Indented);
 }
