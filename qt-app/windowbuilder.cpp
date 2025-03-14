@@ -2,6 +2,7 @@
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QScrollArea>
 
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnConnectDevice,
@@ -30,7 +31,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     textTranscription->setReadOnly(true);
     QLabel* summaryTitle = new QLabel("Summary");
     selectSummaryLayout = new QPushButton(centralWidget);
-    selectSummaryLayout->setCheckable(true);  // Makes it toggle between states
+    selectSummaryLayout->setCheckable(true);
     selectSummaryLayout->setText("Select Summary Layout");
 
     // Style
@@ -104,6 +105,14 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     line2->setFrameShape(QFrame::HLine);
     line2->setFrameShadow(QFrame::Sunken);
 
+    // Create a scroll area for the summary section
+    QScrollArea *scrollArea = new QScrollArea(centralWidget);
+    scrollArea->setWidgetResizable(true);
+    QWidget *scrollWidget = new QWidget();
+    summarySection = new QVBoxLayout(scrollWidget);
+    scrollWidget->setLayout(summarySection);
+    scrollArea->setWidget(scrollWidget);
+
     // Add layouts to main layout
     mainLayout->addLayout(topBarLayout);
     mainLayout->addWidget(line1);
@@ -112,7 +121,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     mainLayout->addLayout(controlsLayout);
     mainLayout->addWidget(textTranscription);
     mainLayout->addLayout(summaryHeader);
-    mainLayout->addLayout(summarySection);
+    mainLayout->addWidget(scrollArea);
 
     // Set layout to central widget
     centralWidget->setLayout(mainLayout);
