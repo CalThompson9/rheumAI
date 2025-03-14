@@ -26,6 +26,8 @@
 #include <QCoreApplication>
 #include "transcript.h"
 #include "api.h"
+#include "dynamicresourceloader.h"
+
 
 class AudioHandler : public QObject
 {
@@ -58,6 +60,7 @@ private:
     QMediaRecorder recorder;
     QMediaCaptureSession captureSession;
     QAudioInput audioInput;
+    void recompileResource();
 };
 
 #endif // AUDIO_HANDLER_H

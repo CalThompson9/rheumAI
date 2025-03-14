@@ -35,12 +35,18 @@ MainWindow::MainWindow(QWidget *parent)
         if (isRecording)
         {
             audioHandler->stopRecording();
-            audioHandler->transcribe(":/audio/output.wav");
+            QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
+
+
+            // Construct absolute path to output.wav
+            QString filePath = QDir(projectDir).filePath("output.wav");
+
+            audioHandler->transcribe(filePath.toStdString());
             btnRecord->setText("Start Recording");
         }
         else
         {
-            audioHandler->startRecording("output.wav");
+            audioHandler->startRecording("output2.wav");
             btnRecord->setText("Stop Recording");
         }
         isRecording = !isRecording; });

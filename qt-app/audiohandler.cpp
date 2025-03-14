@@ -1,6 +1,9 @@
 #include "audiohandler.h"
+
 #include <QAudioSource>
 #include <QDebug>
+#include <QProcess>
+#include <Qlabel>
 
 // Replace with your Google Cloud API key and endpoint
 const std::string API_URL = "https://speech.googleapis.com/v1/speech:recognize";
@@ -82,7 +85,7 @@ std::string AudioHandler::sendToGoogleSpeechAPI(const std::string &audioPath)
     QJsonObject configObj;
     configObj["encoding"] = "LINEAR16"; // Adjust based on your WAV file
     configObj["sampleRateHertz"] = 16000;
-    configObj["languageCode"] = "en-US";
+    configObj["languageCode"] = "en-CA";
 
     QJsonObject audioObj;
     audioObj["content"] = base64Audio;
@@ -116,19 +119,28 @@ std::string AudioHandler::sendToGoogleSpeechAPI(const std::string &audioPath)
     return response;
 }
 
+void AudioHandler::recompileResource()
+{
+    // Create dynamic resource loader
+    QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
+    DynamicResourceLoader loader("resources.qrc", "resources.cpp");
+
+    // Add a resource dynamically
+    loader.addResource("output.wav", "");
+    loader.loadResources();
+}
+
 void AudioHandler::startRecording(const QString &outputFile)
 {
-
-
     recorder.setQuality(QMediaRecorder::HighQuality);
 
     QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
-    if (projectDir.endsWith("debug")) {  // Adjust for shadow builds
-        projectDir = QDir(projectDir).filePath("../../../audio");
-    }
-    QString filePath = QDir(projectDir).filePath(outputFile); // Absolute path to output.wav
+
+    // Construct absolute path to output.wav
+    QString filePath = QDir(projectDir).filePath(outputFile);
 
     recorder.setOutputLocation(QUrl::fromLocalFile(filePath));
+
     QMediaFormat format;
     format.setFileFormat(QMediaFormat::Wave);
     recorder.setMediaFormat(format);
@@ -148,7 +160,6 @@ void AudioHandler::resumeRecording()
 
 void AudioHandler::stopRecording()
 {
-
     recorder.stop();
 }
 
