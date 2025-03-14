@@ -9,7 +9,7 @@
 #include "summary.h"
 
 Summary::Summary() 
-    : symptoms(""), diagnoses(""), medicalHistory(""), treatmentPlans(""), physicalExamination("")
+    : symptoms(""), diagnoses(""), medicalHistory(""), treatmentPlans(""), physicalExamination(""), socialHistory("")
 {
     // Default constructor initializes empty strings
 }
@@ -24,7 +24,8 @@ Summary::Summary(const Summary& other)
       diagnoses(other.diagnoses), 
       medicalHistory(other.medicalHistory), 
       treatmentPlans(other.treatmentPlans),
-      physicalExamination(other.physicalExamination)
+      physicalExamination(other.physicalExamination),
+      socialHistory(other.socialHistory)
 {
 }
 
@@ -43,6 +44,7 @@ Summary& Summary::operator=(const Summary& original)
         medicalHistory = original.medicalHistory;
         treatmentPlans = original.treatmentPlans;
         physicalExamination = original.physicalExamination;
+        socialHistory = original.socialHistory;
     }
     return *this;
 }
@@ -58,6 +60,7 @@ void Summary::clear()
     medicalHistory.clear();
     treatmentPlans.clear();
     physicalExamination.clear();
+    socialHistory.clear();
 }
 
 /**
@@ -111,6 +114,17 @@ const QString& Summary::getPhysicalExamination() const
 }
 
 /**
+ * @name getSocialHistory
+ * @brief Get a read-only summary of social history
+ * @return Summary of social history
+ */
+const QString& Summary::getSocialHistory() const
+{
+    return socialHistory;
+}
+
+
+/**
  * @name setSymptoms
  * @brief Sets the symptoms summary
  * @param[in] newSymptoms: Symptoms summary
@@ -158,4 +172,14 @@ void Summary::setTreatmentPlans(const QString& newTreatmentPlans)
 void Summary::setPhysicalExamination(const QString& newPhysicalExamination)
 {
     physicalExamination = newPhysicalExamination;
+}
+
+/**
+ * @name setSocialHistory
+ * @brief Sets the social history summary
+ * @param[in] newSocialHistory: Social history summary
+ */
+void Summary::setSocialHistory(const QString& newSocialHistory)
+{
+    socialHistory = newSocialHistory;
 }

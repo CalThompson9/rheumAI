@@ -22,17 +22,24 @@
      Q_OBJECT
  
  public:
-     explicit SummaryGenerator(Transcript& transcript, QObject *parent = nullptr);
-     virtual ~SummaryGenerator() = default;
+    explicit SummaryGenerator(QObject *parent = nullptr);
+    virtual ~SummaryGenerator() = default;
+    void sendRequest(Transcript& prompt);
  
      Summary getSummary();
  
  private:
-     Transcript& transcript;
      LLMClient *llmClient;
      Summary summary;
  
      QString extractSectionFromResponse(const QString &response, const QString &sectionName);
+
+     void summarizeSymptoms(const QString &response);
+     void summarizeMedicalHistory(const QString &response);
+     void summarizeDiagnoses(const QString &response);
+     void summarizeTreatmentPlans(const QString &response);
+     void summarizePhysicalExamination(const QString &response);
+     void summarizeSocialHistory(const QString &response);
  
  private slots:
      void handleLLMResponse(const QString &response);
@@ -42,4 +49,3 @@
  };
  
  #endif // SUMMARYGENERATOR_H
- 

@@ -43,6 +43,13 @@ MainWindow::MainWindow(QWidget *parent)
     summaryFormatter = new DetailedSummaryFormatter;
     optionDetailedLayout->setEnabled(false);
 
+    // Initialize SummaryGenerator
+    summaryGenerator = new SummaryGenerator(this);
+
+    // Connect the signal to process the generated summary when ready
+    connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
+
+    // THIS IS A MOCK FUNCTION CALL JUST FOR TESTING ON PROGRAM START
     handleSummarizeButtonClicked();
 }
 
@@ -86,10 +93,9 @@ void MainWindow::handleSummarizeButtonClicked()
     file.close();
 
     Transcript* testTranscript = new Transcript(QTime::currentTime(), sample_transcript);
-    summaryGenerator = new SummaryGenerator(*testTranscript, this);
 
-    // Connect the signal to process the generated summary when ready
-    connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
+    // Send the request to the LLM
+    summaryGenerator->sendRequest(*testTranscript);
 }
 
 /**

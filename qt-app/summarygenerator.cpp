@@ -19,18 +19,27 @@
   * @param[in] transcript: Transcript to summarize
   * @param[in] parent: Parent object in Qt application
   */
- SummaryGenerator::SummaryGenerator(Transcript& transcript, QObject *parent)
-     : QObject(parent), transcript(transcript)
+ SummaryGenerator::SummaryGenerator(QObject *parent)
+     : QObject(parent)
  {
      // Create an LLMClient object
      llmClient = new LLMClient(this);
  
      // Connect the LLMClient signal to the handler
      connect(llmClient, &LLMClient::responseReceived, this, &SummaryGenerator::handleLLMResponse);
- 
-     // Send a request to the LLMClient 
-     llmClient->sendRequest(transcript.getContent());
  }
+
+ /**
+  * @name SendRequest
+  * @brief Sends a request to the LLMClient
+  * @param[in] prompt: Prompt to send to the LLMClient
+  * @details Sends a request to the LLMClient with the given prompt
+  * and stores the response in the summary object
+  */
+void SummaryGenerator::sendRequest(Transcript& prompt)
+{
+    llmClient->sendRequest(prompt.getContent());
+}
  
  /**
   * @name handleLLMResponse
@@ -38,6 +47,26 @@
   * @param[in] response: Full LLM-generated summary
   */
  void SummaryGenerator::handleLLMResponse(const QString &response)
+ {
+     // Debug the response
+     qDebug() << "🔍 LLM Response: " << response;
+ 
+     summarizeSymptoms(response);
+     summarizeMedicalHistory(response);
+     summarizeDiagnoses(response);
+     summarizeTreatmentPlans(response);
+     summarizePhysicalExamination(response);
+     summarizeSocialHistory(response);
+ 
+     emit summaryReady();
+ }
+ 
+ /**
+  * @name summarizeSymptoms
+  * @brief Summarizes the symptoms section from the LLM response
+  * @param[in] response: Full LLM-generated summary
+  */
+ void SummaryGenerator::summarizeSymptoms(const QString &response)
  {
      summary.setSymptoms(
          extractSectionFromResponse(response, "GENERAL") + "\n" +
@@ -48,10 +77,17 @@
          extractSectionFromResponse(response, "GASTROINTESTINAL") + "\n" +
          extractSectionFromResponse(response, "GLANDULAR ENLARGEMENT") + "\n" +
          extractSectionFromResponse(response, "SKIN") + "\n" +
-         extractSectionFromResponse(response, "CNS") + "\n" +
-         extractSectionFromResponse(response, "CANCER")
+         extractSectionFromResponse(response, "CNS")
      );
+ }
  
+ /**
+  * @name summarizeMedicalHistory
+  * @brief Summarizes the medical history section from the LLM response
+  * @param[in] response: Full LLM-generated summary
+  */
+ void SummaryGenerator::summarizeMedicalHistory(const QString &response)
+ {
      summary.setMedicalHistory(
          extractSectionFromResponse(response, "MEDICATIONS") + "\n" +
          extractSectionFromResponse(response, "BLOODWORK") + "\n" +
@@ -61,17 +97,39 @@
          extractSectionFromResponse(response, "LIFE CHANGES") + "\n" +
          extractSectionFromResponse(response, "BONE HEALTH")
      );
+ }
  
+ /**
+  * @name summarizeDiagnoses
+  * @brief Summarizes the diagnoses section from the LLM response
+  * @param[in] response: Full LLM-generated summary
+  */
+ void SummaryGenerator::summarizeDiagnoses(const QString &response)
+ {
      summary.setDiagnoses(extractSectionFromResponse(response, "CLINICAL IMPRESSION"));
+ }
  
+ /**
+  * @name summarizeTreatmentPlans
+  * @brief Summarizes the treatment plans section from the LLM response
+  * @param[in] response: Full LLM-generated summary
+  */
+ void SummaryGenerator::summarizeTreatmentPlans(const QString &response)
+ {
      summary.setTreatmentPlans(
          extractSectionFromResponse(response, "PLAN") + "\n" +
-         extractSectionFromResponse(response, "Patient Education") + "\n" +
-         extractSectionFromResponse(response, "Follow-up")
+         extractSectionFromResponse(response, "FOLLOW-UP")
      );
+ }
  
-     // Extract and store physical examination separately
-     QString physicalExam =
+ /**
+  * @name summarizePhysicalExamination
+  * @brief Summarizes the physical examination section from the LLM response
+  * @param[in] response: Full LLM-generated summary
+  */
+ void SummaryGenerator::summarizePhysicalExamination(const QString &response)
+ {
+     summary.setPhysicalExamination(
          extractSectionFromResponse(response, "VITAL SIGNS") + "\n" +
          extractSectionFromResponse(response, "HEAD & NECK") + "\n" +
          extractSectionFromResponse(response, "SKIN") + "\n" +
@@ -79,21 +137,22 @@
          extractSectionFromResponse(response, "RESPIRATORY") + "\n" +
          extractSectionFromResponse(response, "ABDOMEN") + "\n" +
          extractSectionFromResponse(response, "NEUROLOGIC") + "\n" +
-         extractSectionFromResponse(response, "JOINT EXAM");
- 
-     summary.setPhysicalExamination(physicalExam);
- 
-     // Extract work/living situation details
-     QString livingSituation =
-         extractSectionFromResponse(response, "LIVING/FAMILY SITUATION") + "\n" +
-         extractSectionFromResponse(response, "WORK/EDUCATION");
- 
-     if (!livingSituation.trimmed().isEmpty()) {
-         summary.setMedicalHistory(summary.getMedicalHistory() + "\n\n**SOCIAL HISTORY:**\n" + livingSituation);
-     }
-     emit summaryReady();
+         extractSectionFromResponse(response, "JOINT EXAM")
+     );
  }
  
+ /**
+  * @name summarizeSocialHistory
+  * @brief Summarizes the social history section from the LLM response
+  * @param[in] response: Full LLM-generated summary
+  */
+ void SummaryGenerator::summarizeSocialHistory(const QString &response)
+ {
+     summary.setSocialHistory(
+         extractSectionFromResponse(response, "LIVING/FAMILY SITUATION") + "\n" +
+         extractSectionFromResponse(response, "WORK/EDUCATION")
+     );
+ }
  
  /**
   * @name extractSectionFromResponse
@@ -128,8 +187,6 @@
      return extractedText;
  }
  
- 
- 
  /**
   * @brief getSummary
   * @brief Get the summary generated
@@ -139,4 +196,3 @@
  {
      return summary;
  }
- 

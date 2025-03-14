@@ -64,7 +64,7 @@ void LLMClient::sendLLMRequest(const QString &inputPrompt)
 
     // Add parameters for the request
     QJsonObject generationConfig;
-    generationConfig["temperature"] = 0.3;
+    generationConfig["temperature"] = 0;
     generationConfig["top_p"] = 1.0;
     generationConfig["top_k"] = 40;
     requestBody["generationConfig"] = generationConfig;  
