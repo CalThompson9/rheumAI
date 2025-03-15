@@ -21,18 +21,16 @@ class SummaryFormatter
     public:
 
         struct Section {
-            QString title;
-            QString content;
+            QString title;    // Section title
+            QString content;  // Body text
         };
 
         virtual void generateLayout(const Summary& summary, QVBoxLayout* summaryLayout) const = 0;
         virtual ~SummaryFormatter() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
-  
-        static QString formatBoldText(const QString& text);
-        static void clearLayout(QVBoxLayout* layout);
         
     protected:
-        void displayNoSummaryText(QVBoxLayout* summaryLayout) const;
+        QString formatBoldText(const QString& text) const;
+        void clearLayout(QVBoxLayout* layout) const;
         void addSection(const Section& section, QVBoxLayout* summaryLayout) const;
 };
 

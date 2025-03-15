@@ -15,7 +15,7 @@
  * @brief Clears all layout elements
  * @param[in, out] layout: Layout to be cleared
  */
-void SummaryFormatter::clearLayout(QVBoxLayout* layout) 
+void SummaryFormatter::clearLayout(QVBoxLayout* layout) const
 {
     if (!layout) {  // Ensure layout exists before accessing it
         return;
@@ -32,23 +32,12 @@ void SummaryFormatter::clearLayout(QVBoxLayout* layout)
 }
 
 /**
- * @name displayEmptyText
- * @brief Displays a message indicating that there is no summary data to display
- * @param[in, out] summaryLayout: Layout to add message to
- */
-void SummaryFormatter::displayNoSummaryText(QVBoxLayout* summaryLayout) const
-{
-    QLabel* textWidget = new QLabel("No data to display. Try generating a summary!");
-    summaryLayout->addWidget(textWidget);
-}
-
-/**
  * @name formatBoldText
  * @brief Formats bold text in the summary
  * @param[in] text: Text to format
  * @return Formatted text with bold tags
  */
-QString SummaryFormatter::formatBoldText(const QString& text)
+QString SummaryFormatter::formatBoldText(const QString& text) const
 {
     QString formattedText = text;
 
@@ -65,7 +54,7 @@ QString SummaryFormatter::formatBoldText(const QString& text)
 /**
  * @name addSection
  * @brief Adds a section to the summary layout
- * @param[in] section: Section content struct
+ * @param[in] section: Section content
  * @param[in, out] summaryLayout: Layout to add section to
  */
 void SummaryFormatter::addSection(const Section& section, QVBoxLayout* summaryLayout) const
@@ -75,7 +64,7 @@ void SummaryFormatter::addSection(const Section& section, QVBoxLayout* summaryLa
     QTextBrowser* sectionText = new QTextBrowser();
 
     // Set styling
-    sectionText->setHtml(section.content); // Use HTML formatting
+    sectionText->setHtml(formatBoldText(section.content)); // Use HTML formatting. Format any bold elements.
     sectionText->setReadOnly(true);
     sectionText->setFixedHeight(150); // Adjust height as needed
 

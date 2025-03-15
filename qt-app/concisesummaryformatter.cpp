@@ -20,11 +20,13 @@ void ConciseSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayout
 {
     clearLayout(summaryLayout);  // Clear existing layout elements
 
+    // Define sections
     QList<Section> sections = {
-        {"Current Status:", formatBoldText(summary.getCurrentStatus())},
-        {"Plan:", formatBoldText(summary.getPlan())}
+        {"Current Status:", summary.getCurrentStatus()},
+        {"Plan:", summary.getPlan()}
     };
 
+    // Add each section to layout
     for (const Section& section : sections)
     {
         addSection(section, summaryLayout);

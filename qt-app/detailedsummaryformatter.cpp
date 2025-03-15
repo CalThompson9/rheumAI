@@ -20,13 +20,15 @@ void DetailedSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayou
 {
     clearLayout(summaryLayout);  // Clear existing layout elements
 
+    // Define sections
     QList<Section> sections = {
-        {"Interval History:", formatBoldText(summary.getIntervalHistory())},
-        {"Physical Examination:", formatBoldText(summary.getPhysicalExamination())},
-        {"Current Status:", formatBoldText(summary.getCurrentStatus())},
-        {"Plan:", formatBoldText(summary.getPlan())}
+        {"Interval History:", summary.getIntervalHistory()},
+        {"Physical Examination:", summary.getPhysicalExamination()},
+        {"Current Status:", summary.getCurrentStatus()},
+        {"Plan:", summary.getPlan()}
     };
 
+    // Add each section to layout
     for (const Section& section : sections)
     {
         addSection(section, summaryLayout);
