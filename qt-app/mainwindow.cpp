@@ -66,7 +66,7 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter)
 {
     // Display summary with selected layout format
     setSummaryFormatter(summaryFormatter);
-    displaySummary(testSummary);
+    displaySummary(summaryGenerator->getSummary());
 
     // Update options menu
     QAction* selectedOption = qobject_cast<QAction*>(sender());
