@@ -1,7 +1,7 @@
 /**
  * @file summaryformatter.h
  * @brief Declaration of SummaryFormatter class
- * TODO: Fix documentation for this, talk about design pattern
+ * @details Implements the Strategy pattern
  * 
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 6, 2025
@@ -11,6 +11,8 @@
 #define SUMMARYFORMATTER_H
 
 #include <QVBoxLayout>
+#include <QRegularExpression>
+#include <QTextBrowser>
 #include "summary.h"
 
 class SummaryFormatter 
@@ -22,6 +24,7 @@ class SummaryFormatter
         static void clearLayout(QVBoxLayout* layout);
     
     protected:
+        QString formatBoldText(const QString& text) const;
         void displayNoSummaryText(QVBoxLayout* summaryLayout) const;
         void addSection(const QString& title, const QString& text, QVBoxLayout* summaryLayout) const;
 };

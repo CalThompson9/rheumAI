@@ -1,7 +1,6 @@
 /**
  * @file detailedsummaryformatter.cpp
  * @brief Definition of DetailedSummaryFormatter class
- * TODO: Fix documentation for this class, talk about design patterns
  * 
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 7, 2025
@@ -13,7 +12,7 @@
 /**
  * @name generateLayout
  * @brief Creates a detailed layout of the summary
- * @details Includes medical history, symptopms, diagnoses, and treatment plans
+ * @details Includes interval history, physical examination, current status, and plan
  * @param[in] summary: Summary to create layout for
  * @param[in,out] summaryLayout: Layout to display summary in. Existing layout elements will be cleared.
  */
@@ -44,26 +43,8 @@ void DetailedSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayou
         summaryLayout->addWidget(sectionLabel);
         summaryLayout->addWidget(sectionText);
     }
+
 }
 
-/**
- * @name formatBoldText
- * @brief Formats bold text in the summary
- * @param[in] text: Text to format
- * @return Formatted text with bold tags
- */
-QString DetailedSummaryFormatter::formatBoldText(const QString& text) const
-{
-    QString formattedText = text;
-
-    // Replace **bold text** with <b>bold text</b>
-    QRegularExpression boldRegex(R"(\*\*(.*?)\*\*)");
-    formattedText.replace(boldRegex, "<b>\\1</b>");
-
-    // Preserve new lines by replacing \n with <br>
-    formattedText.replace("\n", "<br>");
-
-    return formattedText;
-}
 
 

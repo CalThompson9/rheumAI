@@ -63,3 +63,23 @@ void SummaryFormatter::addSection(const QString& title, const QString& text, QVB
     summaryLayout->addWidget(titleWidget);
     summaryLayout->addWidget(textWidget);
 }
+
+/**
+ * @name formatBoldText
+ * @brief Formats bold text in the summary
+ * @param[in] text: Text to format
+ * @return Formatted text with bold tags
+ */
+QString SummaryFormatter::formatBoldText(const QString& text) const
+{
+    QString formattedText = text;
+
+    // Replace **bold text** with <b>bold text</b>
+    QRegularExpression boldRegex(R"(\*\*(.*?)\*\*)");
+    formattedText.replace(boldRegex, "<b>\\1</b>");
+
+    // Preserve new lines by replacing \n with <br>
+    formattedText.replace("\n", "<br>");
+
+    return formattedText;
+}
