@@ -15,18 +15,25 @@
 #include <QTextBrowser>
 #include "summary.h"
 
+
 class SummaryFormatter 
 {
     public:
+
+        struct Section {
+            QString title;
+            QString content;
+        };
+
         virtual void generateLayout(const Summary& summary, QVBoxLayout* summaryLayout) const = 0;
         virtual ~SummaryFormatter() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
-
+  
+        static QString formatBoldText(const QString& text);
         static void clearLayout(QVBoxLayout* layout);
-    
+        
     protected:
-        QString formatBoldText(const QString& text) const;
         void displayNoSummaryText(QVBoxLayout* summaryLayout) const;
-        void addSection(const QString& title, const QString& text, QVBoxLayout* summaryLayout) const;
+        void addSection(const Section& section, QVBoxLayout* summaryLayout) const;
 };
 
 #endif

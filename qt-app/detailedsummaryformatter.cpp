@@ -20,11 +20,6 @@ void DetailedSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayou
 {
     clearLayout(summaryLayout);  // Clear existing layout elements
 
-    struct Section {
-        QString title;
-        QString content;
-    };
-
     QList<Section> sections = {
         {"Interval History:", formatBoldText(summary.getIntervalHistory())},
         {"Physical Examination:", formatBoldText(summary.getPhysicalExamination())},
@@ -34,17 +29,8 @@ void DetailedSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayou
 
     for (const Section& section : sections)
     {
-        QLabel* sectionLabel = new QLabel(section.title);
-        QTextBrowser* sectionText = new QTextBrowser();
-        sectionText->setHtml(section.content); // Use HTML formatting
-        sectionText->setReadOnly(true);
-        sectionText->setFixedHeight(150); // Adjust height as needed
-
-        summaryLayout->addWidget(sectionLabel);
-        summaryLayout->addWidget(sectionText);
+        addSection(section, summaryLayout);
     }
 
 }
-
-
 

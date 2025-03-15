@@ -43,34 +43,12 @@ void SummaryFormatter::displayNoSummaryText(QVBoxLayout* summaryLayout) const
 }
 
 /**
- * @name addSection
- * @brief Adds a section to the summary layout
- * @param[in] title: Section title
- * @param[in] text: Body text
- * @param[in, out] summaryLayout: Layout to add section to
- */
-void SummaryFormatter::addSection(const QString& title, const QString& text, QVBoxLayout* summaryLayout) const
-{
-    // Generate layout elements
-    QLabel* titleWidget = new QLabel(title);
-    QLabel* textWidget = new QLabel(!text.isEmpty() ? text : "Nothing to display.");
-
-    // Set styling
-    titleWidget->setStyleSheet("font-weight: bold; font-size: 13px;");
-    textWidget->setWordWrap(true);
-
-    // Add elements to layout
-    summaryLayout->addWidget(titleWidget);
-    summaryLayout->addWidget(textWidget);
-}
-
-/**
  * @name formatBoldText
  * @brief Formats bold text in the summary
  * @param[in] text: Text to format
  * @return Formatted text with bold tags
  */
-QString SummaryFormatter::formatBoldText(const QString& text) const
+QString SummaryFormatter::formatBoldText(const QString& text)
 {
     QString formattedText = text;
 
@@ -83,3 +61,26 @@ QString SummaryFormatter::formatBoldText(const QString& text) const
 
     return formattedText;
 }
+
+/**
+ * @name addSection
+ * @brief Adds a section to the summary layout
+ * @param[in] section: Section content struct
+ * @param[in, out] summaryLayout: Layout to add section to
+ */
+void SummaryFormatter::addSection(const Section& section, QVBoxLayout* summaryLayout) const
+{
+    // Create layout elements
+    QLabel* sectionLabel = new QLabel(section.title);
+    QTextBrowser* sectionText = new QTextBrowser();
+
+    // Set styling
+    sectionText->setHtml(section.content); // Use HTML formatting
+    sectionText->setReadOnly(true);
+    sectionText->setFixedHeight(150); // Adjust height as needed
+
+    // Add layouts to widget
+    summaryLayout->addWidget(sectionLabel);
+    summaryLayout->addWidget(sectionText);
+}
+
