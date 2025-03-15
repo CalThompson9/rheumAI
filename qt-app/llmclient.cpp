@@ -5,6 +5,7 @@ LLMClient::LLMClient(QObject *parent)
 {
     apiKey = "";  // ⚠️ Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY. ⚠️
 
+
     if (apiKey.isEmpty()) {
         qWarning() << "API Key is empty! Request aborted.";
     }
