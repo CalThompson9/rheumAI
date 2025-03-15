@@ -15,6 +15,10 @@ AudioHandler::AudioHandler() : QObject(nullptr)
     networkManager = new QNetworkAccessManager(this);
     captureSession.setAudioInput(&audioInput); // Add this line
     captureSession.setRecorder(&recorder);     // Add this line
+
+    // Connect mediaFormatChanged signal to a slot to print a message
+    connect(&recorder, &QMediaRecorder::audioChannelCountChanged, this, []()
+            { qDebug() << "Media format has changed. sample rate is "; });
 }
 
 AudioHandler *AudioHandler::getInstance()
@@ -135,17 +139,23 @@ void AudioHandler::startRecording(const QString &outputFile)
     recorder.setQuality(QMediaRecorder::HighQuality);
 
     QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
-
-    // Construct absolute path to output.wav
     QString filePath = QDir(projectDir).filePath(outputFile);
-
     recorder.setOutputLocation(QUrl::fromLocalFile(filePath));
 
     QMediaFormat format;
     format.setFileFormat(QMediaFormat::Wave);
+
     recorder.setMediaFormat(format);
+    qDebug() << "Media format has changed. from MEDIA FORMAT ";
+    recorder.setAudioSampleRate(16000);
+    qDebug() << "Media format has changed. from SAMPLE RATE ";
+    recorder.setAudioChannelCount(1);
+    qDebug() << "Media format has changed. from AUDIO CHANEL ";
 
     recorder.record();
+    qDebug() << "Media format has changed. from Record " << recorder.audioSampleRate();
+
+    qDebug() << "Recording started with sample rate" << recorder.audioChannelCount();
 }
 
 void AudioHandler::pauseRecording()
@@ -161,6 +171,8 @@ void AudioHandler::resumeRecording()
 void AudioHandler::stopRecording()
 {
     recorder.stop();
+    qDebug() << "Recording ended with sample rate" << recorder.audioSampleRate();
+    qDebug() << "Recording ended with channel" << recorder.audioChannelCount();
 }
 
 time_t AudioHandler::getCurrentTime()

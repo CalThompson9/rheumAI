@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
         else
         {
-            audioHandler->startRecording("output2.wav");
+            audioHandler->startRecording("output.wav");
             btnRecord->setText("Stop Recording");
         }
         isRecording = !isRecording; });
