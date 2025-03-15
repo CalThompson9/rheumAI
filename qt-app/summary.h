@@ -23,29 +23,26 @@ public:
 
     Summary& operator=(const Summary& original);
 
-    const QString& getSymptoms() const;
-    const QString& getDiagnoses() const;
-    const QString& getMedicalHistory() const;
-    const QString& getTreatmentPlans() const;
+    const QString& getIntervalHistory() const;
+    void setIntervalHistory(const QString& intervalHistory);
+    
     const QString& getPhysicalExamination() const;
-    const QString& getSocialHistory() const;  // New getter for social history
-
-    void setSymptoms(const QString& symptoms);
-    void setDiagnoses(const QString& diagnoses);
-    void setMedicalHistory(const QString& medicalHistory);
-    void setTreatmentPlans(const QString& treatmentPlans);
     void setPhysicalExamination(const QString& physicalExamination);
-    void setSocialHistory(const QString& socialHistory);  // New setter for social history
+    
+    const QString& getCurrentStatus() const;
+    void setCurrentStatus(const QString& currentStatus);
+    
+    const QString& getPlan() const;
+    void setPlan(const QString& plan);
+    
 
     void clear();
 
 private:
-    QString symptoms;
-    QString diagnoses;
-    QString medicalHistory;
-    QString treatmentPlans;
+    QString intervalHistory;
     QString physicalExamination;
-    QString socialHistory;  // New field for social history
+    QString currentStatus;
+    QString plan;
 };
 
 #endif // SUMMARY_H

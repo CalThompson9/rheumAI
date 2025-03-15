@@ -21,14 +21,5 @@ void ConciseSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayout
 {
     clearLayout(summaryLayout);  // Clear existing layout elements
 
-    if (summary.getSymptoms().isEmpty() &&  // No relevant summary data to display
-        summary.getDiagnoses().isEmpty())
-    {  
-        displayNoSummaryText(summaryLayout); 
-        return;
-    }
-
-    // Add sections
-    addSection(QString("Symptoms"), summary.getSymptoms(), summaryLayout);
-    addSection(QString("Diagnoses"), summary.getDiagnoses(), summaryLayout);
+    // WILL BE IMPLEMENTED IN FUTURE ITERATION (CALLUM WILL DO IT)
 }

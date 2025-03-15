@@ -13,6 +13,8 @@
  #define SUMMARYGENERATOR_H
  
  #include <QObject>
+ #include <QRegularExpression>
+ #include <QRegularExpressionMatch>
  #include "transcript.h"
  #include "summary.h"
  #include "llmclient.h"
@@ -34,12 +36,11 @@
  
      QString extractSectionFromResponse(const QString &response, const QString &sectionName);
 
-     void summarizeSymptoms(const QString &response);
-     void summarizeMedicalHistory(const QString &response);
-     void summarizeDiagnoses(const QString &response);
-     void summarizeTreatmentPlans(const QString &response);
+     void summarizeIntervalHistory(const QString &response);
      void summarizePhysicalExamination(const QString &response);
-     void summarizeSocialHistory(const QString &response);
+     void summarizeCurrentStatus(const QString &response);
+     void summarizePlan(const QString &response);
+     
  
  private slots:
      void handleLLMResponse(const QString &response);
