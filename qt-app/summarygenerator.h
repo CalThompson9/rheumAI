@@ -13,6 +13,8 @@
  #define SUMMARYGENERATOR_H
  
  #include <QObject>
+ #include <QRegularExpression>
+ #include <QRegularExpressionMatch>
  #include "transcript.h"
  #include "summary.h"
  #include "llmclient.h"
@@ -22,17 +24,23 @@
      Q_OBJECT
  
  public:
-     explicit SummaryGenerator(Transcript& transcript, QObject *parent = nullptr);
-     virtual ~SummaryGenerator() = default;
+    explicit SummaryGenerator(QObject *parent = nullptr);
+    virtual ~SummaryGenerator() = default;
+    void sendRequest(Transcript& prompt);
  
      Summary getSummary();
  
  private:
-     Transcript& transcript;
      LLMClient *llmClient;
      Summary summary;
  
      QString extractSectionFromResponse(const QString &response, const QString &sectionName);
+
+     void summarizeIntervalHistory(const QString &response);
+     void summarizePhysicalExamination(const QString &response);
+     void summarizeCurrentStatus(const QString &response);
+     void summarizePlan(const QString &response);
+     
  
  private slots:
      void handleLLMResponse(const QString &response);
@@ -42,4 +50,3 @@
  };
  
  #endif // SUMMARYGENERATOR_H
- 

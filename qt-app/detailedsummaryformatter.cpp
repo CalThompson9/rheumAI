@@ -21,18 +21,49 @@ void DetailedSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayou
 {
     clearLayout(summaryLayout);  // Clear existing layout elements
 
-    if (summary.getMedicalHistory().isEmpty() &&  // No relevant summary data to display
-        summary.getTreatmentPlans().isEmpty() &&
-        summary.getDiagnoses().isEmpty() &&
-        summary.getSymptoms().isEmpty())
-    {
-        displayNoSummaryText(summaryLayout);
-        return;
-    }
+    struct Section {
+        QString title;
+        QString content;
+    };
 
-    // Add sections
-    addSection(QString("Symptoms"), summary.getSymptoms(), summaryLayout);
-    addSection(QString("Medical History"), summary.getMedicalHistory(), summaryLayout);
-    addSection(QString("Diagnoses"), summary.getDiagnoses(), summaryLayout);
-    addSection(QString("Treatment Plans"), summary.getTreatmentPlans(), summaryLayout);
+    QList<Section> sections = {
+        {"Interval History:", formatBoldText(summary.getIntervalHistory())},
+        {"Physical Examination:", formatBoldText(summary.getPhysicalExamination())},
+        {"Current Status:", formatBoldText(summary.getCurrentStatus())},
+        {"Plan:", formatBoldText(summary.getPlan())}
+    };
+
+    for (const Section& section : sections)
+    {
+        QLabel* sectionLabel = new QLabel(section.title);
+        QTextBrowser* sectionText = new QTextBrowser();
+        sectionText->setHtml(section.content); // Use HTML formatting
+        sectionText->setReadOnly(true);
+        sectionText->setFixedHeight(150); // Adjust height as needed
+
+        summaryLayout->addWidget(sectionLabel);
+        summaryLayout->addWidget(sectionText);
+    }
 }
+
+/**
+ * @name formatBoldText
+ * @brief Formats bold text in the summary
+ * @param[in] text: Text to format
+ * @return Formatted text with bold tags
+ */
+QString DetailedSummaryFormatter::formatBoldText(const QString& text) const
+{
+    QString formattedText = text;
+
+    // Replace **bold text** with <b>bold text</b>
+    QRegularExpression boldRegex(R"(\*\*(.*?)\*\*)");
+    formattedText.replace(boldRegex, "<b>\\1</b>");
+
+    // Preserve new lines by replacing \n with <br>
+    formattedText.replace("\n", "<br>");
+
+    return formattedText;
+}
+
+
