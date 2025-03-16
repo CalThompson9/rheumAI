@@ -8,6 +8,7 @@
 #include "summary.h"
 #include "summaryformatter.h"
 #include "summarygenerator.h"
+#include "settings.h"
 
 class MainWindow : public QMainWindow
 {

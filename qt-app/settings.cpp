@@ -1,24 +1,42 @@
 #include "settings.h"
 
-// The getInstance method creates a single instance on first use.
-// The instance is stored in a function-local static variable.
-Settings* Settings::getInstance() {
-    static Settings instance;
-    return &instance;
-}
-
-// Private constructor: initializes the settings with default values.
-Settings::Settings(QObject *parent)
-    : QObject(parent), m_someValue(0)  // Initialize m_someValue to 0, for example.
+Settings::Settings(QObject *Parent) :
+    QObject(Parent),
+    APIKey(""),
+    summaryLayout(""),
+    connectedPeripherals(false)
 {
 }
 
-// Getter for the example setting.
-int Settings::someValue() const {
-    return m_someValue;
+Settings* Settings::getInstance() {
+    static Settings instance;  // Constructed only once.
+    return &instance;
 }
 
-// Setter for the example setting.
-void Settings::setSomeValue(int value) {
-    m_someValue = value;
+/**
+ * @brief Settings::getAPIKey
+ * @return
+ */
+QString Settings::getAPIKey() {
+    return APIKey;
 }
+
+/**
+ * @brief Settings::getPeripherals
+ * @return
+ */
+bool Settings::getPeripherals() {
+    return connectedPeripherals;
+}
+
+/**
+ * @brief Settings::setAPIKey
+ * @param key
+ */
+void Settings::setAPIKey(QString key) {
+    // Update varaible storing Key
+    APIKey = key;
+
+    // Apply it to LLM Client
+}
+

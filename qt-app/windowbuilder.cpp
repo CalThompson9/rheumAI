@@ -19,7 +19,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnAddPatient)
 {
     // Create UI elements
-    btnConnectDevice = new QPushButton("Connect Device", centralWidget);
+    //btnConnectDevice = new QPushButton("Connect Device", centralWidget);
     btnSettings = new QPushButton("Settings", centralWidget);
     lblTitle = new QLabel("RheumAI Dashboard", centralWidget);
     lblPatientName = new QLabel("[Patient Name]", centralWidget);
@@ -62,7 +62,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                                 "background-color: #C56E39;"
                                 "}";
 
-    btnConnectDevice->setStyleSheet(blueButtonStyle);
+    //btnConnectDevice->setStyleSheet(blueButtonStyle);
     btnSettings->setStyleSheet(blueButtonStyle);
     btnRecord->setStyleSheet(orangeButtonStyle);
     btnSummarize->setStyleSheet(orangeButtonStyle);
@@ -81,7 +81,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     summarySection = new QVBoxLayout();
 
     // Top bar layout
-    topBarLayout->addWidget(btnConnectDevice);
+    //topBarLayout->addWidget(btnConnectDevice);
     topBarLayout->addStretch();
     topBarLayout->addWidget(lblTitle);
     topBarLayout->addStretch();

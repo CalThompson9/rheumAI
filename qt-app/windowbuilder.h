@@ -8,6 +8,10 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QDialogButtonBox>
 
 class WindowBuilder {
 public:

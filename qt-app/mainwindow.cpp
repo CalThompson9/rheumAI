@@ -6,7 +6,7 @@
 #include "patientrecord.h"
 #include "transcript.h"
 #include "summarygenerator.h"
-#include <QDialog>
+#include "settings.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     // THIS IS A MOCK FUNCTION CALL JUST FOR TESTING ON PROGRAM START
     handleSummarizeButtonClicked();
 
-    // Connect Settings button to widget pop-up
+    // Connect Settings button to showing settings menu
     connect(btnSettings, &QPushButton::clicked, this, &MainWindow::showSettings);
 }
 
@@ -156,8 +156,36 @@ void MainWindow::displaySummary(const Summary& summary)
  */
 void MainWindow::showSettings()
 {
-    // Must access static class settings
+    // Get settings
+    Settings* settings = Settings::getInstance();
 
+    // Setup Layout
+    QDialog *settingsDialog = new QDialog(this);
+    settingsDialog->setWindowTitle("Settings");
+
+    QVBoxLayout *layout = new QVBoxLayout(settingsDialog);
+
+    // Example: Display and edit the API key.
+    QLabel *label = new QLabel("API Key:", settingsDialog);
+    QLineEdit *apiKeyInput = new QLineEdit(settingsDialog);
+    apiKeyInput->setText(settings->getAPIKey());
+    layout->addWidget(label);
+    layout->addWidget(apiKeyInput);
+
+    // Add standard dialog buttons.
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsDialog);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox, &QDialogButtonBox::accepted, settingsDialog, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, settingsDialog, &QDialog::reject);
+
+    // Execute the dialog modally.
+    if (settingsDialog->exec() == QDialog::Accepted) {
+        // Update settings using the singleton instance.
+        settings->setAPIKey(apiKeyInput->text());
+    }
+
+    delete settingsDialog;
 }
 
 MainWindow::~MainWindow()
