@@ -6,6 +6,7 @@
 #include "patientrecord.h"
 #include "transcript.h"
 #include "summarygenerator.h"
+#include <QDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -51,6 +52,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // THIS IS A MOCK FUNCTION CALL JUST FOR TESTING ON PROGRAM START
     handleSummarizeButtonClicked();
+
+    // Connect Settings button to widget pop-up
+    connect(btnSettings, &QPushButton::clicked, this, &MainWindow::showSettings);
 }
 
 /**
@@ -144,6 +148,16 @@ void MainWindow::setSummaryFormatter(SummaryFormatter* newSummaryFormatter)
 void MainWindow::displaySummary(const Summary& summary)
 {
     summaryFormatter->generateLayout(summary, summarySection);
+}
+
+/**
+ * @name showSettings
+ * @brief creates a settings widget menu for accessing and modifying various configurations of the app
+ */
+void MainWindow::showSettings()
+{
+    // Must access static class settings
+
 }
 
 MainWindow::~MainWindow()

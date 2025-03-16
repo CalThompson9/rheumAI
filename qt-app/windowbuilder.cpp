@@ -125,17 +125,4 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
 
     // Set layout to central widget
     centralWidget->setLayout(mainLayout);
-
-    // 🎛 Connect settings button to pop-up
-    QObject::connect(btnSettings, &QPushButton::clicked, [centralWidget]() {
-        QDialog *settingsDialog = new QDialog(centralWidget);
-        settingsDialog->setWindowTitle("Settings");
-
-        QVBoxLayout *layout = new QVBoxLayout(settingsDialog);
-        QLabel *label = new QLabel("Settings options will go here.", settingsDialog);
-        layout->addWidget(label);
-
-        settingsDialog->setLayout(layout);
-        settingsDialog->exec();
-    });
 }

@@ -49,6 +49,9 @@ private slots:
     void handleSummarizeButtonClicked();
     void handleSummaryReady();
     void on_addPatientButton_clicked();
+
+public slots:
+    void showSettings();
 };
 
 #endif // MAINWINDOW_H
