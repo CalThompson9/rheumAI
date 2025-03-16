@@ -20,6 +20,7 @@ class LLMClient : public QObject
 public:
     explicit LLMClient(QObject *parent = nullptr);
     void sendRequest(const QString &prompt);
+
 signals:
     void responseReceived(const QString &response);
 
@@ -29,6 +30,9 @@ private slots:
 private:
     QNetworkAccessManager *networkManager;
     QString apiKey;
+    QString userPrompt; // Stores the user prompt for the second request
+
+    void sendLLMRequest(const QString &inputPrompt);
 };
 
 #endif // LLMCLIENT_H

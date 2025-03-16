@@ -1,21 +1,30 @@
+/**
+ * @name transcript.h
+ * @brief Declaration of Transcript class
+ *
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @date Mar. 9, 2025
+ */
+
 #ifndef TRANSCRIPT_H
 #define TRANSCRIPT_H
 
-#include <string>
-#include <ctime>
+#include <QTime>
+#include <QString>
 
 class Transcript
 {
-private:
-    time_t timestamp;
-    std::string content;
 
 public:
-    Transcript(time_t timestamp, std::string content);
+    Transcript(const QTime &timestamp, const QString &content);
+    ~Transcript() = default; // Qt automatically manages memory of QObjects, no need for manual deletion
 
-    time_t getTimestamp() const;
-    std::string getContent() const;
-    std::string toJSON() const;
+    const QTime &getTimestamp() const;
+    const QString &getContent() const;
+
+private:
+    QTime timestamp;
+    QString content;
 };
 
 #endif // TRANSCRIPT_H

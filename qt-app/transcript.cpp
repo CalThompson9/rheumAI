@@ -1,20 +1,34 @@
+/**
+ * @name transcript.cpp
+ * @brief Definition of Transcript class
+ *
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @date Mar. 9, 2025
+ */
+
 #include "transcript.h"
 
-Transcript::Transcript(time_t timestamp, std::string content)
-    : timestamp(timestamp), content(content) {}
+Transcript::Transcript(const QTime &timestamp, const QString &content) : timestamp(timestamp), content(content)
+{
+    // No logic body
+}
 
-time_t Transcript::getTimestamp() const
+/**
+ * @name getTimestamp
+ * @brief Get a read-only version of the transcript timestamp
+ * @return Transcript timestamp
+ */
+const QTime &Transcript::getTimestamp() const
 {
     return timestamp;
 }
 
-std::string Transcript::getContent() const
+/**
+ * @name getContent
+ * @brief Get a read-only version of the transcript content
+ * @return Transcript content
+ */
+const QString &Transcript::getContent() const
 {
     return content;
-}
-
-std::string Transcript::toJSON() const
-{
-    return "{\"timestamp\": " + std::to_string(timestamp) +
-           ", \"content\": \"" + content + "\"}";
 }

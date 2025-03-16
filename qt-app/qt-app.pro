@@ -16,9 +16,13 @@ SOURCES += \
     mainwindow.cpp \
     patientrecord.cpp \
     windowbuilder.cpp \
-    summary.cpp \
     transcript.cpp \
-    audiohandler.cpp
+    summary.cpp \
+    audiohandler.cpp \
+    summarygenerator.cpp \
+    summaryformatter.cpp \
+    detailedsummaryformatter.cpp \
+    concisesummaryformatter.cpp
 
 HEADERS += \
     api.h \
@@ -27,9 +31,13 @@ HEADERS += \
     mainwindow.h \
     patientrecord.h \
     windowbuilder.h \
-    summary.h \
     transcript.h \
-    audiohandler.h
+    summary.h \
+    audiohandler.h \
+    summarygenerator.h \
+    summaryformatter.h \
+    detailedsummaryformatter.h \
+    concisesummaryformatter.h
 
 FORMS += \
     mainwindow.ui

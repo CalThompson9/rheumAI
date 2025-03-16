@@ -74,6 +74,7 @@ PatientRecord FileHandler::loadPatientRecord(int patientID) {
     file.close();
 
     QJsonDocument doc = QJsonDocument::fromJson(fileData);
+    qDebug() << "Patient record loaded for ID:" << patientID;
     return PatientRecord::fromJSON(doc.object());
 }
 
@@ -103,13 +104,13 @@ void FileHandler::saveTranscriptToJson() {
 }
 
 
-    QString FileHandler::getTranscriptFilename() const {
-        return transcriptFilename;
-    }
+QString FileHandler::getTranscriptFilename() const {
+    return transcriptFilename;
+}
 
-    QString FileHandler::getJsonFilename() const {
-        return jsonFilename;
-    }
+QString FileHandler::getJsonFilename() const {
+    return jsonFilename;
+}
 
 
 // Read JSON and print it
@@ -125,6 +126,5 @@ void FileHandler::loadPatientJson() {
 
     QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
     QJsonObject jsonObj = jsonDoc.object();
-
-    qDebug() << "Loaded JSON:\n" << jsonDoc.toJson(QJsonDocument::Indented);
+    qDebug() << "Loaded JSON data:" << jsonObj;
 }

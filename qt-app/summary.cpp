@@ -8,92 +8,114 @@
 
 #include "summary.h"
 
-Summary::Summary(QObject *parent) : QObject(parent)
+/**
+ * @name Summary (Default Constructor)
+ * @brief Creates an empty Summary object
+ */
+Summary::Summary() 
+    : intervalHistory(""), 
+      physicalExamination(""), 
+      currentStatus(""), 
+      plan("")
 {
-    // No logic body; QStrings get initialized to null by default
-}
-
-Summary::~Summary()
-{
-    // Qt automatically manages memory of QObjects, no need for manual deletion
+    // Default constructor initializes empty strings
 }
 
 /**
- * @name getSymptoms
- * @brief Get summary of symptoms
- * @return Summary of symptoms
+ * @name Summary (Copy Constructor)
+ * @brief Creates a copy of a Summary
+ * @param[in] other: Summary object to copy
  */
-const QString& Summary::getSymptoms()
+Summary::Summary(const Summary& other)
+    : intervalHistory(other.intervalHistory),
+      physicalExamination(other.physicalExamination),
+      currentStatus(other.currentStatus),
+      plan(other.plan)
 {
-    return symptoms;
 }
 
 /**
- * @name getDiagnoses
- * @brief Get summary of diagnoses
- * @return Summary of diagnoses
+ * @name operator=
+ * @brief Assigns one Summary to another
+ * @param[in] original: Summary to copy
+ * @return Reference to the updated Summary object
  */
-const QString& Summary::getDiagnoses()
+Summary& Summary::operator=(const Summary& original)
 {
-    return diagnoses;
+    if (this != &original) // Prevent self-assignment
+    {
+        intervalHistory = original.intervalHistory;
+        physicalExamination = original.physicalExamination;
+        currentStatus = original.currentStatus;
+        plan = original.plan;
+    }
+    return *this;
 }
 
 /**
- * @name getMedicalHistory
- * @brief Get summary of medical history
- * @return Summary of medical history
+ * @name clear
+ * @brief Clears all fields of the summary
  */
-const QString& Summary::getMedicalHistory()
+void Summary::clear()
 {
-    return medicalHistory;
+    intervalHistory.clear();
+    physicalExamination.clear();
+    currentStatus.clear();
+    plan.clear();
 }
 
 /**
- * @name getTreatmentPlans
- * @brief Get summary of treatment plans
- * @return Summary of treatment plans
+ * @name getIntervalHistory
+ * @brief Retrieves the interval history section of the summary
+ * @return Interval history section
  */
-const QString& Summary::getTreatmentPlans()
-{
-    return treatmentPlans;
-}
+const QString& Summary::getIntervalHistory() const { return intervalHistory; }
 
 /**
- * @name setSymptoms
- * @brief Sets the symptoms summary
- * @param[in] newSymptoms: Symptoms summary
+ * @name setIntervalHistory
+ * @brief Sets the interval history section of the summary
+ * @param[in] newIntervalHistory: New interval history section
  */
-void Summary::setSymptoms(const QString& newSymptoms)
-{
-    symptoms = newSymptoms;
-}
+void Summary::setIntervalHistory(const QString& newIntervalHistory) { intervalHistory = newIntervalHistory; }
 
 /**
- * @name setDiagnoses
- * @brief Sets the diagnoses summary
- * @param[in] newDiagnoses: Diagnoses summary
+ * @name getPhysicalExamination
+ * @brief Retrieves the physical examination section of the summary
+ * @return Physical examination section
  */
-void Summary::setDiagnoses(const QString& newDiagnoses)
-{
-    diagnoses = newDiagnoses;
-}
+const QString& Summary::getPhysicalExamination() const { return physicalExamination; }
 
 /**
- * @name setMedicalHistory
- * @brief Sets the medical history summary
- * @param[in] newMedicalHistory: Medical history summary
+ * @name setPhysicalExamination
+ * @brief Sets the physical examination section of the summary
+ * @param[in] newPhysicalExamination: New physical examination section
  */
-void Summary::setMedicalHistory(const QString& newMedicalHistory)
-{
-    medicalHistory = newMedicalHistory;
-}
+void Summary::setPhysicalExamination(const QString& newPhysicalExamination) { physicalExamination = newPhysicalExamination; }
 
 /**
- * @name setTreatmentPlans
- * @brief Sets the treatment plans summary
- * @param[in] newTreatmentPlans: Treatment plans summary
+ * @name getCurrentStatus
+ * @brief Retrieves the current status section of the summary
+ * @return Current status section
  */
-void Summary::setTreatmentPlans(const QString& newTreatmentPlans)
-{
-    treatmentPlans = newTreatmentPlans;
-}
+const QString& Summary::getCurrentStatus() const { return currentStatus; }
+
+/**
+ * @name setCurrentStatus
+ * @brief Sets the current status section of the summary
+ * @param[in] newCurrentStatus: New current status section
+ */
+void Summary::setCurrentStatus(const QString& newCurrentStatus) { currentStatus = newCurrentStatus; }
+
+/**
+ * @name getPlan
+ * @brief Retrieves the plan section of the summary
+ * @return Plan section
+ */
+const QString& Summary::getPlan() const { return plan; }
+
+/**
+ * @name setPlan
+ * @brief Sets the plan section of the summary
+ * @param[in] newPlan: New plan section
+ */
+void Summary::setPlan(const QString& newPlan) { plan = newPlan; }

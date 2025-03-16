@@ -2,8 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMenu>
 #include "windowbuilder.h"
 #include "llmclient.h"
+#include "summary.h"
+#include "summaryformatter.h"
+#include "summarygenerator.h"
 
 class MainWindow : public QMainWindow
 {
@@ -12,6 +16,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void setSummaryFormatter(SummaryFormatter* summaryFormatter);
+    void displaySummary(const Summary& summary);
 
 private:
     QWidget *centralWidget;
@@ -23,20 +30,25 @@ private:
     QLabel *lblPatientName;
     QComboBox *comboSelectPatient;
     QPushButton *btnRecord;
+    QPushButton *btnSummarize;
     QPushButton *btnAddPatient;
     QTextEdit *textTranscription;
-
-
-    // Backend LLM
-    LLMClient *llmClient;
+    QPushButton *selectSummaryLayout;
+    QMenu* summaryLayoutOptions;
+    QVBoxLayout *summarySection;
 
     // Layout
     QVBoxLayout *mainLayout;
 
-private slots:
-    void handleLLMResponse(const QString &response);
-    void on_addPatientButton_clicked();
+    SummaryFormatter *summaryFormatter;
+    SummaryGenerator *summaryGenerator;
+    Summary testSummary;
 
+private slots:
+    void handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter);
+    void handleSummarizeButtonClicked();
+    void handleSummaryReady();
+    void on_addPatientButton_clicked();
 };
 
 #endif // MAINWINDOW_H

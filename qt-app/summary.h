@@ -4,37 +4,45 @@
  * 
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 6, 2025
+ * 
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @date Mar. 12, 2025
  */
 
 #ifndef SUMMARY_H
 #define SUMMARY_H
 
-#include <QObject>
+#include <QString>
 
-class Summary : public QObject
+class Summary
 {
-    Q_OBJECT
+public:
+    Summary();
+    Summary(const Summary& other);
+    ~Summary() = default;
 
-    public:
-        explicit Summary(QObject *parent = nullptr);
-        ~Summary();
+    Summary& operator=(const Summary& original);
 
-        const QString& getSymptoms();
-        const QString& getDiagnoses();
-        const QString& getMedicalHistory();
-        const QString& getTreatmentPlans();
+    const QString& getIntervalHistory() const;
+    void setIntervalHistory(const QString& intervalHistory);
+    
+    const QString& getPhysicalExamination() const;
+    void setPhysicalExamination(const QString& physicalExamination);
+    
+    const QString& getCurrentStatus() const;
+    void setCurrentStatus(const QString& currentStatus);
+    
+    const QString& getPlan() const;
+    void setPlan(const QString& plan);
+    
 
-        void setSymptoms(const QString& symptoms);
-        void setDiagnoses(const QString& diagnoses);
-        void setMedicalHistory(const QString& medicalHistory);
-        void setTreatmentPlans(const QString& treatmentPlans);
+    void clear();
 
-    private:
-        QString symptoms;
-        QString diagnoses;
-        QString medicalHistory;
-        QString treatmentPlans;
-
+private:
+    QString intervalHistory;
+    QString physicalExamination;
+    QString currentStatus;
+    QString plan;
 };
 
-#endif
+#endif // SUMMARY_H

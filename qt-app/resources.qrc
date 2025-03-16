@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>sample_transcript.txt</file>
+        <file>llmprompt.txt</file>
     </qresource>
 </RCC>
