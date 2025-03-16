@@ -49,7 +49,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
     // Initialize AudioHandler and connect transcription signal to LLMClient
     AudioHandler *audioHandler = AudioHandler::getInstance();
-    connect(audioHandler, &AudioHandler::transcriptionCompleted, llmClient, &LLMClient::sendRequest);
 
     // Connect "Record" button to start and stop recording
     connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
@@ -64,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
             // Construct absolute path to output.wav
             QString filePath = QDir(projectDir).filePath("output.wav");
 
-            audioHandler->transcribe(filePath.toStdString());
+            audioHandler->transcribe(filePath);
             btnRecord->setText("Start Recording");
         }
         else
@@ -73,6 +72,8 @@ MainWindow::MainWindow(QWidget *parent)
             btnRecord->setText("Stop Recording");
         }
         isRecording = !isRecording; });
+
+    connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
     // THIS IS A MOCK FUNCTION CALL JUST FOR TESTING ON PROGRAM START
     handleSummarizeButtonClicked();

@@ -1,15 +1,24 @@
+/**
+ * @file audiohandler.cpp
+ * @brief Definition of AudioHandler class
+ *
+ * Handles audio recording and transcription using Google Speech-to-Text API.
+ *
+ * @author Andres Pedreros Castro (apedrero@uwo.ca)
+ * @date Mar. 6, 2025
+ */
+
 #include "audiohandler.h"
 
-#include <QAudioSource>
-#include <QDebug>
-#include <QProcess>
-#include <Qlabel>
-
 // Replace with your Google Cloud API key and endpoint
-const std::string API_URL = "https://speech.googleapis.com/v1/speech:recognize";
+const QString API_URL = "https://speech.googleapis.com/v1/speech:recognize";
 
 AudioHandler *AudioHandler::instance = nullptr;
 
+/**
+ * @name AudioHandler (Constructor)
+ * @brief Initializes the AudioHandler instance
+ */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
     networkManager = new QNetworkAccessManager(this);
@@ -17,10 +26,15 @@ AudioHandler::AudioHandler() : QObject(nullptr)
     captureSession.setRecorder(&recorder);     // Add this line
 
     // Connect mediaFormatChanged signal to a slot to print a message
-    connect(&recorder, &QMediaRecorder::audioChannelCountChanged, this, []()
-            { qDebug() << "Media format has changed. sample rate is "; });
+    // connect(&recorder, &QMediaRecorder::audioChannelCountChanged, this, []()
+    //         { qDebug() << "Media format has changed. sample rate is "; });
 }
 
+/**
+ * @name getInstance
+ * @brief Returns the singleton instance of AudioHandler
+ * @return Singleton instance of AudioHandler
+ */
 AudioHandler *AudioHandler::getInstance()
 {
     if (!instance)
@@ -30,53 +44,64 @@ AudioHandler *AudioHandler::getInstance()
     return instance;
 }
 
-Transcript AudioHandler::transcribe(const std::string &filename)
+/**
+ * @name transcribe
+ * @brief Transcribes the audio file using Google Speech-to-Text API
+ * @param[in] filename: Path to the audio file
+ * @return Transcript object containing the transcribed text
+ */
+Transcript AudioHandler::transcribe(const QString &filename)
 {
-    std::string response = sendToGoogleSpeechAPI(filename);
-    if (response.empty())
+    QString response = sendToGoogleSpeechAPI(filename);
+    if (response.isEmpty())
     {
         emit transcriptionCompleted("Transcription failed");
         return Transcript(getCurrentTime(), "");
     }
 
     // Parse JSON response from Google Speech-to-Text
-    QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromStdString(response));
+    QJsonDocument doc = QJsonDocument::fromJson(response.toUtf8());
     if (!doc.isObject())
     {
-        std::cerr << "Invalid JSON response" << std::endl;
+        qDebug() << "Invalid JSON response";
         emit transcriptionCompleted("Invalid response format");
         return Transcript(getCurrentTime(), "");
     }
 
     QJsonObject jsonObj = doc.object();
     QJsonArray results = jsonObj["results"].toArray();
-    std::string transcribedText;
+    QString transcribedText;
     for (const QJsonValue &result : results)
     {
         QJsonObject resObj = result.toObject();
         QJsonArray alternatives = resObj["alternatives"].toArray();
         if (!alternatives.isEmpty())
         {
-            transcribedText += alternatives[0].toObject()["transcript"].toString().toStdString();
+            transcribedText += alternatives[0].toObject()["transcript"].toString();
         }
     }
 
-    QString qText = QString::fromStdString(transcribedText);
-    emit transcriptionCompleted(qText);
+    emit transcriptionCompleted(transcribedText);
     return Transcript(getCurrentTime(), transcribedText);
 }
 
-std::string AudioHandler::sendToGoogleSpeechAPI(const std::string &audioPath)
+/**
+ * @name sendToGoogleSpeechAPI
+ * @brief Sends the audio file to Google Speech-to-Text API for transcription
+ * @param[in] audioPath: Path to the audio file
+ * @return Response from the API as a string
+ */
+QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
 {
-    QUrl url(QString::fromStdString(API_URL + "?key=" + AUDIO_API_KEY));
+    QUrl url(API_URL + QString::fromStdString("?key=") + QString::fromStdString(AUDIO_API_KEY));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     // Read audio file
-    QFile file(QString::fromStdString(audioPath));
+    QFile file(audioPath);
     if (!file.open(QIODevice::ReadOnly))
     {
-        std::cerr << "Could not open audio file: " << audioPath << std::endl;
+        qDebug() << "Could not open audio file: " << audioPath;
         return "";
     }
     QByteArray audioData = file.readAll();
@@ -108,32 +133,26 @@ std::string AudioHandler::sendToGoogleSpeechAPI(const std::string &audioPath)
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     loop.exec();
 
-    std::string response;
+    QString response;
     if (reply->error() == QNetworkReply::NoError)
     {
-        response = reply->readAll().toStdString();
-        std::cout << "API Response: " << response << std::endl;
+        response = reply->readAll();
+        qDebug() << "API Response: " << response;
     }
     else
     {
-        std::cerr << "Request failed: " << reply->errorString().toStdString() << std::endl;
+        qDebug() << "Request failed: " << reply->errorString();
     }
 
     reply->deleteLater();
     return response;
 }
 
-void AudioHandler::recompileResource()
-{
-    // Create dynamic resource loader
-    QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
-    DynamicResourceLoader loader("resources.qrc", "resources.cpp");
-
-    // Add a resource dynamically
-    loader.addResource("output.wav", "");
-    loader.loadResources();
-}
-
+/**
+ * @name startRecording
+ * @brief Starts audio recording
+ * @param[in] outputFile: Path to the output file
+ */
 void AudioHandler::startRecording(const QString &outputFile)
 {
     recorder.setQuality(QMediaRecorder::HighQuality);
@@ -146,36 +165,50 @@ void AudioHandler::startRecording(const QString &outputFile)
     format.setFileFormat(QMediaFormat::Wave);
 
     recorder.setMediaFormat(format);
-    qDebug() << "Media format has changed. from MEDIA FORMAT ";
     recorder.setAudioSampleRate(16000);
-    qDebug() << "Media format has changed. from SAMPLE RATE ";
     recorder.setAudioChannelCount(1);
-    qDebug() << "Media format has changed. from AUDIO CHANEL ";
 
     recorder.record();
-    qDebug() << "Media format has changed. from Record " << recorder.audioSampleRate();
+    // qDebug() << "Media format has changed. from Record " << recorder.audioSampleRate();
 
-    qDebug() << "Recording started with sample rate" << recorder.audioChannelCount();
+    // qDebug() << "Recording started with sample rate" << recorder.audioChannelCount();
 }
 
+/**
+ * @name pauseRecording
+ * @brief Pauses audio recording
+ */
 void AudioHandler::pauseRecording()
 {
     recorder.pause();
 }
 
+/**
+ * @name resumeRecording
+ * @brief Resumes audio recording
+ */
 void AudioHandler::resumeRecording()
 {
     recorder.record();
 }
 
+/**
+ * @name stopRecording
+ * @brief Stops audio recording
+ */
 void AudioHandler::stopRecording()
 {
     recorder.stop();
-    qDebug() << "Recording ended with sample rate" << recorder.audioSampleRate();
-    qDebug() << "Recording ended with channel" << recorder.audioChannelCount();
+    // qDebug() << "Recording ended with sample rate" << recorder.audioSampleRate();
+    // qDebug() << "Recording ended with channel" << recorder.audioChannelCount();
 }
 
-time_t AudioHandler::getCurrentTime()
+/**
+ * @name getCurrentTime
+ * @brief Retrieves the current time
+ * @return Current time
+ */
+QTime AudioHandler::getCurrentTime()
 {
-    return std::time(nullptr);
+    return QTime::currentTime();
 }
