@@ -52,12 +52,12 @@ signals:
     void transcriptionCompleted(const QString &transcribedText); // Signal for transcription completion
 
 private:
-    const QString API_KEY = QString::fromStdString(AUDIO_API_KEY);                                       // API key for Google Speech API
+    const QString API_KEY = AUDIO_API_KEY;                                                               // API key for Google Speech API
     const QString API_URL = QString::fromStdString("https://speech.googleapis.com/v1/speech:recognize"); // API URL for Google Speech API
     QNetworkAccessManager *networkManager;                                                               // Network manager for API requests
 
     QString sendToGoogleSpeechAPI(const QString &audioPath); // Send audio to Google Speech API
-    QTime getCurrentTime();                                  // Get current time
+    QTime getCurrentTime() const;                            // Get current time
     QString outputFilePath;                                  // Output file path for recording
     QMediaRecorder recorder;                                 // Media recorder for audio
     QMediaCaptureSession captureSession;                     // Media capture session
