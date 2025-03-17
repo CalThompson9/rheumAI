@@ -85,3 +85,6 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+
+# Api
+api.h

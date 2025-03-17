@@ -11,6 +11,7 @@
 #include <QUrl>
 #include <QDebug>
 #include <QFile>
+#include <api.h>
 
 class LLMClient : public QObject
 {
@@ -29,7 +30,7 @@ private slots:
 private:
     QNetworkAccessManager *networkManager;
     QString apiKey;
-    QString userPrompt;  // Stores the user prompt for the second request
+    QString userPrompt; // Stores the user prompt for the second request
 
     void sendLLMRequest(const QString &inputPrompt);
 };
