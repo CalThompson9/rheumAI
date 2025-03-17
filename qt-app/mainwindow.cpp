@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "llmclient.h"
+#include "audiohandler.h"
 #include "detailedsummaryformatter.h"
 #include "concisesummaryformatter.h"
 #include "filehandler.h"
@@ -20,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Use WindowBuilder to set up UI
     WindowBuilder::setupUI(centralWidget, btnConnectDevice, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
-                           btnRecord, btnSummarize, textTranscription, 
+                           btnRecord, btnSummarize, textTranscription,
                            selectSummaryLayout, summarySection,
                            mainLayout, btnAddPatient);
 
@@ -32,12 +33,10 @@ MainWindow::MainWindow(QWidget *parent)
     selectSummaryLayout->setMenu(summaryLayoutOptions);
 
     // Connect selection of each option to update summary layout format
-    connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
-        handleSummaryLayoutChanged(new DetailedSummaryFormatter);
-    });
-    connect(optionConciseLayout, &QAction::triggered, this, [=]() {
-        handleSummaryLayoutChanged(new ConciseSummaryFormatter);
-    });
+    connect(optionDetailedLayout, &QAction::triggered, this, [=]()
+            { handleSummaryLayoutChanged(new DetailedSummaryFormatter); });
+    connect(optionConciseLayout, &QAction::triggered, this, [=]()
+            { handleSummaryLayoutChanged(new ConciseSummaryFormatter); });
 
     // Initialize summary layout formatter
     summaryFormatter = new DetailedSummaryFormatter;
@@ -48,6 +47,33 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect the signal to process the generated summary when ready
     connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
+    // Initialize AudioHandler and connect transcription signal to LLMClient
+    AudioHandler *audioHandler = AudioHandler::getInstance();
+
+    // Connect "Record" button to start and stop recording
+    connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
+            {
+        static bool isRecording = false;
+        if (isRecording)
+        {
+            audioHandler->stopRecording();
+            QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
+
+
+            // Construct absolute path to output.wav
+            QString filePath = QDir(projectDir).filePath("output.wav");
+
+            audioHandler->transcribe(filePath);
+            btnRecord->setText("Start Recording");
+        }
+        else
+        {
+            audioHandler->startRecording("output.wav");
+            btnRecord->setText("Stop Recording");
+        }
+        isRecording = !isRecording; });
+
+    connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
     // THIS IS A MOCK FUNCTION CALL JUST FOR TESTING ON PROGRAM START
     handleSummarizeButtonClicked();
@@ -62,15 +88,15 @@ MainWindow::MainWindow(QWidget *parent)
  * @param[in] summaryFormatter: Summary formatter corresponding to the selected
  * layout style
  */
-void MainWindow::handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter)
+void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
 {
     // Display summary with selected layout format
     setSummaryFormatter(summaryFormatter);
     displaySummary(summaryGenerator->getSummary());
 
     // Update options menu
-    QAction* selectedOption = qobject_cast<QAction*>(sender());
-    for (QAction* layoutAction : summaryLayoutOptions->actions())
+    QAction *selectedOption = qobject_cast<QAction *>(sender());
+    for (QAction *layoutAction : summaryLayoutOptions->actions())
     {
         layoutAction->setEnabled(layoutAction != selectedOption);
     }
@@ -85,14 +111,15 @@ void MainWindow::handleSummarizeButtonClicked()
 {
     // Create a new transcript for LLM summarization
     QFile file(":/sample_transcript.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         qWarning() << "Failed to open. Request aborted.";
         return;
     }
     QString sample_transcript = QTextStream(&file).readAll().trimmed();
     file.close();
 
-    Transcript* testTranscript = new Transcript(QTime::currentTime(), sample_transcript);
+    Transcript *testTranscript = new Transcript(QTime::currentTime(), sample_transcript);
 
     // Send the request to the LLM
     summaryGenerator->sendRequest(*testTranscript);
@@ -115,8 +142,9 @@ void MainWindow::handleSummaryReady()
  * @name on_addPatientButton_clicked
  * @brief Handles adding a new patient record
  */
-void MainWindow::on_addPatientButton_clicked() {
-    int patientID = 12345;  // Temporary for testing
+void MainWindow::on_addPatientButton_clicked()
+{
+    int patientID = 12345; // Temporary for testing
     QString firstName = "John";
     QString lastName = "Doe";
     QString dateOfBirth = "1990-01-01";
@@ -130,7 +158,7 @@ void MainWindow::on_addPatientButton_clicked() {
  * @brief Set the formatter used to create the summary
  * @param[in] summaryFormatter: Summary layout formatter
  */
-void MainWindow::setSummaryFormatter(SummaryFormatter* newSummaryFormatter)
+void MainWindow::setSummaryFormatter(SummaryFormatter *newSummaryFormatter)
 {
     delete summaryFormatter;
     summaryFormatter = newSummaryFormatter;
@@ -141,7 +169,7 @@ void MainWindow::setSummaryFormatter(SummaryFormatter* newSummaryFormatter)
  * @brief Display summary using the configured layout
  * @param[in] summary: Summary to display
  */
-void MainWindow::displaySummary(const Summary& summary)
+void MainWindow::displaySummary(const Summary &summary)
 {
     summaryFormatter->generateLayout(summary, summarySection);
 }

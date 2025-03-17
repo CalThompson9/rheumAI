@@ -1,4 +1,4 @@
-QT       += core gui network
+QT       += core gui network multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    api.cpp \
     filehandler.cpp \
     llmclient.cpp \
     main.cpp \
@@ -17,12 +18,14 @@ SOURCES += \
     windowbuilder.cpp \
     transcript.cpp \
     summary.cpp \
+    audiohandler.cpp \
     summarygenerator.cpp \
     summaryformatter.cpp \
     detailedsummaryformatter.cpp \
     concisesummaryformatter.cpp
 
 HEADERS += \
+    api.h \
     filehandler.h \
     llmclient.h \
     mainwindow.h \
@@ -30,6 +33,7 @@ HEADERS += \
     windowbuilder.h \
     transcript.h \
     summary.h \
+    audiohandler.h \
     summarygenerator.h \
     summaryformatter.h \
     detailedsummaryformatter.h \

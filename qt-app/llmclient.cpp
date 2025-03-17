@@ -3,19 +3,20 @@
 LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
-    apiKey = "";  // ⚠️ Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY. ⚠️
+    apiKey = GEMINI_API_KEY; // ⚠️Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY.
 
-    if (apiKey.isEmpty()) {
+    if (apiKey.isEmpty())
+    {
         qWarning() << "API Key is empty! Request aborted.";
     }
 
     connect(networkManager, &QNetworkAccessManager::finished, this, &LLMClient::handleNetworkReply);
 }
 
-
 void LLMClient::sendRequest(const QString &prompt)
 {
-    if (apiKey.isEmpty()) {
+    if (apiKey.isEmpty())
+    {
         qWarning() << "API Key is empty! Request aborted.";
         return;
     }
@@ -24,14 +25,16 @@ void LLMClient::sendRequest(const QString &prompt)
 
     // Read the initial prompt from llmprompt.txt
     QFile file(":/llmprompt.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         qWarning() << "Failed to open llmprompt.txt. Request aborted.";
         return;
     }
     initialPrompt = QTextStream(&file).readAll().trimmed();
     file.close();
 
-    if (initialPrompt.isEmpty()) {
+    if (initialPrompt.isEmpty())
+    {
         qWarning() << "Initial prompt is empty! Request aborted.";
         return;
     }
@@ -39,11 +42,10 @@ void LLMClient::sendRequest(const QString &prompt)
     // Combine initial prompt and user prompt
     QString fullPrompt = initialPrompt + "\n\n" + prompt;
 
-    userPrompt = fullPrompt;  // Store user prompt including initial prompt
+    userPrompt = fullPrompt; // Store user prompt including initial prompt
 
     sendLLMRequest(fullPrompt);
 }
-
 
 void LLMClient::sendLLMRequest(const QString &inputPrompt)
 {
@@ -67,69 +69,74 @@ void LLMClient::sendLLMRequest(const QString &inputPrompt)
     generationConfig["temperature"] = 0;
     generationConfig["top_p"] = 1.0;
     generationConfig["top_k"] = 40;
-    requestBody["generationConfig"] = generationConfig;  
+    requestBody["generationConfig"] = generationConfig;
 
     QJsonDocument jsonDoc(requestBody);
     QByteArray jsonData = jsonDoc.toJson();
 
-
     // Send POST request
     networkManager->post(request, jsonData);
 }
-
 
 void LLMClient::handleNetworkReply(QNetworkReply *reply)
 {
     QByteArray responseData = reply->readAll();
     reply->deleteLater(); // Clean up the reply object
 
-    if (reply->error() != QNetworkReply::NoError) {
+    if (reply->error() != QNetworkReply::NoError)
+    {
         qWarning() << "Network error:" << reply->errorString();
         return;
     }
 
     QJsonDocument jsonResponse = QJsonDocument::fromJson(responseData);
-    if (!jsonResponse.isObject()) {
+    if (!jsonResponse.isObject())
+    {
         qWarning() << "Invalid JSON response.";
         return;
     }
 
     QJsonObject jsonObj = jsonResponse.object();
-    if (!jsonObj.contains("candidates") || !jsonObj["candidates"].isArray()) {
+    if (!jsonObj.contains("candidates") || !jsonObj["candidates"].isArray())
+    {
         qWarning() << "No candidates found in response.";
         return;
     }
 
     QJsonArray candidates = jsonObj["candidates"].toArray();
-    if (candidates.isEmpty() || !candidates[0].isObject()) {
+    if (candidates.isEmpty() || !candidates[0].isObject())
+    {
         qWarning() << "Empty candidates list.";
         return;
     }
 
     QJsonObject candidate = candidates[0].toObject();
-    if (!candidate.contains("content") || !candidate["content"].isObject()) {
+    if (!candidate.contains("content") || !candidate["content"].isObject())
+    {
         qWarning() << "No content in response.";
         return;
     }
 
     QJsonObject contentObj = candidate["content"].toObject();
-    if (!contentObj.contains("parts") || !contentObj["parts"].isArray()) {
+    if (!contentObj.contains("parts") || !contentObj["parts"].isArray())
+    {
         qWarning() << "No parts in content.";
         return;
     }
 
     QJsonArray parts = contentObj["parts"].toArray();
-    if (parts.isEmpty() || !parts[0].isObject()) {
+    if (parts.isEmpty() || !parts[0].isObject())
+    {
         qWarning() << "No valid text response found.";
         return;
     }
 
     QString responseText = parts[0].toObject().value("text").toString();
-    if (responseText.isEmpty()) {
+    if (responseText.isEmpty())
+    {
         qWarning() << "Response text is empty.";
         return;
     }
-
 
     // Emit the final response
     emit responseReceived(responseText);
