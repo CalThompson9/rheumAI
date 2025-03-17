@@ -53,7 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
     // THIS IS A MOCK FUNCTION CALL JUST FOR TESTING ON PROGRAM START
     handleSummarizeButtonClicked();
 
-    // Connect Settings button to showing settings menu
+    // Settings
+    settings = new Settings(this, summaryGenerator->llmClient);
     connect(btnSettings, &QPushButton::clicked, this, &MainWindow::showSettings);
 }
 
@@ -156,33 +157,29 @@ void MainWindow::displaySummary(const Summary& summary)
  */
 void MainWindow::showSettings()
 {
-    // Get settings
-    Settings* settings = Settings::getInstance();
-
-    // Setup Layout
+    // Menu Layout
     QDialog *settingsDialog = new QDialog(this);
     settingsDialog->setWindowTitle("Settings");
+    settingsDialog->setGeometry(0, 0, 600, 500);
 
     QVBoxLayout *layout = new QVBoxLayout(settingsDialog);
 
-    // Example: Display and edit the API key.
+    // API Key
     QLabel *label = new QLabel("API Key:", settingsDialog);
     QLineEdit *apiKeyInput = new QLineEdit(settingsDialog);
-    apiKeyInput->setText(settings->getAPIKey());
+
     layout->addWidget(label);
     layout->addWidget(apiKeyInput);
-
-    // Add standard dialog buttons.
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsDialog);
     layout->addWidget(buttonBox);
 
     connect(buttonBox, &QDialogButtonBox::accepted, settingsDialog, &QDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, settingsDialog, &QDialog::reject);
 
-    // Execute the dialog modally.
     if (settingsDialog->exec() == QDialog::Accepted) {
-        // Update settings using the singleton instance.
-        settings->setAPIKey(apiKeyInput->text());
+        if (!apiKeyInput->text().isEmpty()) {
+            settings->setAPIKey(apiKeyInput->text());
+        }
     }
 
     delete settingsDialog;

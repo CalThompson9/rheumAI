@@ -1,10 +1,8 @@
 #include "llmclient.h"
 
 LLMClient::LLMClient(QObject *parent)
-    : QObject(parent), networkManager(new QNetworkAccessManager(this))
+    : QObject(parent), networkManager(new QNetworkAccessManager(this)), apiKey("")
 {
-    apiKey = "";  // ⚠️ Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY. ⚠️
-
     if (apiKey.isEmpty()) {
         qWarning() << "API Key is empty! Request aborted.";
     }
@@ -43,7 +41,6 @@ void LLMClient::sendRequest(const QString &prompt)
 
     sendLLMRequest(fullPrompt);
 }
-
 
 void LLMClient::sendLLMRequest(const QString &inputPrompt)
 {

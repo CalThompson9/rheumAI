@@ -20,6 +20,8 @@ public:
     explicit LLMClient(QObject *parent = nullptr);
     void sendRequest(const QString &prompt);
 
+    friend class Settings;
+
 signals:
     void responseReceived(const QString &response);
 

@@ -41,9 +41,13 @@ private:
     // Layout
     QVBoxLayout *mainLayout;
 
+    // Summarization
     SummaryFormatter *summaryFormatter;
     SummaryGenerator *summaryGenerator;
     Summary testSummary;
+
+    // Settings
+    Settings *settings;
 
 private slots:
     void handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter);

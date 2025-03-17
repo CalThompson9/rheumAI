@@ -1,6 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include "llmclient.h"
 #include <QObject>
 #include <QString>
 #include <QDialog>
@@ -18,20 +19,12 @@ class Settings : public QObject {
     Q_OBJECT
 
 public:
-
     /**
-     * @name getInstance
-     * @brief Returns the static instance of the settings configuration
-     * @return
+     * @name Settings
+     * @brief Constructor for the static settings class
+     * @param parent
      */
-    static Settings* getInstance();
-
-    /**
-     * @name getAPIKey
-     * @brief Returns the LLM Client's API Key
-     * @return ^
-     */
-    QString getAPIKey();
+    Settings(QObject *parent = nullptr, LLMClient *client = nullptr);
 
     /**
      * @name getPeripherals
@@ -45,23 +38,11 @@ public:
      * @brief Allows LLM Client API Key to be set from settings menu.
      * @param key - API Key.
      */
-    void setAPIKey(const QString key);
+    void setAPIKey(const QString newKey);
 
 
 private:
-    /**
-     * @name Settings
-     * @brief Constructor for the static settings class
-     * @param parent
-     */
-    explicit Settings(QObject *parent = nullptr);
-
-    // Disable copy-construction and assignment.
-    Settings(const Settings&) = delete;
-    Settings& operator=(const Settings&) = delete;
-
-    // Settings Variables
-    QString APIKey = "";
+    LLMClient *client;
     QString summaryLayout = "";
     bool connectedPeripherals = false;
 };

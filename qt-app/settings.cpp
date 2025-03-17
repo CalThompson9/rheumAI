@@ -1,24 +1,17 @@
 #include "settings.h"
 
-Settings::Settings(QObject *Parent) :
-    QObject(Parent),
-    APIKey(""),
+/**
+ * @name Settings
+ * @brief Constructor for settings - stores user preferences and configurations.
+ * @param parent - MainWindow
+ * @param llmClient - LLM Client instance
+ */
+Settings::Settings(QObject *parent, LLMClient *llmClient) :
+    QObject(parent),
+    client(llmClient),
     summaryLayout(""),
     connectedPeripherals(false)
 {
-}
-
-Settings* Settings::getInstance() {
-    static Settings instance;  // Constructed only once.
-    return &instance;
-}
-
-/**
- * @brief Settings::getAPIKey
- * @return
- */
-QString Settings::getAPIKey() {
-    return APIKey;
 }
 
 /**
@@ -33,10 +26,6 @@ bool Settings::getPeripherals() {
  * @brief Settings::setAPIKey
  * @param key
  */
-void Settings::setAPIKey(QString key) {
-    // Update varaible storing Key
-    APIKey = key;
-
-    // Apply it to LLM Client
+void Settings::setAPIKey(QString newKey) {
+    client->apiKey = newKey;
 }
-
