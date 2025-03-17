@@ -3,7 +3,7 @@
 LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
-    apiKey = QString::fromStdString(GEMINI_API_KEY); // ⚠️Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY.
+    apiKey = GEMINI_API_KEY; // ⚠️Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY.
 
     if (apiKey.isEmpty())
     {

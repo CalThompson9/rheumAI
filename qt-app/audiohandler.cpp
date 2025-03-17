@@ -93,7 +93,7 @@ Transcript AudioHandler::transcribe(const QString &filename)
  */
 QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
 {
-    QUrl url(API_URL + QString::fromStdString("?key=") + QString::fromStdString(AUDIO_API_KEY));
+    QUrl url(API_URL + QString::fromStdString("?key=") + AUDIO_API_KEY);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -208,7 +208,7 @@ void AudioHandler::stopRecording()
  * @brief Retrieves the current time
  * @return Current time
  */
-QTime AudioHandler::getCurrentTime()
+QTime AudioHandler::getCurrentTime() const
 {
     return QTime::currentTime();
 }
