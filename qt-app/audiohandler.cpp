@@ -113,8 +113,9 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
     // Construct JSON payload
     QJsonObject configObj;
     configObj["encoding"] = "LINEAR16"; // Adjust based on your WAV file
-    configObj["sampleRateHertz"] = 16000;
+    configObj["sampleRateHertz"] = 48000;
     configObj["languageCode"] = "en-CA";
+    configObj["audioChannelCount"] = 2;
 
     QJsonObject audioObj;
     audioObj["content"] = base64Audio;
@@ -163,11 +164,7 @@ void AudioHandler::startRecording(const QString &outputFile)
 
     QMediaFormat format;
     format.setFileFormat(QMediaFormat::Wave);
-
     recorder.setMediaFormat(format);
-    recorder.setAudioSampleRate(16000);
-    recorder.setAudioChannelCount(1);
-
     recorder.record();
     // qDebug() << "Media format has changed. from Record " << recorder.audioSampleRate();
 
