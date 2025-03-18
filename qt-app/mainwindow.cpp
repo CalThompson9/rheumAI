@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
 
     selectSummaryLayout->setMenu(summaryLayoutOptions);
+    selectSummaryLayout->setText("Detailed Layout");
 
     // Connect selection of each option to update summary layout format
     connect(optionDetailedLayout, &QAction::triggered, this, [=]()
@@ -152,6 +153,7 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
     for (QAction *layoutAction : summaryLayoutOptions->actions())
     {
         layoutAction->setEnabled(layoutAction != selectedOption);
+        selectSummaryLayout->setText(selectedOption->text());
     }
 }
 
