@@ -5,8 +5,7 @@ LLMClient::LLMClient(QObject *parent)
 {
     apiKey = GEMINI_API_KEY; // ⚠️Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY.
 
-    if (apiKey.isEmpty())
-    {
+    if (apiKey.isEmpty()) {
         qWarning() << "API Key is empty! Request aborted.";
     }
 

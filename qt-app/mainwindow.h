@@ -32,10 +32,12 @@ private:
     QPushButton *btnRecord;
     QPushButton *btnSummarize;
     QPushButton *btnAddPatient;
+    QPushButton *btnRemovePatient;
     QTextEdit *textTranscription;
     QPushButton *selectSummaryLayout;
     QMenu* summaryLayoutOptions;
     QVBoxLayout *summarySection;
+    LLMClient *llmClient;
 
     // Layout
     QVBoxLayout *mainLayout;
@@ -49,6 +51,12 @@ private slots:
     void handleSummarizeButtonClicked();
     void handleSummaryReady();
     void on_addPatientButton_clicked();
+    void on_patientSelected(int index);
+    void on_removePatientButton_clicked();
+    void loadPatientsIntoDropdown();
+    void handleLLMResponse(const QString &response);
+
+
 };
 
 #endif // MAINWINDOW_H

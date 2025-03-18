@@ -12,16 +12,16 @@ private:
     QString dateOfBirth;
 
 public:
-    PatientRecord();
-    PatientRecord(int id, QString first, QString last, QString dob);
+    PatientRecord(int id, const QString &firstName, const QString &lastName, const QString &dob);
+    PatientRecord(); // Default constructor
 
-    int getPatientID() const;
+    int getID() const;
     QString getFirstName() const;
     QString getLastName() const;
     QString getDateOfBirth() const;
 
-    QJsonObject toJSON() const;
-    static PatientRecord fromJSON(const QJsonObject &obj);
+    QJsonObject toJson() const;
+    static PatientRecord fromJson(const QJsonObject &json);
 };
 
 #endif // PATIENTRECORD_H

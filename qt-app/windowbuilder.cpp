@@ -16,7 +16,8 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&selectSummaryLayout,
                             QVBoxLayout *&summarySection,
                             QVBoxLayout *&mainLayout,
-                            QPushButton *&btnAddPatient)
+                            QPushButton *&btnAddPatient,
+                            QPushButton *&btnRemovePatient)  // 🔹 NEW BUTTON
 {
     // Create UI elements
     btnConnectDevice = new QPushButton("Connect Device", centralWidget);
@@ -28,6 +29,8 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnSummarize = new QPushButton("Summarize", centralWidget);
     textTranscription = new QTextEdit(centralWidget);
     btnAddPatient = new QPushButton("Add Patient", centralWidget);
+    btnRemovePatient = new QPushButton("Remove Patient", centralWidget);  // 🔹 NEW BUTTON
+    textTranscription = new QTextEdit(centralWidget);
     textTranscription->setReadOnly(true);
     QLabel* summaryTitle = new QLabel("Summary");
     selectSummaryLayout = new QPushButton(centralWidget);
@@ -92,6 +95,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     controlsLayout->addWidget(btnRecord);
     controlsLayout->addWidget(btnSummarize);
     controlsLayout->addWidget(btnAddPatient);
+    controlsLayout->addWidget(btnRemovePatient);  //  ADD NEW BUTTON
 
     // Summary layout header and format selection
     summaryHeader->addWidget(summaryTitle);
