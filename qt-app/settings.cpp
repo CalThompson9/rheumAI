@@ -23,9 +23,19 @@ bool Settings::getPeripherals() {
 }
 
 /**
- * @brief Settings::setAPIKey
+ * @brief Settings::setLLMKey
  * @param key
  */
-void Settings::setAPIKey(QString newKey) {
+void Settings::setLLMKey(QString newKey) {
     client->apiKey = newKey;
+    qDebug() << "=== Gemini Key:" << client->apiKey << "===";
+}
+
+/**
+ * @brief Settings::setWsprKey
+ * @param key
+ */
+void Settings::setWsprKey(QString newKey) {
+    //client->apiKey = newKey;
+    qDebug() << "=== Whisper Key:" << newKey << "===";
 }

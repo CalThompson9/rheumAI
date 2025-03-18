@@ -6,7 +6,6 @@
 #include "patientrecord.h"
 #include "transcript.h"
 #include "summarygenerator.h"
-#include "settings.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -157,32 +156,44 @@ void MainWindow::displaySummary(const Summary& summary)
  */
 void MainWindow::showSettings()
 {
-    // Menu Layout
-    QDialog *settingsDialog = new QDialog(this);
-    settingsDialog->setWindowTitle("Settings");
-    settingsDialog->setGeometry(0, 0, 600, 500);
+    // ========== Menu layout ==========
+    QDialog *settingsWindow = new QDialog(this);
+    settingsWindow->setWindowTitle("Settings");
+    settingsWindow->setGeometry(0, 0, 600, 500);
 
-    QVBoxLayout *layout = new QVBoxLayout(settingsDialog);
+    QVBoxLayout *layout = new QVBoxLayout(settingsWindow);
 
-    // API Key
-    QLabel *label = new QLabel("API Key:", settingsDialog);
-    QLineEdit *apiKeyInput = new QLineEdit(settingsDialog);
+    // ========== API keys ==========
+    QLabel *llmLabel = new QLabel("LLM API Key:", settingsWindow);
+    QLineEdit *llmKeyField = new QLineEdit(settingsWindow);
 
-    layout->addWidget(label);
-    layout->addWidget(apiKeyInput);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsDialog);
+    QLabel *wsprLabel = new QLabel("Whisper API Key:", settingsWindow);
+    QLineEdit *wsprKeyField = new QLineEdit(settingsWindow);
+
+    layout->addWidget(llmLabel);
+    layout->addWidget(llmKeyField);
+
+    layout->addWidget(wsprLabel);
+    layout->addWidget(wsprKeyField);
+
+    // ========== Input handling ==========
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, &QDialogButtonBox::accepted, settingsDialog, &QDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, settingsDialog, &QDialog::reject);
+    connect(buttonBox, &QDialogButtonBox::accepted, settingsWindow, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, settingsWindow, &QDialog::reject);
 
-    if (settingsDialog->exec() == QDialog::Accepted) {
-        if (!apiKeyInput->text().isEmpty()) {
-            settings->setAPIKey(apiKeyInput->text());
+    if (settingsWindow->exec() == QDialog::Accepted) {
+        if (!llmKeyField->text().isEmpty()) {
+            settings->setLLMKey(llmKeyField->text());
+        }
+
+        if (!wsprKeyField->text().isEmpty()) {
+            settings->setWsprKey(wsprKeyField->text());
         }
     }
 
-    delete settingsDialog;
+    delete settingsWindow;
 }
 
 MainWindow::~MainWindow()

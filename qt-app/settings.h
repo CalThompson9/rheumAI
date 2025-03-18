@@ -38,7 +38,14 @@ public:
      * @brief Allows LLM Client API Key to be set from settings menu.
      * @param key - API Key.
      */
-    void setAPIKey(const QString newKey);
+    void setLLMKey(const QString newKey);
+
+    /**
+     * @name setWsprKey
+     * @brief Allows Whisper Client API Key to be set from settings menu.
+     * @param key - API Key.
+     */
+    void setWsprKey(const QString newKey);
 
 
 private:
