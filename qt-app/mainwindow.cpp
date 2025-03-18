@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     WindowBuilder::setupUI(centralWidget, btnConnectDevice, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
-                           btnRecord, btnSummarize, textTranscription,
+                           btnRecord, btnSummarize,
                            selectSummaryLayout, summarySection,
                            mainLayout, btnAddPatient, btnRemovePatient);
 
