@@ -48,7 +48,6 @@ void SummaryGenerator::sendRequest(Transcript &prompt)
  */
 void SummaryGenerator::handleLLMResponse(const QString &response)
 {
-    qDebug() << "🔍 LLM Response: " << response;
 
     summarizeIntervalHistory(response);
     summarizePhysicalExamination(response);
