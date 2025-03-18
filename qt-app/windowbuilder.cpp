@@ -2,6 +2,7 @@
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QScrollArea>
 
 void WindowBuilder::setupUI(QWidget *centralWidget,

@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QDialogButtonBox>
+#include <QCheckBox>
 
 class WindowBuilder {
 public:
@@ -28,7 +29,6 @@ public:
                         QVBoxLayout *&summarySection,
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient);
-
 };
 
 #endif // WINDOWBUILDER_H
