@@ -7,8 +7,8 @@
 #include "patientrecord.h"
 #include "transcript.h"
 #include "summarygenerator.h"
-#include "addpatientdialog.h"  // 🔹 Ensure this file exists!
-#include <QMessageBox>         // 🔹 Required for popup warnings
+#include "addpatientdialog.h"
+#include <QMessageBox> 
 
 
 MainWindow::MainWindow(QWidget *parent)
