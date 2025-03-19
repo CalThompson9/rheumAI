@@ -104,19 +104,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
         btnRecord->setText(isRecording ? "Stop Recording" : "Record");
     });
 
-    // Settings button functionality
-    QObject::connect(btnSettings, &QPushButton::clicked, [centralWidget]() {
-        QDialog *settingsDialog = new QDialog(centralWidget);
-        settingsDialog->setWindowTitle("Settings");
-
-        QVBoxLayout *layout = new QVBoxLayout(settingsDialog);
-        QLabel *label = new QLabel("Settings options will go here.", settingsDialog);
-        layout->addWidget(label);
-
-        settingsDialog->setLayout(layout);
-        settingsDialog->exec();
-    });
-
     // Layouts
     mainLayout = new QVBoxLayout(centralWidget);
     QHBoxLayout *topBarLayout = new QHBoxLayout();
