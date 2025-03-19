@@ -46,6 +46,8 @@ private:
     SummaryGenerator *summaryGenerator;
     Summary testSummary;
 
+    QString currentTranscriptText;
+
 private slots:
     void handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter);
     void handleSummarizeButtonClicked();

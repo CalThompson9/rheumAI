@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     summaryLayoutOptions = new QMenu(this);
     QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
     QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
+    QAction *optionPlainLayout = summaryLayoutOptions->addAction("Plain Text");
 
     selectSummaryLayout->setMenu(summaryLayoutOptions);
     selectSummaryLayout->setText("Detailed Layout");
@@ -40,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
             { handleSummaryLayoutChanged(new DetailedSummaryFormatter); });
     connect(optionConciseLayout, &QAction::triggered, this, [=]()
             { handleSummaryLayoutChanged(new ConciseSummaryFormatter); });
+    connect(optionPlainLayout, &QAction::triggered, this, [=]()
+            { handleSummaryLayoutChanged(nullptr); });
 
     // Initialize summary layout formatter
     summaryFormatter = new DetailedSummaryFormatter;
@@ -144,12 +147,29 @@ void MainWindow::handleLLMResponse(const QString &response)
  */
 void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
 {
-    // Display summary with selected layout format
-    setSummaryFormatter(summaryFormatter);
-    displaySummary(summaryGenerator->getSummary());
+    QAction *selectedOption = qobject_cast<QAction *>(sender());
+    if (selectedOption->text() == "Plain Text")
+    {
+        // Display the current transcript text directly
+        QLayoutItem *child;
+        while ((child = summarySection->takeAt(0)) != nullptr) {
+            delete child->widget();
+            delete child;
+        }
+        QLabel *transcriptLabel = new QLabel(currentTranscriptText);
+        QWidget *transcriptWidget = new QWidget;
+        QVBoxLayout *transcriptLayout = new QVBoxLayout(transcriptWidget);
+        transcriptLayout->addWidget(transcriptLabel);
+        summarySection->addWidget(transcriptWidget);
+    }
+    else
+    {
+        // Display summary with selected layout format
+        setSummaryFormatter(summaryFormatter);
+        displaySummary(summaryGenerator->getSummary());
+    }
 
     // Update options menu
-    QAction *selectedOption = qobject_cast<QAction *>(sender());
     for (QAction *layoutAction : summaryLayoutOptions->actions())
     {
         layoutAction->setEnabled(layoutAction != selectedOption);
@@ -171,13 +191,16 @@ void MainWindow::handleSummarizeButtonClicked()
         qWarning() << "Failed to open. Request aborted.";
         return;
     }
-    QString sample_transcript = QTextStream(&file).readAll().trimmed();
+    currentTranscriptText = QTextStream(&file).readAll().trimmed();
     file.close();
 
-    Transcript *testTranscript = new Transcript(QTime::currentTime(), sample_transcript);
+    // ANDRES: THIS IS WHERE THE TRANSCRIPT IS CREATED, 
+    // AUDIOHANDLER NEEDS TO BE ABLE TO GET THE TRANSCRIPT INTO THIS FUNCTION
+
+    Transcript *transcript = new Transcript(QTime::currentTime(), currentTranscriptText);
 
     // Send the request to the LLM
-    summaryGenerator->sendRequest(*testTranscript);
+    summaryGenerator->sendRequest(*transcript);
 }
 
 /**
