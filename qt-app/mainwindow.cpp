@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
 
-    WindowBuilder::setupUI(centralWidget, btnConnectDevice, btnSettings,
+    WindowBuilder::setupUI(centralWidget, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
                            selectSummaryLayout, summarySection,
@@ -63,14 +63,18 @@ MainWindow::MainWindow(QWidget *parent)
     summaryFormatter = new DetailedSummaryFormatter;
     optionDetailedLayout->setEnabled(false);
 
-
     // Initialize SummaryGenerator
     summaryGenerator = new SummaryGenerator(this);
 
     // Connect the signal to process the generated summary when ready
     connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
+
     // Initialize AudioHandler and connect transcription signal to LLMClient
     AudioHandler *audioHandler = AudioHandler::getInstance();
+
+    // Settings
+    settings = new Settings(this, summaryGenerator->llmClient, audioHandler);
+    connect(btnSettings, &QPushButton::clicked, this, &MainWindow::showSettings);
 
     // Connect "Record" button to start and stop recording
     connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
@@ -96,8 +100,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
-    // THIS IS A MOCK FUNCTION CALL JUST FOR TESTING ON PROGRAM START
-    handleSummarizeButtonClicked();
+    //handleSummarizeButtonClicked();
 
     llmClient = new LLMClient(this);
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
@@ -105,11 +108,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(btnRemovePatient, &QPushButton::clicked, this, &MainWindow::on_removePatientButton_clicked);
     connect(comboSelectPatient, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_patientSelected);
 
-
     // Connect "Record" button to LLM API request
 
     // NEW: Load existing patients on startup**
-     loadPatientsIntoDropdown();
+    loadPatientsIntoDropdown();
 
     connect(btnRecord, &QPushButton::clicked, this, [this]() {
         //llmClient->sendRequest("Hello, AI! How are you?");
@@ -254,6 +256,308 @@ void MainWindow::setSummaryFormatter(SummaryFormatter *newSummaryFormatter)
 void MainWindow::displaySummary(const Summary &summary)
 {
     summaryFormatter->generateLayout(summary, summarySection);
+}
+
+/**
+ * @brief Handles constructing the settings pop-up menu.
+ * @todo MOVE FUNCTION TO SETTINGS OR WINDOWBUILDER FOR CLEARER CODE STRUCTURE
+ */
+void MainWindow::showSettings()
+{
+    // ========== Layout ==========
+    QDialog *settingsWindow = new QDialog(this);
+    settingsWindow->setWindowTitle("Settings");
+    settingsWindow->setGeometry(0, 0, 800, 250);
+    settingsWindow->adjustSize();
+
+    QRect parentRect = this->geometry();
+    QSize dialogSize = settingsWindow->size();
+
+    int x = parentRect.x() + ((parentRect.width()-dialogSize.width()) / 2);
+    int y = parentRect.y() + ((parentRect.height()-dialogSize.height()) / 2);
+
+    settingsWindow->move(x, y);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(settingsWindow);
+
+    // ========== Connected Peripherals ==========
+    QVBoxLayout *peripheralsLayout = new QVBoxLayout();
+    QLabel *cpLabel = new QLabel("Connected Peripherals:", settingsWindow);
+    peripheralsLayout->addWidget(cpLabel);
+
+    QTextEdit *peripheralsField = new QTextEdit(settingsWindow);
+    peripheralsField->setReadOnly(true);
+    peripheralsField->setFixedHeight(60); // Adjust height as needed
+    peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
+
+    // #################### TODO: Add microphone checking ####################
+    if (true) {
+        peripheralsField->setText("Microphone ✅");
+    } else {
+        peripheralsField->setText("Microphone ❌");
+    }
+
+    peripheralsLayout->addWidget(peripheralsField);
+    mainLayout->addLayout(peripheralsLayout);
+
+    // ========== LLM API Key ==========
+    QHBoxLayout *llmLayout = new QHBoxLayout();
+    QLabel *llmLabel = new QLabel("Summarizer API Key:", settingsWindow);
+    QLineEdit *llmKeyField = new QLineEdit(settingsWindow);
+    llmKeyField->setText(settings->llmKey);
+    QDialogButtonBox *llmButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
+
+    llmLayout->addWidget(llmLabel);
+    llmLayout->addWidget(llmKeyField);
+    llmLayout->addWidget(llmButtonBox);
+    mainLayout->addLayout(llmLayout);
+
+    connect(llmButtonBox, &QDialogButtonBox::accepted, this, [=]() {
+        if (!llmKeyField->text().isEmpty()) {
+            settings->setLLMKey(llmKeyField->text());
+            handleSummarizeButtonClicked();
+        } else {
+            qWarning() << "This field cannot be empty.";
+        }
+    });
+    connect(llmButtonBox, &QDialogButtonBox::rejected, this, [=]() {
+        llmKeyField->clear();
+    });
+
+    // ========== Audio Handler API Key ==========
+    QHBoxLayout *audioLayout = new QHBoxLayout();
+    QLabel *audioLabel = new QLabel("Transcriber API Key:", settingsWindow);
+    QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
+    audioKeyField->setText(settings->audioKey);
+    QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
+
+    audioLayout->addWidget(audioLabel);
+    audioLayout->addWidget(audioKeyField);
+    audioLayout->addWidget(audioButtonBox);
+    mainLayout->addLayout(audioLayout);
+
+    connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
+        if (!audioKeyField->text().isEmpty()) {
+            settings->setAudioKey(audioKeyField->text());
+            handleSummarizeButtonClicked();
+        } else {
+            qWarning() << "This field cannot be empty.";
+        }
+    });
+    connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
+        audioKeyField->clear();
+    });
+
+    // ========== Save & Close ==========
+    QPushButton *saveCloseButton = new QPushButton("Close", settingsWindow);
+    mainLayout->addWidget(saveCloseButton);
+
+    connect(saveCloseButton, &QPushButton::clicked, settingsWindow, &QDialog::close);
+
+    // ========== Button sty ==========
+    const QString blueStyle = R"(
+        QPushButton {
+            background-color: #5371ff;
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 0 4px;
+            font-size: 14px;
+        }
+        QPushButton:hover {
+            background-color: #425BD0;
+        }
+        QPushButton:pressed {
+            background-color: #006ae6;
+        }
+    )";
+    const QString cancelStyle = R"(
+        QPushButton {
+            background-color: #AAAAAA;
+            color: black;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 0 4px;
+            font-size: 14px;
+        }
+        QPushButton:hover {
+            background-color: #949494;
+        }
+        QPushButton:pressed {
+            background-color: #5F5F5F;
+        }
+    )";
+
+    QPushButton *llmOkButton = llmButtonBox->button(QDialogButtonBox::Ok);
+    QPushButton *llmCancelButton = llmButtonBox->button(QDialogButtonBox::Cancel);
+    QPushButton *wsprOkButton = audioButtonBox->button(QDialogButtonBox::Ok);
+    QPushButton *wsprCancelButton= audioButtonBox->button(QDialogButtonBox::Cancel);
+
+    // Disable default style
+    llmOkButton->setDefault(false);
+    llmOkButton->setAutoDefault(false);
+    wsprOkButton->setDefault(false);
+    wsprOkButton->setAutoDefault(false);
+
+    llmOkButton->setStyleSheet(blueStyle);
+    llmCancelButton->setStyleSheet(cancelStyle);
+    wsprOkButton->setStyleSheet(blueStyle);
+    wsprCancelButton->setStyleSheet(cancelStyle);
+    saveCloseButton->setStyleSheet(blueStyle);
+
+    settingsWindow->exec();
+    delete settingsWindow;
+}
+
+/**
+ * @brief Handles constructing the settings pop-up menu.
+ * @todo MOVE FUNCTION TO SETTINGS OR WINDOWBUILDER FOR CLEARER CODE STRUCTURE
+ */
+void MainWindow::showSettings()
+{
+    // ========== Layout ==========
+    QDialog *settingsWindow = new QDialog(this);
+    settingsWindow->setWindowTitle("Settings");
+    settingsWindow->setGeometry(0, 0, 800, 250);
+    settingsWindow->adjustSize();
+
+    QRect parentRect = this->geometry();
+    QSize dialogSize = settingsWindow->size();
+
+    int x = parentRect.x() + ((parentRect.width()-dialogSize.width()) / 2);
+    int y = parentRect.y() + ((parentRect.height()-dialogSize.height()) / 2);
+
+    settingsWindow->move(x, y);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(settingsWindow);
+
+    // ========== Connected Peripherals ==========
+    QVBoxLayout *peripheralsLayout = new QVBoxLayout();
+    QLabel *cpLabel = new QLabel("Connected Peripherals:", settingsWindow);
+    peripheralsLayout->addWidget(cpLabel);
+
+    QTextEdit *peripheralsField = new QTextEdit(settingsWindow);
+    peripheralsField->setReadOnly(true);
+    peripheralsField->setFixedHeight(60); // Adjust height as needed
+    peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
+
+    // #################### TODO: Add microphone checking ####################
+    if (true) {
+        peripheralsField->setText("Microphone ✅");
+    } else {
+        peripheralsField->setText("Microphone ❌");
+    }
+
+    peripheralsLayout->addWidget(peripheralsField);
+    mainLayout->addLayout(peripheralsLayout);
+
+    // ========== LLM API Key ==========
+    QHBoxLayout *llmLayout = new QHBoxLayout();
+    QLabel *llmLabel = new QLabel("Summarizer API Key:", settingsWindow);
+    QLineEdit *llmKeyField = new QLineEdit(settingsWindow);
+    llmKeyField->setText(settings->llmKey);
+    QDialogButtonBox *llmButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
+
+    llmLayout->addWidget(llmLabel);
+    llmLayout->addWidget(llmKeyField);
+    llmLayout->addWidget(llmButtonBox);
+    mainLayout->addLayout(llmLayout);
+
+    connect(llmButtonBox, &QDialogButtonBox::accepted, this, [=]() {
+        if (!llmKeyField->text().isEmpty()) {
+            settings->setLLMKey(llmKeyField->text());
+            handleSummarizeButtonClicked();
+        } else {
+            qWarning() << "This field cannot be empty.";
+        }
+    });
+    connect(llmButtonBox, &QDialogButtonBox::rejected, this, [=]() {
+        llmKeyField->clear();
+    });
+
+    // ========== Audio Handler API Key ==========
+    QHBoxLayout *audioLayout = new QHBoxLayout();
+    QLabel *audioLabel = new QLabel("Transcriber API Key:", settingsWindow);
+    QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
+    audioKeyField->setText(settings->audioKey);
+    QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
+
+    audioLayout->addWidget(audioLabel);
+    audioLayout->addWidget(audioKeyField);
+    audioLayout->addWidget(audioButtonBox);
+    mainLayout->addLayout(audioLayout);
+
+    connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
+        if (!audioKeyField->text().isEmpty()) {
+            settings->setAudioKey(audioKeyField->text());
+            handleSummarizeButtonClicked();
+        } else {
+            qWarning() << "This field cannot be empty.";
+        }
+    });
+    connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
+        audioKeyField->clear();
+    });
+
+    // ========== Save & Close ==========
+    QPushButton *saveCloseButton = new QPushButton("Close", settingsWindow);
+    mainLayout->addWidget(saveCloseButton);
+
+    connect(saveCloseButton, &QPushButton::clicked, settingsWindow, &QDialog::close);
+
+    // ========== Button sty ==========
+    const QString blueStyle = R"(
+        QPushButton {
+            background-color: #5371ff;
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 0 4px;
+            font-size: 14px;
+        }
+        QPushButton:hover {
+            background-color: #425BD0;
+        }
+        QPushButton:pressed {
+            background-color: #006ae6;
+        }
+    )";
+    const QString cancelStyle = R"(
+        QPushButton {
+            background-color: #AAAAAA;
+            color: black;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 0 4px;
+            font-size: 14px;
+        }
+        QPushButton:hover {
+            background-color: #949494;
+        }
+        QPushButton:pressed {
+            background-color: #5F5F5F;
+        }
+    )";
+
+    QPushButton *llmOkButton = llmButtonBox->button(QDialogButtonBox::Ok);
+    QPushButton *llmCancelButton = llmButtonBox->button(QDialogButtonBox::Cancel);
+    QPushButton *wsprOkButton = audioButtonBox->button(QDialogButtonBox::Ok);
+    QPushButton *wsprCancelButton= audioButtonBox->button(QDialogButtonBox::Cancel);
+
+    // Disable default style
+    llmOkButton->setDefault(false);
+    llmOkButton->setAutoDefault(false);
+    wsprOkButton->setDefault(false);
+    wsprOkButton->setAutoDefault(false);
+
+    llmOkButton->setStyleSheet(blueStyle);
+    llmCancelButton->setStyleSheet(cancelStyle);
+    wsprOkButton->setStyleSheet(blueStyle);
+    wsprCancelButton->setStyleSheet(cancelStyle);
+    saveCloseButton->setStyleSheet(blueStyle);
+
+    settingsWindow->exec();
+    delete settingsWindow;
 }
 
 /**

@@ -20,11 +20,15 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QDialogButtonBox>
+#include <QCheckBox>
 
 class WindowBuilder {
 public:
     static void setupUI(QWidget *centralWidget,
-                        QPushButton *&btnConnectDevice,
                         QPushButton *&btnSettings,
                         QLabel *&lblTitle,
                         QLabel *&lblPatientName,
@@ -36,7 +40,6 @@ public:
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
                         QPushButton *&btnRemovePatient);
-
 };
 
 #endif // WINDOWBUILDER_H

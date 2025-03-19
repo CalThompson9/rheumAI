@@ -21,6 +21,9 @@ AudioHandler *AudioHandler::instance = nullptr;
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
+    apiKey = getAPIKey();
+    qDebug() << "Audio API Key:" << apiKey;
+
     networkManager = new QNetworkAccessManager(this);
     captureSession.setAudioInput(&audioInput); // Add this line
     captureSession.setRecorder(&recorder);     // Add this line
@@ -93,7 +96,7 @@ Transcript AudioHandler::transcribe(const QString &filename)
  */
 QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
 {
-    QUrl url(API_URL + QString::fromStdString("?key=") + AUDIO_API_KEY);
+    QUrl url(API_URL + QString::fromStdString("?key=") + apiKey);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -208,4 +211,29 @@ void AudioHandler::stopRecording()
 QTime AudioHandler::getCurrentTime() const
 {
     return QTime::currentTime();
+}
+
+/**
+ * @author Thomas Llamzon
+ * @brief Reads keyFile upon class construction to set apiKey.
+ * @return Returns LLM API Key.
+*/
+QString AudioHandler::getAPIKey() {
+
+    QFile file("keyFile.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "keyFile does not exist yet.";
+        return "";
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (line.startsWith("AUDIO_API_KEY:")) {
+            file.close();
+            return line.mid(QString("AUDIO_API_KEY:").length()).trimmed();
+        }
+    }
+
+    return "";
 }

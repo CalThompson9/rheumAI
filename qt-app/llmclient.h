@@ -11,7 +11,6 @@
 #include <QUrl>
 #include <QDebug>
 #include <QFile>
-#include <api.h>
 
 class LLMClient : public QObject
 {
@@ -20,6 +19,9 @@ class LLMClient : public QObject
 public:
     explicit LLMClient(QObject *parent = nullptr);
     void sendRequest(const QString &prompt);
+    QString getAPIKey();
+
+    friend class Settings;
 
 signals:
     void responseReceived(const QString &response);
