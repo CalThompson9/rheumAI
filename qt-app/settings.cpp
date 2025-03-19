@@ -6,36 +6,97 @@
  * @param parent - MainWindow
  * @param llmClient - LLM Client instance
  */
-Settings::Settings(QObject *parent, LLMClient *llmClient) :
-    QObject(parent),
-    client(llmClient),
-    summaryLayout(""),
-    connectedPeripherals(false)
+Settings::Settings(QObject *parent, LLMClient *llm, AudioHandler *audio)
+    : QObject(parent),
+    llmClient(llm),
+    audioHandlerClient(audio),
+    summaryLayout("")
 {
 }
 
 /**
- * @brief Settings::getPeripherals
- * @return
- */
-bool Settings::getPeripherals() {
-    return connectedPeripherals;
-}
-
-/**
- * @brief Settings::setLLMKey
+ *  * @name setLLMKey
+ * @brief Sets LLM API key and modifies key storage file for continual use.
  * @param key
  */
 void Settings::setLLMKey(QString newKey) {
-    client->apiKey = newKey;
-    qDebug() << "=== Gemini Key:" << client->apiKey << "===";
+
+    // Set key in LLMClient class
+    llmClient->apiKey = newKey;
+
+    // Change API Key in keyFile
+    writeAPIKey("LLM", newKey);
 }
 
 /**
- * @brief Settings::setWsprKey
+ * @name setAudioKey
+ * @brief Sets audio transcriber API key and modifies key storage file for continual use.
  * @param key
  */
-void Settings::setWsprKey(QString newKey) {
-    //client->apiKey = newKey;
-    qDebug() << "=== Whisper Key:" << newKey << "===";
+void Settings::setAudioKey(QString newKey) {
+
+    // Set key in AudioHandler class
+    audioHandlerClient->apiKey = newKey;
+
+    // Change API Key in keyFile
+    writeAPIKey("AUDIO", newKey);
 }
+
+/**
+ * @name writeAPIKey
+ * @brief Writes API key to hidden key file storing API keys for continual use.
+ * @param keyClient - Client to set API key for
+ * @param key - User API key
+ */
+void Settings::writeAPIKey(const QString &keyClient, const QString &key)
+{
+    QString prefix;
+    if (keyClient == "LLM") {
+        prefix = "GEMINI_API_KEY:";
+    } else if (keyClient == "AUDIO") {
+        prefix = "AUDIO_API_KEY:";
+    } else {
+        qWarning() << "Unknown keyClient:" << keyClient;
+        return;
+    }
+
+    QFile file("keyFile.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Could not open file for reading:" << file.errorString();
+        return;
+    }
+
+    QStringList lines;
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        lines << in.readLine();
+    }
+    file.close();
+
+    // Search for an line with the prefix and update it
+    bool foundLine = false;
+    for (int i = 0; i < lines.size(); ++i) {
+        if (lines[i].startsWith(prefix)) {
+            lines[i] = prefix + " " + key; // Replace everything after the prefix with the new key
+            foundLine = true;
+            break;
+        }
+    }
+
+    if (!foundLine) {
+        lines << prefix + " " + key;
+    }
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        qWarning() << "Could not open file for writing:" << file.errorString();
+        return;
+    }
+
+    QTextStream out(&file);
+    for (const QString &line : lines) {
+        out << line << "\n";
+    }
+
+    file.close();
+}
+

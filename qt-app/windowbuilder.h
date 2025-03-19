@@ -29,8 +29,6 @@ public:
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
                         QPushButton *&btnRemovePatient);
-
-
 };
 
 #endif // WINDOWBUILDER_H

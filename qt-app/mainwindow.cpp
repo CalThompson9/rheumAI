@@ -44,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent)
     summaryFormatter = new DetailedSummaryFormatter;
     optionDetailedLayout->setEnabled(false);
 
-
     // Initialize SummaryGenerator
     summaryGenerator = new SummaryGenerator(this);
 
@@ -52,6 +51,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
     // Initialize AudioHandler and connect transcription signal to LLMClient
     AudioHandler *audioHandler = AudioHandler::getInstance();
+
+    // Settings
+    settings = new Settings(this, summaryGenerator->llmClient, audioHandler);
+    connect(btnSettings, &QPushButton::clicked, this, &MainWindow::showSettings);
 
     // Connect "Record" button to start and stop recording
     connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
@@ -243,7 +246,7 @@ void MainWindow::displaySummary(const Summary &summary)
 /**
  * @name showSettings
  * @brief Handles constructing and handling the settings pop-up menu.
- * @todo [OPTIONAL] Move function to Settings class.
+ * @todo MOVE FUNCTION TO SETTINGS OR WINDOWBUILDER FOR CLEARER CODE STRUCTURE
  */
 void MainWindow::showSettings()
 {
@@ -259,26 +262,24 @@ void MainWindow::showSettings()
     QLabel *cpLabel = new QLabel("Connected Peripherals:", settingsWindow);
     peripheralsLayout->addWidget(cpLabel);
 
-    // Create a read-only text field to display a structured list of peripherals.
-    // Here we use a QTextEdit styled with a white background and gray border.
     QTextEdit *peripheralsField = new QTextEdit(settingsWindow);
     peripheralsField->setReadOnly(true);
     peripheralsField->setFixedHeight(60); // Adjust height as needed
     peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
 
-    // Example: Set the text for the microphone connection status.
-    // Replace 'true' with the actual check for your hardware.
-    if (true)
+    // #################### TODO: Add microphone checking ####################
+    if (true) {
         peripheralsField->setText("Microphone ✅");
-    else
+    } else {
         peripheralsField->setText("Microphone ❌");
+    }
 
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);
 
     // ========== LLM API Key ==========
     QHBoxLayout *llmLayout = new QHBoxLayout();
-    QLabel *llmLabel = new QLabel("LLM API Key:", settingsWindow);
+    QLabel *llmLabel = new QLabel("Set new summarizer API Key:", settingsWindow);
     QLineEdit *llmKeyField = new QLineEdit(settingsWindow);
     QDialogButtonBox *llmButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
@@ -287,7 +288,6 @@ void MainWindow::showSettings()
     llmLayout->addWidget(llmButtonBox);
     mainLayout->addLayout(llmLayout);
 
-    // When OK is clicked, set the key if non-empty
     connect(llmButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!llmKeyField->text().isEmpty()) {
             settings->setLLMKey(llmKeyField->text());
@@ -295,31 +295,30 @@ void MainWindow::showSettings()
             qWarning() << "This field cannot be empty.";
         }
     });
-    // When Cancel is clicked, just clear the field
     connect(llmButtonBox, &QDialogButtonBox::rejected, this, [=]() {
         llmKeyField->clear();
     });
 
-    // ========== Whisper API Key ==========
-    QHBoxLayout *wsprLayout = new QHBoxLayout();
-    QLabel *wsprLabel = new QLabel("Whisper API Key:", settingsWindow);
-    QLineEdit *wsprKeyField = new QLineEdit(settingsWindow);
-    QDialogButtonBox *wsprButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
+    // ========== Audio Handler API Key ==========
+    QHBoxLayout *audioLayout = new QHBoxLayout();
+    QLabel *audioLabel = new QLabel("Set new transcriber API Key:", settingsWindow);
+    QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
+    QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
-    wsprLayout->addWidget(wsprLabel);
-    wsprLayout->addWidget(wsprKeyField);
-    wsprLayout->addWidget(wsprButtonBox);
-    mainLayout->addLayout(wsprLayout);
+    audioLayout->addWidget(audioLabel);
+    audioLayout->addWidget(audioKeyField);
+    audioLayout->addWidget(audioButtonBox);
+    mainLayout->addLayout(audioLayout);
 
-    connect(wsprButtonBox, &QDialogButtonBox::accepted, this, [=]() {
-        if (!wsprKeyField->text().isEmpty()) {
-            settings->setWsprKey(wsprKeyField->text());
+    connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
+        if (!audioKeyField->text().isEmpty()) {
+            settings->setAudioKey(audioKeyField->text());
         } else {
             qWarning() << "This field cannot be empty.";
         }
     });
-    connect(wsprButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        wsprKeyField->clear();
+    connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
+        audioKeyField->clear();
     });
 
     // ========== Save & Close ==========
@@ -364,8 +363,8 @@ void MainWindow::showSettings()
 
     QPushButton *llmOkButton = llmButtonBox->button(QDialogButtonBox::Ok);
     QPushButton *llmCancelButton = llmButtonBox->button(QDialogButtonBox::Cancel);
-    QPushButton *wsprOkButton = wsprButtonBox->button(QDialogButtonBox::Ok);
-    QPushButton *wsprCancelButton= wsprButtonBox->button(QDialogButtonBox::Cancel);
+    QPushButton *wsprOkButton = audioButtonBox->button(QDialogButtonBox::Ok);
+    QPushButton *wsprCancelButton= audioButtonBox->button(QDialogButtonBox::Cancel);
 
     // Disable default style
     llmOkButton->setDefault(false);

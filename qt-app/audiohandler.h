@@ -29,7 +29,7 @@
 #include <QTime>
 #include <QDebug>
 #include "transcript.h"
-#include "api.h"
+//#include "api.h"
 
 // AudioHandler class handles audio recording and transcription
 class AudioHandler : public QObject
@@ -48,11 +48,15 @@ public:
     void pauseRecording();                          // Pause audio recording
     void resumeRecording();                         // Resume audio recording
 
+    QString getAPIKey();
+
+    friend class Settings;
+
 signals:
     void transcriptionCompleted(const QString &transcribedText); // Signal for transcription completion
 
 private:
-    const QString API_KEY = AUDIO_API_KEY;                                                               // API key for Google Speech API
+    QString apiKey;
     const QString API_URL = QString::fromStdString("https://speech.googleapis.com/v1/speech:recognize"); // API URL for Google Speech API
     QNetworkAccessManager *networkManager;                                                               // Network manager for API requests
 
