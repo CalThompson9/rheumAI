@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     patientrecord.cpp \
+    settings.cpp \
     windowbuilder.cpp \
     transcript.cpp \
     summary.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     llmclient.h \
     mainwindow.h \
     patientrecord.h \
+    settings.h \
     windowbuilder.h \
     transcript.h \
     summary.h \
@@ -51,3 +53,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+DISTFILES +=

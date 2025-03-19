@@ -86,5 +86,6 @@ CMakeLists.txt.user*
 .uic/
 /build*/
 
-# Api
+# Api (not needed anymore)
 api.h
+

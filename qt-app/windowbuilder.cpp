@@ -2,11 +2,11 @@
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QScrollArea>
 #include <QPixmap>
 
 void WindowBuilder::setupUI(QWidget *centralWidget,
-                            QPushButton *&btnConnectDevice,
                             QPushButton *&btnSettings,
                             QLabel *&lblTitle,
                             QLabel *&lblPatientName,
@@ -20,7 +20,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnRemovePatient)
 {
     // Create UI elements
-    btnConnectDevice = new QPushButton("Connect Device", centralWidget);
+    //btnConnectDevice = new QPushButton("Connect Device", centralWidget);
     btnSettings = new QPushButton("Settings", centralWidget);
     lblTitle = new QLabel(centralWidget);
     lblPatientName = new QLabel("[Select a Patient]", centralWidget);
@@ -67,7 +67,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                                 "background-color: #C56E39;"
                                 "}";
 
-    btnConnectDevice->setStyleSheet(blueButtonStyle);
+    //btnConnectDevice->setStyleSheet(blueButtonStyle);
     btnSettings->setStyleSheet(blueButtonStyle);
     btnSummarize->setStyleSheet(orangeButtonStyle);
     btnAddPatient->setStyleSheet(blueButtonStyle);
@@ -126,7 +126,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     summarySection = new QVBoxLayout();
 
     // Top bar layout
-    topBarLayout->addWidget(btnConnectDevice);
+    //topBarLayout->addWidget(btnConnectDevice);
     topBarLayout->addStretch();
     topBarLayout->addWidget(lblTitle);
     topBarLayout->addStretch();
