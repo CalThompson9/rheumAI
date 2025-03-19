@@ -47,7 +47,8 @@ private:
     SummaryGenerator *summaryGenerator;
     Summary testSummary;
 
-    // Settings
+    QString currentTranscriptText;
+    
     Settings *settings;
 
 private slots:
