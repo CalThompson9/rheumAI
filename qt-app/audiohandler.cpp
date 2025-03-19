@@ -22,7 +22,7 @@ AudioHandler *AudioHandler::instance = nullptr;
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
     apiKey = getAPIKey();
-    qDebug() << "=== Audio API Key:" << apiKey;
+    qDebug() << "Audio API Key:" << apiKey;
 
     networkManager = new QNetworkAccessManager(this);
     captureSession.setAudioInput(&audioInput); // Add this line
@@ -222,8 +222,8 @@ QString AudioHandler::getAPIKey() {
 
     QFile file("keyFile.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Could not open keyFile.txt for reading:" << file.errorString();
-        return QString();
+        qWarning() << "keyFile does not exist yet.";
+        return "";
     }
 
     QTextStream in(&file);

@@ -30,9 +30,6 @@ public:
 private:
     LLMClient *llmClient;
     AudioHandler *audioHandlerClient;
-    QString userPath;
-    QString keyFilePath = "../../../../../keyFile.txt";
-    QString summaryLayout = "";
 };
 
 #endif // SETTINGS_H

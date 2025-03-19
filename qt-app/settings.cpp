@@ -13,8 +13,7 @@
 Settings::Settings(QObject *parent, LLMClient *llm, AudioHandler *audio)
     : QObject(parent),
     llmClient(llm),
-    audioHandlerClient(audio),
-    summaryLayout("")
+    audioHandlerClient(audio)
 {
 }
 
@@ -65,23 +64,26 @@ void Settings::writeAPIKey(const QString &keyClient, const QString &key)
     }
 
     QFile file("keyFile.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Could not open file for reading:" << file.errorString();
-        return;
-    }
-
     QStringList lines;
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        lines << in.readLine();
-    }
-    file.close();
 
-    // Search for an line with the prefix and update it
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            lines << in.readLine();
+        }
+        file.close();
+    } else {
+        if (file.error() != QFile::FileError::OpenError) {
+            qWarning() << "Could not open file for reading:" << file.errorString();
+            return;
+        }
+    }
+
+    // Search for an existing line with the prefix and update it
     bool foundLine = false;
     for (int i = 0; i < lines.size(); ++i) {
         if (lines[i].startsWith(prefix)) {
-            lines[i] = prefix + " " + key; // Replace everything after the prefix with the new key
+            lines[i] = prefix + " " + key; // Replace everything after prefix
             foundLine = true;
             break;
         }
@@ -103,4 +105,3 @@ void Settings::writeAPIKey(const QString &keyClient, const QString &key)
 
     file.close();
 }
-

@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect the signal to process the generated summary when ready
     connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
+
     // Initialize AudioHandler and connect transcription signal to LLMClient
     AudioHandler *audioHandler = AudioHandler::getInstance();
 
@@ -92,11 +93,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(btnRemovePatient, &QPushButton::clicked, this, &MainWindow::on_removePatientButton_clicked);
     connect(comboSelectPatient, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_patientSelected);
 
-
     // Connect "Record" button to LLM API request
 
     // NEW: Load existing patients on startup**
-     loadPatientsIntoDropdown();
+    loadPatientsIntoDropdown();
 
 
     connect(btnRecord, &QPushButton::clicked, this, [this]() {
@@ -284,11 +284,6 @@ void MainWindow::showSettings()
 
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);
-
-    // ========== Default Summary Layout ==========
-    QHBoxLayout *defaultSummaryLayout = new QHBoxLayout();
-    QLabel *dfSummaryLabel = new QLabel("Default Summary Layout:", settingsWindow);
-
 
     // ========== LLM API Key ==========
     QHBoxLayout *llmLayout = new QHBoxLayout();

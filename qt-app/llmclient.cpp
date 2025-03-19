@@ -4,7 +4,7 @@ LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
     apiKey = getAPIKey();
-    qDebug() << "=== LLM API Key: " << apiKey;
+    qDebug() << "LLM API Key: " << apiKey;
 
     if (apiKey.isEmpty()) {
         qWarning() << "API Key is empty! Request aborted.";
@@ -153,8 +153,8 @@ QString LLMClient::getAPIKey() {
 
     QFile file("keyFile.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Could not open keyFile.txt for reading:" << file.errorString();
-        return QString();
+        qWarning() << "keyFile does not exist yet.";
+        return "";
     }
 
     QTextStream in(&file);
