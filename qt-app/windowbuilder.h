@@ -24,11 +24,13 @@ public:
                         QComboBox *&comboSelectPatient,
                         QPushButton *&btnRecord,
                         QPushButton *&btnSummarize,
-                        QTextEdit *&textTranscription,
                         QPushButton *&selectSummaryLayout,
                         QVBoxLayout *&summarySection,
                         QVBoxLayout *&mainLayout,
-                        QPushButton *&btnAddPatient);
+                        QPushButton *&btnAddPatient,
+                        QPushButton *&btnRemovePatient);
+
+
 };
 
 #endif // WINDOWBUILDER_H

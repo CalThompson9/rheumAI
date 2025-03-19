@@ -13,11 +13,11 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QComboBox *&comboSelectPatient,
                             QPushButton *&btnRecord,
                             QPushButton *&btnSummarize,
-                            QTextEdit *&textTranscription,
                             QPushButton *&selectSummaryLayout,
                             QVBoxLayout *&summarySection,
                             QVBoxLayout *&mainLayout,
-                            QPushButton *&btnAddPatient)
+                            QPushButton *&btnAddPatient,
+                            QPushButton *&btnRemovePatient)
 {
     // Create UI elements
     //btnConnectDevice = new QPushButton("Connect Device", centralWidget);
@@ -27,9 +27,8 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     comboSelectPatient = new QComboBox(centralWidget);
     btnRecord = new QPushButton("Record", centralWidget);
     btnSummarize = new QPushButton("Summarize", centralWidget);
-    textTranscription = new QTextEdit(centralWidget);
     btnAddPatient = new QPushButton("Add Patient", centralWidget);
-    textTranscription->setReadOnly(true);
+    btnRemovePatient = new QPushButton("Remove Patient", centralWidget);
     QLabel* summaryTitle = new QLabel("Summary");
     selectSummaryLayout = new QPushButton(centralWidget);
     selectSummaryLayout->setCheckable(true);
@@ -69,8 +68,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnSummarize->setStyleSheet(orangeButtonStyle);
     btnAddPatient->setStyleSheet(blueButtonStyle);
 
-    textTranscription->setStyleSheet("background-color: #f5f5f5; padding: 10px; border-radius: 5px;");
-
     summaryTitle->setAlignment(Qt::AlignLeft);
     summaryTitle->setStyleSheet("font-weight: bold; font-size: 14px;");
 
@@ -93,6 +90,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     controlsLayout->addWidget(btnRecord);
     controlsLayout->addWidget(btnSummarize);
     controlsLayout->addWidget(btnAddPatient);
+    controlsLayout->addWidget(btnRemovePatient);
 
     // Summary layout header and format selection
     summaryHeader->addWidget(summaryTitle);
@@ -120,7 +118,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     mainLayout->addWidget(lblPatientName);
     mainLayout->addWidget(line2);
     mainLayout->addLayout(controlsLayout);
-    mainLayout->addWidget(textTranscription);
     mainLayout->addLayout(summaryHeader);
     mainLayout->addWidget(scrollArea);
 

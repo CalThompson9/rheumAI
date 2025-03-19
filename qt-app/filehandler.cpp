@@ -47,7 +47,7 @@ QString FileHandler::readTranscript() {
 }
 
 void FileHandler::savePatientRecord(const PatientRecord &record) {
-    QString patientPath = patientDatabasePath + "/" + QString::number(record.getPatientID());
+    QString patientPath = patientDatabasePath + "/" + QString::number(record.getID());
     QDir().mkpath(patientPath);  // Ensure patient folder exists
 
     QFile file(patientPath + "/patient_info.json");
@@ -56,11 +56,12 @@ void FileHandler::savePatientRecord(const PatientRecord &record) {
         return;
     }
 
-    QJsonDocument doc(record.toJSON());
+    QJsonDocument doc(record.toJson());
     file.write(doc.toJson());
     file.close();
     qDebug() << "Patient record saved to:" << file.fileName();
 }
+
 
 PatientRecord FileHandler::loadPatientRecord(int patientID) {
     QString filePath = patientDatabasePath + "/" + QString::number(patientID) + "/patient_info.json";
@@ -75,7 +76,7 @@ PatientRecord FileHandler::loadPatientRecord(int patientID) {
 
     QJsonDocument doc = QJsonDocument::fromJson(fileData);
     qDebug() << "Patient record loaded for ID:" << patientID;
-    return PatientRecord::fromJSON(doc.object());
+    return PatientRecord::fromJson(doc.object());
 }
 
 
