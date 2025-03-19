@@ -1,3 +1,13 @@
+/**
+ * @file filehandler.cpp
+ * @brief Definition of FileHandler class
+ * 
+ * Handles reading and writing patient files.
+ * 
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @date Mar. 16, 2025
+ */
+
 #include "filehandler.h"
 #include <QTextStream>
 #include <QJsonDocument>
@@ -6,26 +16,50 @@
 
 FileHandler* FileHandler::instance = nullptr;
 
+/**
+ * @name FileHandler (constructor)
+ * @brief Initializes the FileHandler instance
+ */
 FileHandler::FileHandler() {
     patientDatabasePath = "Patients";  // Base directory
     QDir().mkpath(patientDatabasePath);  // Ensure it exists
 }
 
+/**
+ * @name getInstance
+ * @brief Returns the singleton instance of FileHandler
+ * @return Singleton instance of FileHandler
+ */
 FileHandler* FileHandler::getInstance() {
     if (!instance)
         instance = new FileHandler();
     return instance;
 }
 
+/**
+ * @name setTranscriptFilename
+ * @brief Sets the filepath to the transcript file
+ * @param[in] filepath: Filepath to transcript file
+ */
 void FileHandler::setTranscriptFilename(const QString &filepath) {
     transcriptFilename = filepath;
 }
 
+/**
+ * @name setJsonFilename
+ * @brief Sets the filepath to the patient information JSON file
+ * @param[in] filepath: Filepath to the patient information JSON file
+ */
 void FileHandler::setJsonFilename(const QString &filepath) {
     jsonFilename = filepath;
 }
 
-// Read the transcript from the file
+/**
+ * @name readTranscript
+ * @name Read transcript from file
+ * @details Transcript filepath must first be set using `setTranscriptFilename`
+ * @return Transcript data, or an empty string if the file could not be read
+ */
 QString FileHandler::readTranscript() {
     if (transcriptFilename.isEmpty()) {
         qDebug() << "Transcript file is not set!";
@@ -46,6 +80,14 @@ QString FileHandler::readTranscript() {
     return content;
 }
 
+/**
+ * @name savePatientRecord
+ * @brief Saves the patient record to file
+ * @details File will be named according to the patient ID stored in the patient
+ * record, and located in the directory configured in the constructor.
+ * @warning If the file already exists, it will be overwritten
+ * @param[in] record: Patient record to save
+ */
 void FileHandler::savePatientRecord(const PatientRecord &record) {
     QString patientPath = patientDatabasePath + "/" + QString::number(record.getID());
     QDir().mkpath(patientPath);  // Ensure patient folder exists
@@ -63,6 +105,12 @@ void FileHandler::savePatientRecord(const PatientRecord &record) {
 }
 
 
+/**
+ * @name loadPatientRecord
+ * @brief Reads a patient record from file
+ * @param[in] patientID: Patient ID of record to read
+ * @return Read patient record, or an empty record if the file could not be read
+ */
 PatientRecord FileHandler::loadPatientRecord(int patientID) {
     QString filePath = patientDatabasePath + "/" + QString::number(patientID) + "/patient_info.json";
     QFile file(filePath);
@@ -80,7 +128,11 @@ PatientRecord FileHandler::loadPatientRecord(int patientID) {
 }
 
 
-// Convert transcript text into JSON and save it
+/**
+ * @name saveTranscriptToJson
+ * @brief Convert the currently stored transcript text into JSON format and save it 
+ * @details Transcript filepath must first be set using `setTranscriptFilename`.
+ */
 void FileHandler::saveTranscriptToJson() {
     QString transcriptText = readTranscript();
     if (transcriptText.isEmpty()) return;
@@ -104,17 +156,30 @@ void FileHandler::saveTranscriptToJson() {
     qDebug() << "Transcript saved as JSON to:" << jsonFilename;
 }
 
-
+/**
+ * @name getTranscriptFilename
+ * @brief Get the filepath to the transcript file
+ * @return Filepath to the transcript file
+ */
 QString FileHandler::getTranscriptFilename() const {
     return transcriptFilename;
 }
 
+/**
+ * @name getJsonFilename
+ * @brief Gets the filepath to the patient information JSON file
+ * @return Filepath to the patient information JSON file
+ */
 QString FileHandler::getJsonFilename() const {
     return jsonFilename;
 }
 
-
-// Read JSON and print it
+/**
+ * @name loadPatientJson
+ * @brief Read the raw text stored in the patient information JSON file and
+ * print it
+ * @details Patient information filepath must first be set using `setJsonFilename`
+ */
 void FileHandler::loadPatientJson() {
     QFile jsonFile(jsonFilename);
     if (!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
