@@ -28,25 +28,27 @@
     virtual ~SummaryGenerator() = default;
     void sendRequest(Transcript& prompt);
  
-     Summary getSummary();
- 
- private:
-     LLMClient *llmClient;
-     Summary summary;
- 
-     QString extractSectionFromResponse(const QString &response, const QString &sectionName);
+    Summary getSummary();
 
-     void summarizeIntervalHistory(const QString &response);
-     void summarizePhysicalExamination(const QString &response);
-     void summarizeCurrentStatus(const QString &response);
-     void summarizePlan(const QString &response);
+    friend class MainWindow;
+
+ private:
+    LLMClient *llmClient;
+    Summary summary;
+ 
+    QString extractSectionFromResponse(const QString &response, const QString &sectionName);
+
+    void summarizeIntervalHistory(const QString &response);
+    void summarizePhysicalExamination(const QString &response);
+    void summarizeCurrentStatus(const QString &response);
+    void summarizePlan(const QString &response);
      
  
  private slots:
-     void handleLLMResponse(const QString &response);
+    void handleLLMResponse(const QString &response);
  
  signals:
-     void summaryReady();
+    void summaryReady();
  };
  
  #endif // SUMMARYGENERATOR_H

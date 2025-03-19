@@ -8,6 +8,7 @@
 #include "summary.h"
 #include "summaryformatter.h"
 #include "summarygenerator.h"
+#include "settings.h"
 
 class MainWindow : public QMainWindow
 {
@@ -24,7 +25,6 @@ private:
     QWidget *centralWidget;
 
     // UI Components
-    QPushButton *btnConnectDevice;
     QPushButton *btnSettings;
     QLabel *lblTitle;
     QLabel *lblPatientName;
@@ -42,15 +42,22 @@ private:
     // Layout
     QVBoxLayout *mainLayout;
 
+    // Summarization
     SummaryFormatter *summaryFormatter;
     SummaryGenerator *summaryGenerator;
     Summary testSummary;
+
+    // Settings
+    Settings *settings;
 
 private slots:
     void handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter);
     void handleSummarizeButtonClicked();
     void handleSummaryReady();
     void on_addPatientButton_clicked();
+
+public slots:
+    void showSettings();
     void on_patientSelected(int index);
     void on_removePatientButton_clicked();
     void loadPatientsIntoDropdown();

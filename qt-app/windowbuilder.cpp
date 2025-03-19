@@ -2,10 +2,10 @@
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QScrollArea>
 
 void WindowBuilder::setupUI(QWidget *centralWidget,
-                            QPushButton *&btnConnectDevice,
                             QPushButton *&btnSettings,
                             QLabel *&lblTitle,
                             QLabel *&lblPatientName,
@@ -19,7 +19,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnRemovePatient)
 {
     // Create UI elements
-    btnConnectDevice = new QPushButton("Connect Device", centralWidget);
+    //btnConnectDevice = new QPushButton("Connect Device", centralWidget);
     btnSettings = new QPushButton("Settings", centralWidget);
     lblTitle = new QLabel("RheumAI Dashboard", centralWidget);
     lblPatientName = new QLabel("[Patient Name]", centralWidget);
@@ -61,7 +61,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                                 "background-color: #C56E39;"
                                 "}";
 
-    btnConnectDevice->setStyleSheet(blueButtonStyle);
+    //btnConnectDevice->setStyleSheet(blueButtonStyle);
     btnSettings->setStyleSheet(blueButtonStyle);
     btnRecord->setStyleSheet(orangeButtonStyle);
     btnSummarize->setStyleSheet(orangeButtonStyle);
@@ -78,7 +78,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     summarySection = new QVBoxLayout();
 
     // Top bar layout
-    topBarLayout->addWidget(btnConnectDevice);
+    //topBarLayout->addWidget(btnConnectDevice);
     topBarLayout->addStretch();
     topBarLayout->addWidget(lblTitle);
     topBarLayout->addStretch();
@@ -122,17 +122,4 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
 
     // Set layout to central widget
     centralWidget->setLayout(mainLayout);
-
-    // Connect settings button to pop-up
-    QObject::connect(btnSettings, &QPushButton::clicked, [centralWidget]() {
-        QDialog *settingsDialog = new QDialog(centralWidget);
-        settingsDialog->setWindowTitle("Settings");
-
-        QVBoxLayout *layout = new QVBoxLayout(settingsDialog);
-        QLabel *label = new QLabel("Settings options will go here.", settingsDialog);
-        layout->addWidget(label);
-
-        settingsDialog->setLayout(layout);
-        settingsDialog->exec();
-    });
 }

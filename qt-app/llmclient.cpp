@@ -3,7 +3,8 @@
 LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
-    apiKey = GEMINI_API_KEY; // ⚠️Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY.
+    apiKey = getAPIKey();
+    qDebug() << "LLM API Key: " << apiKey;
 
     if (apiKey.isEmpty()) {
         qWarning() << "API Key is empty! Request aborted.";
@@ -139,4 +140,31 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
 
     // Emit the final response
     emit responseReceived(responseText);
+}
+
+
+
+/**
+ * @author Thomas Llamzon
+ * @brief Reads keyFile upon class construction to set apiKey.
+ * @return Returns LLM API Key.
+ */
+QString LLMClient::getAPIKey() {
+
+    QFile file("keyFile.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "keyFile does not exist yet.";
+        return "";
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (line.startsWith("GEMINI_API_KEY:")) {
+            file.close();
+            return line.mid(QString("GEMINI_API_KEY:").length()).trimmed();
+        }
+    }
+
+    return "";
 }
