@@ -38,7 +38,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     // Set logo as title without distortion
     QPixmap logoPixmap(":/logo.png");
     lblTitle->setPixmap(logoPixmap.scaled(300, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    lblTitle->setContentsMargins(0, 0, 30, 0);
+
     
 
     lblPatientName->setAlignment(Qt::AlignCenter);
@@ -69,6 +69,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
 
     //btnConnectDevice->setStyleSheet(blueButtonStyle);
     btnSettings->setStyleSheet(blueButtonStyle);
+    btnSettings->setFixedWidth(100);
     btnSummarize->setStyleSheet(orangeButtonStyle);
     btnAddPatient->setStyleSheet(blueButtonStyle);
     btnRemovePatient->setStyleSheet(orangeButtonStyle);
@@ -113,11 +114,12 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     summarySection = new QVBoxLayout();
 
     // Top bar layout
-    //topBarLayout->addWidget(btnConnectDevice);
     topBarLayout->addStretch();
     topBarLayout->addWidget(lblTitle);
     topBarLayout->addStretch();
     topBarLayout->addWidget(btnSettings);
+    // Padding on left
+    topBarLayout->setContentsMargins(125, 0, 0, 0);
 
     // Patient controls layout
     patientControlsLayout->addWidget(comboSelectPatient);
