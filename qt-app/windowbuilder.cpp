@@ -1,9 +1,43 @@
+/**
+ * @file windowbuilder.cpp
+ * @brief Definition of WindowBuilder class
+ * 
+ * Provides methods to build the application's main user interface (UI), including
+ * initializing UI elements, layout, and styling.
+ * 
+ * 
+ * @author Andres Pedreros Castro (apedrero@uwo.ca)
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @date Mar. 1, 2025
+ */
+
 #include "windowbuilder.h"
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QScrollArea>
 
+/**
+ * @name setupUI
+ * @brief Builds the application's main user interface
+ * @details Includes initializing UI elements, layout, and styling
+ * @param[in,out] centralWidget: Central widget displaying `mainLayout`
+ *  @param[in,out] btnConnectDevice: "Connect Device" button
+ *  @param[in,out] btnSettings: "Settings" button
+ *  @param[in,out] lblTitle: Window title
+ *  @param[in,out] lblPatientName: Patient's name
+ *  @param[in,out] comboSelectPatient: Dropdown menu to select patient
+ *  @param[in,out] btnRecord: "Record" button
+ *  @param[in,out] btnSummarize: "Summarize" button
+ *  @param[in,out] selectSummaryLayout: Dropdown menu to select summary layout format
+ *  @param[in,out] summarySection: Displays the LLM-generated summary
+ *  @param[in,out] mainLayout: Main layout which contains all UI elements
+ *  @param[in,out] btnAddPatient: "Add Patient" button
+ *  @param[in,out] btnRemovePatient: "Remove Patient" button
+ */
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnConnectDevice,
                             QPushButton *&btnSettings,

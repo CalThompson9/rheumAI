@@ -1,3 +1,15 @@
+/**
+ * @file windowbuilder.h
+ * @brief Declaration of WindowBuilder class
+ * 
+ * @author Andres Pedreros Castro (apedrero@uwo.ca)
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @date Mar. 1, 2025
+ */
+
 #ifndef WINDOWBUILDER_H
 #define WINDOWBUILDER_H
 
@@ -24,7 +36,6 @@ public:
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
                         QPushButton *&btnRemovePatient);
-
 
 };
 

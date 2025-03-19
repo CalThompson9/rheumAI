@@ -1,3 +1,15 @@
+/**
+ * @file mainwindow.h
+ * @brief Declaration of MainWindow class
+ * 
+ * @author Andres Pedreros Castro (apedrero@uwo.ca)
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @date Mar. 1, 2025
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -15,7 +27,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() = default;  // Qt automatically manages memory, no need for manual deletion
 
     void setSummaryFormatter(SummaryFormatter* summaryFormatter);
     void displaySummary(const Summary& summary);
@@ -44,7 +56,6 @@ private:
 
     SummaryFormatter *summaryFormatter;
     SummaryGenerator *summaryGenerator;
-    Summary testSummary;
 
 private slots:
     void handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter);
@@ -55,7 +66,6 @@ private slots:
     void on_removePatientButton_clicked();
     void loadPatientsIntoDropdown();
     void handleLLMResponse(const QString &response);
-
 
 };
 
