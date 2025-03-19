@@ -13,7 +13,9 @@
 Settings::Settings(QObject *parent, LLMClient *llm, AudioHandler *audio)
     : QObject(parent),
     llmClient(llm),
-    audioHandlerClient(audio)
+    audioHandlerClient(audio),
+    llmKey(llm->apiKey),
+    audioKey(audio->apiKey)
 {
 }
 
@@ -23,11 +25,7 @@ Settings::Settings(QObject *parent, LLMClient *llm, AudioHandler *audio)
  * @param key
  */
 void Settings::setLLMKey(QString newKey) {
-
-    // Set key in LLMClient class
     llmClient->apiKey = newKey;
-
-    // Change API Key in keyFile
     writeAPIKey("LLM", newKey);
 }
 
@@ -37,11 +35,7 @@ void Settings::setLLMKey(QString newKey) {
  * @param key
  */
 void Settings::setAudioKey(QString newKey) {
-
-    // Set key in AudioHandler class
     audioHandlerClient->apiKey = newKey;
-
-    // Change API Key in keyFile
     writeAPIKey("AUDIO", newKey);
 }
 

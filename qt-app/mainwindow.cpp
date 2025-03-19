@@ -82,10 +82,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
-    // THIS IS A MOCK FUNCTION CALL JUST FOR TESTING ON PROGRAM START
-
-
-    handleSummarizeButtonClicked();
+    //handleSummarizeButtonClicked();
 
     llmClient = new LLMClient(this);
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
@@ -252,7 +249,7 @@ void MainWindow::showSettings()
     // ========== Layout ==========
     QDialog *settingsWindow = new QDialog(this);
     settingsWindow->setWindowTitle("Settings");
-    settingsWindow->setGeometry(0, 0, 700, 300);
+    settingsWindow->setGeometry(0, 0, 800, 250);
     settingsWindow->adjustSize();
 
     QRect parentRect = this->geometry();
@@ -287,9 +284,9 @@ void MainWindow::showSettings()
 
     // ========== LLM API Key ==========
     QHBoxLayout *llmLayout = new QHBoxLayout();
-    QLabel *llmLabel = new QLabel("Set new summarizer API Key:", settingsWindow);
+    QLabel *llmLabel = new QLabel("Summarizer API Key:", settingsWindow);
     QLineEdit *llmKeyField = new QLineEdit(settingsWindow);
-    // Set text to be API key here ?
+    llmKeyField->setText(settings->llmKey);
     QDialogButtonBox *llmButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
     llmLayout->addWidget(llmLabel);
@@ -300,6 +297,7 @@ void MainWindow::showSettings()
     connect(llmButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!llmKeyField->text().isEmpty()) {
             settings->setLLMKey(llmKeyField->text());
+            handleSummarizeButtonClicked();
         } else {
             qWarning() << "This field cannot be empty.";
         }
@@ -310,9 +308,9 @@ void MainWindow::showSettings()
 
     // ========== Audio Handler API Key ==========
     QHBoxLayout *audioLayout = new QHBoxLayout();
-    QLabel *audioLabel = new QLabel("Set new transcriber API Key:", settingsWindow);
+    QLabel *audioLabel = new QLabel("Transcriber API Key:", settingsWindow);
     QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
-    // Set text to be API key here ?
+    audioKeyField->setText(settings->audioKey);
     QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
     audioLayout->addWidget(audioLabel);
@@ -323,6 +321,7 @@ void MainWindow::showSettings()
     connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!audioKeyField->text().isEmpty()) {
             settings->setAudioKey(audioKeyField->text());
+            handleSummarizeButtonClicked();
         } else {
             qWarning() << "This field cannot be empty.";
         }

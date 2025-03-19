@@ -21,6 +21,8 @@
 class Settings : public QObject {
     Q_OBJECT
 
+    friend class MainWindow;
+
 public:
     Settings(QObject *parent = nullptr, LLMClient *llm = nullptr, AudioHandler *audio = nullptr);
     void setLLMKey(const QString newKey);
@@ -30,6 +32,8 @@ public:
 private:
     LLMClient *llmClient;
     AudioHandler *audioHandlerClient;
+    QString llmKey;
+    QString audioKey;
 };
 
 #endif // SETTINGS_H
