@@ -25,7 +25,6 @@ private:
     QWidget *centralWidget;
 
     // UI Components
-    QPushButton *btnConnectDevice;
     QPushButton *btnSettings;
     QLabel *lblTitle;
     QLabel *lblPatientName;

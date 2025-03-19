@@ -17,7 +17,6 @@
 class WindowBuilder {
 public:
     static void setupUI(QWidget *centralWidget,
-                        QPushButton *&btnConnectDevice,
                         QPushButton *&btnSettings,
                         QLabel *&lblTitle,
                         QLabel *&lblPatientName,

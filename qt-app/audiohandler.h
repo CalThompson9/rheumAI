@@ -29,7 +29,6 @@
 #include <QTime>
 #include <QDebug>
 #include "transcript.h"
-//#include "api.h"
 
 // AudioHandler class handles audio recording and transcription
 class AudioHandler : public QObject

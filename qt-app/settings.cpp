@@ -1,6 +1,10 @@
 #include "settings.h"
 
 /**
+ * @todo Default summary layout, API key change automatic restart, API key field default value
+ */
+
+/**
  * @name Settings
  * @brief Constructor for settings - stores user preferences and configurations.
  * @param parent - MainWindow

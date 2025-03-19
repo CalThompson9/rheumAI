@@ -6,7 +6,6 @@
 #include <QScrollArea>
 
 void WindowBuilder::setupUI(QWidget *centralWidget,
-                            QPushButton *&btnConnectDevice,
                             QPushButton *&btnSettings,
                             QLabel *&lblTitle,
                             QLabel *&lblPatientName,

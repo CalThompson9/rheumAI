@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
 
-    WindowBuilder::setupUI(centralWidget, btnConnectDevice, btnSettings,
+    WindowBuilder::setupUI(centralWidget, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
                            selectSummaryLayout, summarySection,
@@ -244,8 +244,7 @@ void MainWindow::displaySummary(const Summary &summary)
 }
 
 /**
- * @name showSettings
- * @brief Handles constructing and handling the settings pop-up menu.
+ * @brief Handles constructing the settings pop-up menu.
  * @todo MOVE FUNCTION TO SETTINGS OR WINDOWBUILDER FOR CLEARER CODE STRUCTURE
  */
 void MainWindow::showSettings()
@@ -253,7 +252,16 @@ void MainWindow::showSettings()
     // ========== Layout ==========
     QDialog *settingsWindow = new QDialog(this);
     settingsWindow->setWindowTitle("Settings");
-    settingsWindow->setGeometry(0, 0, 500, 250);
+    settingsWindow->setGeometry(0, 0, 700, 300);
+    settingsWindow->adjustSize();
+
+    QRect parentRect = this->geometry();
+    QSize dialogSize = settingsWindow->size();
+
+    int x = parentRect.x() + ((parentRect.width()-dialogSize.width()) / 2);
+    int y = parentRect.y() + ((parentRect.height()-dialogSize.height()) / 2);
+
+    settingsWindow->move(x, y);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(settingsWindow);
 
@@ -277,10 +285,16 @@ void MainWindow::showSettings()
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);
 
+    // ========== Default Summary Layout ==========
+    QHBoxLayout *defaultSummaryLayout = new QHBoxLayout();
+    QLabel *dfSummaryLabel = new QLabel("Default Summary Layout:", settingsWindow);
+
+
     // ========== LLM API Key ==========
     QHBoxLayout *llmLayout = new QHBoxLayout();
     QLabel *llmLabel = new QLabel("Set new summarizer API Key:", settingsWindow);
     QLineEdit *llmKeyField = new QLineEdit(settingsWindow);
+    // Set text to be API key here ?
     QDialogButtonBox *llmButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
     llmLayout->addWidget(llmLabel);
@@ -303,6 +317,7 @@ void MainWindow::showSettings()
     QHBoxLayout *audioLayout = new QHBoxLayout();
     QLabel *audioLabel = new QLabel("Set new transcriber API Key:", settingsWindow);
     QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
+    // Set text to be API key here ?
     QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
     audioLayout->addWidget(audioLabel);
@@ -322,7 +337,7 @@ void MainWindow::showSettings()
     });
 
     // ========== Save & Close ==========
-    QPushButton *saveCloseButton = new QPushButton("Save and close", settingsWindow);
+    QPushButton *saveCloseButton = new QPushButton("Close", settingsWindow);
     mainLayout->addWidget(saveCloseButton);
 
     connect(saveCloseButton, &QPushButton::clicked, settingsWindow, &QDialog::close);

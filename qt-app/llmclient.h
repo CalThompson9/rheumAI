@@ -11,7 +11,6 @@
 #include <QUrl>
 #include <QDebug>
 #include <QFile>
-//#include <api.h>
 
 class LLMClient : public QObject
 {
