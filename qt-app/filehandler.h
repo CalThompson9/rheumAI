@@ -40,8 +40,7 @@ public:
     void loadPatientJson();  // Read and display JSON
     void saveTranscript(int patientID, const QString &transcript);
     void saveTranscriptToJson();  // Convert transcript to JSON
-    void loadPatientJson();       // Read and display JSON
-
+    
     PatientRecord loadPatientRecord(int patientID);
 
     QString getTranscriptFilename() const;

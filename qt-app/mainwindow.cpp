@@ -638,7 +638,6 @@ void MainWindow::on_patientSelected(int index) {
     }
 }
 
-
 MainWindow::~MainWindow()
 {
     // Qt automatically manages memory, no need for manual deletion
