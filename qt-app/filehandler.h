@@ -30,6 +30,7 @@ public:
     void setDatabasePath(const QString &path);
     void savePatientRecord(const PatientRecord &record);
     void loadPatientJson();  // Read and display JSON
+    void saveTranscript(int patientID, const QString &transcript);
 
     PatientRecord loadPatientRecord(int patientID);
 

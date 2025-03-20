@@ -11,6 +11,7 @@
 #include <QMessageBox> 
 #include <QMediaDevices>
 #include <QAudioDevice>
+#include <QTimer>
 
 
 
@@ -78,7 +79,11 @@ MainWindow::MainWindow(QWidget *parent)
             // Construct absolute path to output.wav
             QString filePath = QDir(projectDir).filePath("output.wav");
 
-            audioHandler->transcribe(filePath);
+            // Getting trancription and saving it to file
+            Transcript currentTranscription = audioHandler->transcribe(filePath);
+            qDebug() << "Transcription: " << currentTranscription.getContent();
+            FileHandler::getInstance()->saveTranscript(patientID, currentTranscription.getContent());
+
             btnRecord->setText("Start Recording");
         }
         else
@@ -90,8 +95,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
-    //handleSummarizeButtonClicked();
-
     llmClient = new LLMClient(this);
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
@@ -102,7 +105,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // NEW: Load existing patients on startup**
     loadPatientsIntoDropdown();
-
+    
+    if (comboSelectPatient->count() > 0) {
+        QTimer::singleShot(100, this, [this]() {
+            comboSelectPatient->setCurrentIndex(0);
+            on_patientSelected(0);
+        });
+    }
 
     // Connect "Summarize" button to summarize transcripts and update window
     connect(btnSummarize, &QPushButton::clicked, this, &MainWindow::handleSummarizeButtonClicked);

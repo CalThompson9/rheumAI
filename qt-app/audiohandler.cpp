@@ -118,7 +118,7 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
 
     // Construct JSON payload
     QJsonObject configObj;
-    configObj["encoding"] = "LINEAR16"; // Adjust based on your WAV file
+    configObj["encoding"] = "LINEAR16";
     configObj["sampleRateHertz"] = 48000;
     configObj["languageCode"] = "en-CA";
     configObj["audioChannelCount"] = 2;
@@ -173,37 +173,50 @@ void AudioHandler::startRecording(const QString &outputFile)
     }
 
     QAudioDevice defaultMic = devices.first();
-    qDebug() << "Using microphone:" << defaultMic.description();
+    qDebug() << "🎤 Using microphone:" << defaultMic.description();
+
+    // Get the preferred format and check requirements
+    QAudioFormat format = defaultMic.preferredFormat();
+
+    if (format.sampleRate() != 48000 || format.channelCount() != 2)
+    {
+        qWarning() << "Microphone does not support required format!";
+        qWarning() << "   Required: 48kHz, 2 channels";
+        qWarning() << "   Found: " << format.sampleRate() << "Hz, " << format.channelCount() << " channels";
+        return;
+    }
+
+    qDebug() << "Microphone meets requirements: 48kHz, 2 channels";
 
     // Delete previous audio input if it exists
-    if (audioInput != nullptr) {
+    if (audioInput != nullptr)
+    {
         delete audioInput;
         audioInput = nullptr;
     }
 
-    // Create a fresh QAudioInput and attach it to the capture session
-    audioInput = new QAudioInput(defaultMic, this);
-    captureSession.setAudioInput(audioInput);       // ← Added
-    captureSession.setRecorder(&recorder);          // ← Added
+    // Create QAudioInput with the validated format
+    audioInput = new QAudioInput(defaultMic);
+    captureSession.setAudioInput(audioInput);
+    captureSession.setRecorder(&recorder);
 
     // Set up recorder output
     QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
     QString filePath = QDir(projectDir).filePath(outputFile);
     recorder.setOutputLocation(QUrl::fromLocalFile(filePath));
 
-    // Optionally specify WAVE format, sample rate, etc.
-    QMediaFormat format;
-    format.setFileFormat(QMediaFormat::Wave);
-    recorder.setMediaFormat(format);
+    // Set media format to Wave
+    QMediaFormat mediaFormat;
+    mediaFormat.setFileFormat(QMediaFormat::Wave);
+    recorder.setMediaFormat(mediaFormat);
 
-    // Optional: Match your 48kHz, 2-channel request to Google
-    recorder.setAudioSampleRate(48000);       // ← Added (optional)
-    recorder.setAudioChannelCount(2);         // ← Added (optional)
+    // Apply required settings to recorder
+    recorder.setAudioSampleRate(48000);
+    recorder.setAudioChannelCount(2);
 
-    qDebug() << "Starting recording. Output file:" << filePath;
+    qDebug() << "🎙️ Starting recording. Output file:" << filePath;
     recorder.record();
 }
-
 
 
 

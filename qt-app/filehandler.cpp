@@ -98,6 +98,22 @@ void FileHandler::savePatientRecord(const PatientRecord &record) {
     qDebug() << "Patient record saved to:" << file.fileName();
 }
 
+void FileHandler::saveTranscript(int patientID, const QString &transcript) {
+    QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
+    QFile file(transcriptPath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Could not save transcript!";
+        return;
+    }
+
+    file.resize(0);
+
+    QTextStream out(&file);
+    out << transcript;
+    file.close();
+    qDebug() << "Transcript saved to:" << transcriptPath;
+}
+
 
 PatientRecord FileHandler::loadPatientRecord(int patientID) {
     QString filePath = patientDatabasePath + "/" + QString::number(patientID) + "/patient_info.json";
