@@ -9,6 +9,9 @@
 #include "summarygenerator.h"
 #include "addpatientdialog.h"
 #include <QMessageBox> 
+#include <QMediaDevices>
+#include <QAudioDevice>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -100,30 +103,6 @@ MainWindow::MainWindow(QWidget *parent)
     // NEW: Load existing patients on startup**
     loadPatientsIntoDropdown();
 
-
-    connect(btnRecord, &QPushButton::clicked, this, [this]() {
-        //llmClient->sendRequest("Hello, AI! How are you?");
-
-         // Get selected patient ID
-         QVariant patientData = comboSelectPatient->currentData();
-         if (!patientData.isValid()) {
-             QMessageBox::warning(this, "No Patient Selected", "Please select a patient before recording.");
-             return;
-         }
-         int patientID = patientData.toInt();
-
-         // Create a test transcript file
-         QString filePath = "Patients/" + QString::number(patientID) + "/transcript_raw.txt";
-         QFile file(filePath);
-         if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-             QTextStream out(&file);
-             out << "This is a test transcript for patient " << patientID << "\n";
-             file.close();
-             qDebug() << "Test transcript saved to: " << filePath;
-         } else {
-             qDebug() << "Failed to save transcript!";
-         }
-    });
 
     // Connect "Summarize" button to summarize transcripts and update window
     connect(btnSummarize, &QPushButton::clicked, this, &MainWindow::handleSummarizeButtonClicked);
@@ -374,12 +353,18 @@ void MainWindow::showSettings()
     peripheralsField->setFixedHeight(60); // Adjust height as needed
     peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
 
-    // #################### TODO: Add microphone checking ####################
-    if (true) {
-        peripheralsField->setText("Microphone ✅");
+    // #################### Check if a microphone is available ####################
+    const QList<QAudioDevice> audioDevices = QMediaDevices::audioInputs(); // Get available microphones
+
+    if (!audioDevices.isEmpty()) {
+        const QAudioDevice &defaultMic = audioDevices.first(); // Get default microphone
+        QString micName = defaultMic.description(); // Get microphone name
+        peripheralsField->setText("Microphone Detected --> [" + micName + "]");
     } else {
-        peripheralsField->setText("Microphone ❌");
+        peripheralsField->setText("No microphone detected.");
     }
+
+
 
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);

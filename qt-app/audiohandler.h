@@ -46,6 +46,8 @@ public:
     void stopRecording();                           // Stop audio recording
     void pauseRecording();                          // Pause audio recording
     void resumeRecording();                         // Resume audio recording
+    void handlePermissionResponse();
+    void playRecording(const QString &filePath);
 
     QString getAPIKey();
 
@@ -53,6 +55,8 @@ public:
 
 signals:
     void transcriptionCompleted(const QString &transcribedText); // Signal for transcription completion
+    void microphonePermissionDenied();
+    void microphonePermissionGranted();
 
 private:
     QString apiKey;
@@ -64,7 +68,10 @@ private:
     QString outputFilePath;                                  // Output file path for recording
     QMediaRecorder recorder;                                 // Media recorder for audio
     QMediaCaptureSession captureSession;                     // Media capture session
-    QAudioInput audioInput;                                  // Audio input for recording
+    QAudioInput *audioInput = nullptr; 
+
+    void requestMicrophonePermission(); // Request microphone permission
+
 };
 
 #endif // AUDIO_HANDLER_H
