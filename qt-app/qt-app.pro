@@ -27,7 +27,6 @@ SOURCES += \
 
 HEADERS += \
     addpatientdialog.h \
-    api.h \
     filehandler.h \
     llmclient.h \
     mainwindow.h \
