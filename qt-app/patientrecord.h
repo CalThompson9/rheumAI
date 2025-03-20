@@ -1,3 +1,11 @@
+/**
+ * @file patientrecord.h
+ * @brief Declaration of PatientRecord class
+ * 
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @date Mar. 16, 2025
+ */
+
 #ifndef PATIENTRECORD_H
 #define PATIENTRECORD_H
 

@@ -1,5 +1,22 @@
+/**
+ * @file llmclient.cpp
+ * @brief Definition of LLMClient class
+ * 
+ * Responsible for managing the connection to the Google Gemini API, including 
+ * sending requests, and handling responses.
+ * 
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @author Thomas Llamazon (tllamazon@uwo.ca)
+ * @date Mar. 4, 2025
+ */
+
 #include "llmclient.h"
 
+/**
+ * @name LLMClient (constructor)
+ * @brief Initializes the LLM client, including the network access manager
+ * @param[in] parent: Parent widget
+ */
 LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
@@ -13,6 +30,13 @@ LLMClient::LLMClient(QObject *parent)
     connect(networkManager, &QNetworkAccessManager::finished, this, &LLMClient::handleNetworkReply);
 }
 
+/**
+ * @name sendRequest
+ * @brief Combines the initial prompt with an additional prompt and sends as a
+ * request to the LLM.
+ * @details Initial prompt is read from file, `llmprompt.txt`
+ * @param[in] prompt: Additional prompt
+ */
 void LLMClient::sendRequest(const QString &prompt)
 {
     if (apiKey.isEmpty())
@@ -47,6 +71,12 @@ void LLMClient::sendRequest(const QString &prompt)
     sendLLMRequest(fullPrompt);
 }
 
+/**
+ * @name sendLLMRequest
+ * @brief Parses the input prompt, sets generation configuration, and sends as a
+ * request and sends to the LLM.
+ * @param[in] inputPrompt: Input prompt
+ */
 void LLMClient::sendLLMRequest(const QString &inputPrompt)
 {
     QUrl url("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=" + apiKey);
@@ -78,6 +108,12 @@ void LLMClient::sendLLMRequest(const QString &inputPrompt)
     networkManager->post(request, jsonData);
 }
 
+/**
+ * @name handleNetworkReply
+ * @brief Handle network reply by parsing the response data, converting it to a
+ * JSON format, and emit a signal that a response has been recieved.
+ * @param[in] reply: Network reply
+ */
 void LLMClient::handleNetworkReply(QNetworkReply *reply)
 {
     QByteArray responseData = reply->readAll();
@@ -141,8 +177,6 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     // Emit the final response
     emit responseReceived(responseText);
 }
-
-
 
 /**
  * @author Thomas Llamzon

@@ -1,3 +1,11 @@
+/**
+ * @file addpatientdialog.h
+ * @brief Declaration of AddPatientDialog class
+ * 
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @date Mar. 16, 2025
+ */
+
 #ifndef ADDPATIENTDIALOG_H
 #define ADDPATIENTDIALOG_H
 

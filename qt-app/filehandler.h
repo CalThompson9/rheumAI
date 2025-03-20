@@ -1,3 +1,12 @@
+/**
+ * @file filehandler.h
+ * @brief Declaration of FileHandler class
+ * 
+ * 
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @date Mar. 16, 2025
+ */
+
 #ifndef FILEHANDLER_H
 #define FILEHANDLER_H
 
@@ -25,10 +34,9 @@ public:
 
     void setTranscriptFilename(const QString &filepath);
     void setJsonFilename(const QString &filepath);
-    void setDatabasePath(const QString &path);
     void savePatientRecord(const PatientRecord &record);
     void saveTranscriptToJson();  // Convert transcript to JSON
-    void loadPatientJson();  // Read and display JSON
+    void loadPatientJson();       // Read and display JSON
 
     PatientRecord loadPatientRecord(int patientID);
 
