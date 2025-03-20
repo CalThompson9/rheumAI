@@ -6,6 +6,7 @@
  * the interval history, physical examination, current status, and plan.
  * 
  * @author Joelene Hales (jhales5@uwo.ca)
+ * @author Callum Thompson (cthom226@uwo.ca)
  * @date Mar. 6, 2025
  */
 

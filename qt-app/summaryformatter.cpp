@@ -2,7 +2,10 @@
  * @file summaryformatter.cpp
  * @brief Definition of SummaryFormatter class
  * 
+ * Provides an interface for all summary layout formats.
+ * 
  * @author Joelene Hales (jhales5@uwo.ca)
+ * @author Callum Thompson (cthom226@uwo.ca)
  * @date Mar. 7, 2025
  */
 
