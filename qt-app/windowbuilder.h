@@ -36,10 +36,12 @@ public:
                         QPushButton *&btnRecord,
                         QPushButton *&btnSummarize,
                         QPushButton *&selectSummaryLayout,
+                        QTextEdit *&textTranscription,
                         QVBoxLayout *&summarySection,
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
-                        QPushButton *&btnRemovePatient);
+                        QPushButton *&btnRemovePatient
+                        );
 };
 
 #endif // WINDOWBUILDER_H

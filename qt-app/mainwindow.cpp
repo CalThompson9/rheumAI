@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     WindowBuilder::setupUI(centralWidget, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
-                           selectSummaryLayout, summarySection,
+                           selectSummaryLayout, textTranscription, summarySection,
                            mainLayout, btnAddPatient, btnRemovePatient);
 
     // Add summary layout options
@@ -597,8 +597,12 @@ void MainWindow::on_patientSelected(int index) {
     if (index == -1) return;
 
     patientID = comboSelectPatient->currentData().toInt();
+    int patientID = comboSelectPatient->currentData().toInt();
+    if (patientID <= 0) return;  // Ensure valid patient ID
+
     qDebug() << "Selected patient: " << patientID;
 
+    // Update the label to show patient ID
     lblPatientName->setText("Patient ID: " + QString::number(patientID));
 
     // Load the transcript
@@ -637,6 +641,13 @@ void MainWindow::on_patientSelected(int index) {
 
     }
 }
+
+
+
+
+
+
+
 
 MainWindow::~MainWindow()
 {

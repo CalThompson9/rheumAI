@@ -1,3 +1,6 @@
+#include <QDir>
+
+
 /**
  * @file summarygenerator.cpp
  * @brief Definition of SummaryGenerator builder class
@@ -53,11 +56,13 @@ void SummaryGenerator::handleLLMResponse(const QString &response)
     summarizePhysicalExamination(response);
     summarizeCurrentStatus(response);
     summarizePlan(response);
+    //saveSummaryToPatientFile(response);
 
     emit summaryReady();
 }
 
 /**
+<<<<<<< HEAD
  * @name setSummary
  * @brief Sets the summary object with the given text
  * @param[in] newSummary: New summary object to set
@@ -94,6 +99,8 @@ void SummaryGenerator::setSummaryText(const QString& summaryText) {
     qDebug() << "Summary successfully loaded from saved text.";
     emit summaryReady();
 }
+
+
 
 
 

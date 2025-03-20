@@ -27,6 +27,8 @@
     explicit SummaryGenerator(QObject *parent = nullptr);
     virtual ~SummaryGenerator() = default;
     void sendRequest(Transcript& prompt);
+    void setSelectedPatientID(QVariant id) {selectedPatientID = id;}
+    QVariant getSelectedPatientID() const {return selectedPatientID;}
  
     Summary getSummary();
 
@@ -35,6 +37,7 @@
  private:
     LLMClient *llmClient;
     Summary summary;
+    QVariant selectedPatientID;
  
     QString extractSectionFromResponse(const QString &response, const QString &sectionName);
 
@@ -44,6 +47,7 @@
     void summarizePlan(const QString &response);
     void setSummary(const Summary& summary);
     void setSummaryText(const QString& summaryText);
+
 
      
  

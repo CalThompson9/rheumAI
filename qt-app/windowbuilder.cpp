@@ -48,6 +48,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnRecord,
                             QPushButton *&btnSummarize,
                             QPushButton *&selectSummaryLayout,
+                            QTextEdit *&textTranscription,
                             QVBoxLayout *&summarySection,
                             QVBoxLayout *&mainLayout,
                             QPushButton *&btnAddPatient,
@@ -63,6 +64,10 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnSummarize = new QPushButton("Summarize", centralWidget);
     btnAddPatient = new QPushButton("Add", centralWidget);
     btnRemovePatient = new QPushButton("Remove", centralWidget);
+    btnAddPatient = new QPushButton("Add Patient", centralWidget);
+    btnRemovePatient = new QPushButton("Remove Patient", centralWidget);  // 🔹 NEW BUTTON
+    textTranscription = new QTextEdit(centralWidget);
+    textTranscription->setReadOnly(true);
     QLabel* summaryTitle = new QLabel("Summary");
     selectSummaryLayout = new QPushButton(centralWidget);
     selectSummaryLayout->setCheckable(true);
@@ -73,7 +78,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     QPixmap logoPixmap(":/logo.png");
     lblTitle->setPixmap(logoPixmap.scaled(300, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    
+
 
     lblPatientName->setAlignment(Qt::AlignCenter);
     lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
@@ -165,7 +170,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     summaryHeader->addWidget(summaryTitle);
     summaryHeader->addWidget(selectSummaryLayout);
     summaryHeader->setSpacing(10);
-    
+
 
 
 
