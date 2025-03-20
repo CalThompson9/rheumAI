@@ -12,17 +12,20 @@
 
 #include "llmclient.h"
 
+
 /**
  * @name LLMClient (constructor)
  * @brief Initializes the LLM client, including the network access manager
  * @param[in] parent: Parent widget
  */
+
 LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
 
     //apiKey = getAPIKey();
-    //qDebug() << "LLM API Key: " << apiKey;
+
+    qDebug() << "LLM API Key: " << apiKey;
     apiKey = "AIzaSyC9Yvpr7fSvGERQw4FwEAgoDnYYC7ji-Qo";  // ⚠️ Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY. ⚠️
 
 

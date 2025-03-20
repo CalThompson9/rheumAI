@@ -16,6 +16,7 @@ mac {
 
 SOURCES += \
     addpatientdialog.cpp \
+    api.cpp \
     filehandler.cpp \
     llmclient.cpp \
     main.cpp \
@@ -33,6 +34,11 @@ SOURCES += \
 
 HEADERS += \
     addpatientdialog.h \
+<<<<<<< HEAD
+=======
+    api.h \
+    api.h \
+>>>>>>> 5170925 (Nthn to important)
     filehandler.h \
     llmclient.h \
     mainwindow.h \
