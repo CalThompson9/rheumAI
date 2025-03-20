@@ -48,6 +48,8 @@ private:
     Summary testSummary;
 
     QString currentTranscriptText;
+
+    int patientID;
     
     Settings *settings;
 

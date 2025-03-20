@@ -23,6 +23,8 @@ public:
 
     Summary& operator=(const Summary& original);
 
+    QString getText() const;
+
     const QString& getIntervalHistory() const;
     void setIntervalHistory(const QString& intervalHistory);
     

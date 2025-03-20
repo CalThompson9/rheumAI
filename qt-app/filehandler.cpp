@@ -46,6 +46,42 @@ QString FileHandler::readTranscript() {
     return content;
 }
 
+
+QString FileHandler::loadSummaryText(int patientID) {
+    QString summaryPath = patientDatabasePath + "/" + QString::number(patientID) + "/summary.txt";
+    QFile file(summaryPath);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "❌ No summary found for patient:" << patientID;
+        return "";
+    }
+
+    QTextStream in(&file);
+    QString summaryContent = in.readAll();
+    file.close();
+
+    qDebug() << "✅ Loaded summary from file (before returning):\n" << summaryContent;
+    return summaryContent;
+}
+
+
+QString FileHandler::loadTranscript(int patientID) {
+    QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
+    QFile file(transcriptPath);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "No transcript found for patient:" << patientID;
+        return "";
+    }
+
+    QTextStream in(&file);
+    QString transcriptContent = in.readAll();
+    file.close();
+
+    return transcriptContent;
+}
+
+
 void FileHandler::savePatientRecord(const PatientRecord &record) {
     QString patientPath = patientDatabasePath + "/" + QString::number(record.getID());
     QDir().mkpath(patientPath);  // Ensure patient folder exists
@@ -79,30 +115,6 @@ PatientRecord FileHandler::loadPatientRecord(int patientID) {
     return PatientRecord::fromJson(doc.object());
 }
 
-
-// Convert transcript text into JSON and save it
-void FileHandler::saveTranscriptToJson() {
-    QString transcriptText = readTranscript();
-    if (transcriptText.isEmpty()) return;
-
-    // Convert to JSON format
-    QJsonObject jsonObj;
-    jsonObj["patientID"] = 12345;  // Mock Patient ID
-    jsonObj["date"] = "2024-03-07";  // Mock Date
-    jsonObj["transcript"] = transcriptText;
-
-    QJsonDocument jsonDoc(jsonObj);
-
-    QFile jsonFile(jsonFilename);
-    if (!jsonFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Could not open JSON file for writing";
-        return;
-    }
-
-    jsonFile.write(jsonDoc.toJson());
-    jsonFile.close();
-    qDebug() << "Transcript saved as JSON to:" << jsonFilename;
-}
 
 
 QString FileHandler::getTranscriptFilename() const {
