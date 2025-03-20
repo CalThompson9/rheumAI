@@ -1,3 +1,18 @@
+/**
+ * @file mainwindow.cpp
+ * @brief Definition of MainWindow class
+ * 
+ * Main window owns and manages the lifetime UI elements, processes button
+ * press signals, and manages summary generation.
+ * 
+ * @author Andres Pedreros Castro (apedrero@uwo.ca)
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @date Mar. 1, 2025
+ */
+
 #include "mainwindow.h"
 #include "llmclient.h"
 #include "audiohandler.h"
@@ -15,6 +30,11 @@
 
 
 
+/**
+ * @name MainWindow (constructor)
+ * @brief Initializes a MainWindow instance
+ * @param[in] parent: Parent widget
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -22,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // Create central widget
-
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
 
@@ -75,7 +94,6 @@ MainWindow::MainWindow(QWidget *parent)
             audioHandler->stopRecording();
             QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
 
-
             // Construct absolute path to output.wav
             QString filePath = QDir(projectDir).filePath("output.wav");
 
@@ -105,8 +123,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // NEW: Load existing patients on startup**
     loadPatientsIntoDropdown();
-    
-    if (comboSelectPatient->count() > 0) {
+        if (comboSelectPatient->count() > 0) {
         QTimer::singleShot(100, this, [this]() {
             comboSelectPatient->setCurrentIndex(0);
             on_patientSelected(0);
@@ -117,7 +134,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(btnSummarize, &QPushButton::clicked, this, &MainWindow::handleSummarizeButtonClicked);
 }
 
-
+/**
+ * @name handleLLMResponse
+ * @brief Handler function called when the LLM returns a response
+ * @details Sets the plan text transcription displayed in the main window
+ * @param[in] response: Response returned by the LLM
+ */
 void MainWindow::handleLLMResponse(const QString &response)
 {
     textTranscription->setPlainText(response);
@@ -148,7 +170,6 @@ void MainWindow::handleLLMResponse(const QString &response)
         qDebug() << "Failed to save transcript!";
     }
 }
-
 
 /**
  * @name handleSummaryLayoutChanged
@@ -276,11 +297,9 @@ void MainWindow::handleSummaryReady()
 }
 
 /**
- * @name on_addPatientButton_clicked
+ * @name loadPatientsIntoDropdown
  * @brief Handles adding a new patient record
  */
-
-
 void MainWindow::loadPatientsIntoDropdown() {
     comboSelectPatient->clear();  // Clear dropdown before loading
     qDebug() << "Loading patients from Patients folder...";
@@ -487,6 +506,13 @@ void MainWindow::showSettings()
     delete settingsWindow;
 }
 
+/**
+ * @name on_addPatientButton_clicked
+ * @brief Handler function called when the "Add Patient" button is pressed
+ * @details Displays a dialog window that prompts the user to enter the
+ * patient's details. Once the user submits the form, a new record file is created
+ * with the input data, and the user interface is updated.
+ */
 void MainWindow::on_addPatientButton_clicked() {
     AddPatientDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
@@ -497,7 +523,7 @@ void MainWindow::on_addPatientButton_clicked() {
 
         int patientID = QDateTime::currentMSecsSinceEpoch() % 100000;
 
-        // 🔹 Check if a patient with the same name already exists
+        // Check if a patient with the same name already exists
         int duplicateCount = 0;
         for (int i = 0; i < comboSelectPatient->count(); ++i) {
             QVariant storedID = comboSelectPatient->itemData(i);
@@ -517,16 +543,17 @@ void MainWindow::on_addPatientButton_clicked() {
             }
         }
 
-        // 🔹 If duplicate, add a counter [1], [2], etc.
+        // If duplicate, add a counter [1], [2], etc.
         QString displayName = baseName;
         if (duplicateCount > 0) {
             displayName += " [" + QString::number(duplicateCount) + "]";
         }
 
-        // 🔹 Create and save new patient
+        // Create and save new patient
         PatientRecord newPatient(patientID, firstName, lastName, dateOfBirth);
         FileHandler::getInstance()->savePatientRecord(newPatient);
 
+        // Update user interface to show new patient in dropdown
         comboSelectPatient->addItem(displayName, patientID);
         qDebug() << "New patient added: " << patientID << " - " << displayName;
 
@@ -536,7 +563,12 @@ void MainWindow::on_addPatientButton_clicked() {
 }
 
 
-
+/**
+ * @name on_removePatientButton_clicked
+ * @brief Handler function called when the "Remove Patient" button is pressed
+ * @details Removes the record file for the selected patient, and updates the
+ * user interface.
+ */
 void MainWindow::on_removePatientButton_clicked() {
     int index = comboSelectPatient->currentIndex();
     if (index == -1) return;  // No patient selected
@@ -551,10 +583,16 @@ void MainWindow::on_removePatientButton_clicked() {
         qDebug() << "Failed to delete patient record!";
     }
 
-    // Remove from dropdown
+    // Update user interface to remove patient from dropdown
     comboSelectPatient->removeItem(index);
 }
 
+/**
+ * @name on_patientSelected
+ * @brief Handles the signal that a new patient has been selected
+ * @details Updates the UI to display the select patient's ID
+ * @param[in] index: Index of option selected in the dropdown
+ */
 void MainWindow::on_patientSelected(int index) {
     if (index == -1) return;
 

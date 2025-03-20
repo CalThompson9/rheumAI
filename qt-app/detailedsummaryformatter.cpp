@@ -2,6 +2,9 @@
  * @file detailedsummaryformatter.cpp
  * @brief Definition of DetailedSummaryFormatter class
  * 
+ * Detailed summary format displays the summaries of the interval history,
+ * physical examination, current status, and plan.
+ * 
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 7, 2025
  */
