@@ -70,6 +70,24 @@ void Summary::clear()
 }
 
 /**
+ * @name getText
+ * @brief Retrieves the full summary as a formatted string
+ * @return A QString containing the entire summary
+ */
+QString Summary::getText() const
+{
+    return QString("**INTERVAL HISTORY**\n%1\n\n"
+                   "**PHYSICAL EXAMINATION**\n%2\n\n"
+                   "**CURRENT STATUS**\n%3\n\n"
+                   "**PLAN**\n%4\n")
+        .arg(intervalHistory.isEmpty() ? "No interval history found." : intervalHistory)
+        .arg(physicalExamination.isEmpty() ? "No physical examination found." : physicalExamination)
+        .arg(currentStatus.isEmpty() ? "No current status found." : currentStatus)
+        .arg(plan.isEmpty() ? "No plan found." : plan);
+}
+
+
+/**
  * @name getIntervalHistory
  * @brief Retrieves the interval history section of the summary
  * @return Interval history section

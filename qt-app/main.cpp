@@ -18,17 +18,5 @@ int main(int argc, char *argv[]) {
     MainWindow w;
     w.show();
 
-    // TEST: Convert transcript to JSON (Temporary for Debugging)
-    FileHandler* fileHandler = FileHandler::getInstance();
-    fileHandler->setTranscriptFilename(":/sample_transcript.txt");
-    fileHandler->setJsonFilename("patient_12345.json");
-
-    // DEBUG: Print expected file paths
-    qDebug() << "Expected Transcript Path: " << fileHandler->getTranscriptFilename();
-    qDebug() << "Expected JSON Path: " << fileHandler->getJsonFilename();
-
-    fileHandler->saveTranscriptToJson();
-    fileHandler->loadPatientJson();
-
     return a.exec();
 }

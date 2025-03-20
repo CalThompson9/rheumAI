@@ -24,6 +24,10 @@
 #include "summarygenerator.h"
 #include "addpatientdialog.h"
 #include <QMessageBox> 
+#include <QMediaDevices>
+#include <QAudioDevice>
+#include <QTimer>
+
 
 
 /**
@@ -35,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setGeometry(0, 0, 1200, 800);
+
 
     // Create central widget
     centralWidget = new QWidget(this);
@@ -92,7 +97,11 @@ MainWindow::MainWindow(QWidget *parent)
             // Construct absolute path to output.wav
             QString filePath = QDir(projectDir).filePath("output.wav");
 
-            audioHandler->transcribe(filePath);
+            // Getting trancription and saving it to file
+            Transcript currentTranscription = audioHandler->transcribe(filePath);
+            qDebug() << "Transcription: " << currentTranscription.getContent();
+            FileHandler::getInstance()->saveTranscript(patientID, currentTranscription.getContent());
+
             btnRecord->setText("Start Recording");
         }
         else
@@ -104,8 +113,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
-    //handleSummarizeButtonClicked();
-
     llmClient = new LLMClient(this);
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
@@ -116,30 +123,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     // NEW: Load existing patients on startup**
     loadPatientsIntoDropdown();
-
-    connect(btnRecord, &QPushButton::clicked, this, [this]() {
-        //llmClient->sendRequest("Hello, AI! How are you?");
-
-         // Get selected patient ID
-         QVariant patientData = comboSelectPatient->currentData();
-         if (!patientData.isValid()) {
-             QMessageBox::warning(this, "No Patient Selected", "Please select a patient before recording.");
-             return;
-         }
-         int patientID = patientData.toInt();
-
-         // Create a test transcript file
-         QString filePath = "Patients/" + QString::number(patientID) + "/transcript_raw.txt";
-         QFile file(filePath);
-         if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-             QTextStream out(&file);
-             out << "This is a test transcript for patient " << patientID << "\n";
-             file.close();
-             qDebug() << "Test transcript saved to: " << filePath;
-         } else {
-             qDebug() << "Failed to save transcript!";
-         }
-    });
+        if (comboSelectPatient->count() > 0) {
+        QTimer::singleShot(100, this, [this]() {
+            comboSelectPatient->setCurrentIndex(0);
+            on_patientSelected(0);
+        });
+    }
 
     // Connect "Summarize" button to summarize transcripts and update window
     connect(btnSummarize, &QPushButton::clicked, this, &MainWindow::handleSummarizeButtonClicked);
@@ -154,6 +143,32 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::handleLLMResponse(const QString &response)
 {
     textTranscription->setPlainText(response);
+
+    // Get selected patient ID
+    QVariant patientData = comboSelectPatient->currentData();
+    if (!patientData.isValid()) {
+        qWarning() << "No patient selected, cannot save transcript!";
+        return;
+    }
+    int patientID = patientData.toInt();
+
+    // Ensure the patient's folder exists
+    QDir patientDir("Patients/" + QString::number(patientID));
+    if (!patientDir.exists()) {
+        patientDir.mkpath(".");
+    }
+
+    // Save the transcript to file
+    QString transcriptPath = patientDir.filePath("transcript_raw.txt");
+    QFile file(transcriptPath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << response;
+        file.close();
+        qDebug() << "Transcript saved to: " << transcriptPath;
+    } else {
+        qDebug() << "Failed to save transcript!";
+    }
 }
 
 /**
@@ -168,34 +183,47 @@ void MainWindow::handleLLMResponse(const QString &response)
 void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
 {
     QAction *selectedOption = qobject_cast<QAction *>(sender());
-    if (selectedOption->text() == "Plain Text")
-    {
-        // Display the current transcript text directly
-        QLayoutItem *child;
-        while ((child = summarySection->takeAt(0)) != nullptr) {
-            delete child->widget();
-            delete child;
-        }
-        QLabel *transcriptLabel = new QLabel(currentTranscriptText);
-        QWidget *transcriptWidget = new QWidget;
-        QVBoxLayout *transcriptLayout = new QVBoxLayout(transcriptWidget);
-        transcriptLayout->addWidget(transcriptLabel);
-        summarySection->addWidget(transcriptWidget);
+
+    // Clear existing summary display
+    QLayoutItem *child;
+    while ((child = summarySection->takeAt(0)) != nullptr) {
+        delete child->widget();  // Ensure previous widget is deleted
+        delete child;
     }
-    else
-    {
-        // Display summary with selected layout format
+
+    if (selectedOption->text() == "Plain Text") {
+        qDebug() << "Switching to plain text (transcript) mode.";
+
+        // Ensure the transcript is actually loaded
+        if (currentTranscriptText.isEmpty()) {
+            qDebug() << "No transcript available.";
+            return;
+        }
+
+        // Create a QLabel inside the summary section (INSTEAD OF ADDING ANYTHING ELSE)
+        QLabel *transcriptLabel = new QLabel(currentTranscriptText);
+        transcriptLabel->setWordWrap(true);  // Ensure proper wrapping
+        transcriptLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);  // Positioning fix
+
+        // Add it inside the summary layout
+        summarySection->addWidget(transcriptLabel);
+
+        qDebug() << "Transcript displayed inside summary section.";
+    }
+    else {
+        // Display summary with the selected format
         setSummaryFormatter(summaryFormatter);
         displaySummary(summaryGenerator->getSummary());
     }
 
-    // Update options menu
-    for (QAction *layoutAction : summaryLayoutOptions->actions())
-    {
+    // Update menu UI
+    for (QAction *layoutAction : summaryLayoutOptions->actions()) {
         layoutAction->setEnabled(layoutAction != selectedOption);
         selectSummaryLayout->setText(selectedOption->text());
     }
 }
+
+
 
 /**
  * @name handleSummarizeButtonClicked
@@ -204,24 +232,34 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
  */
 void MainWindow::handleSummarizeButtonClicked()
 {
-    // Create a new transcript for LLM summarization
-    QFile file(":/sample_transcript.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qWarning() << "Failed to open. Request aborted.";
+    // Get selected patient ID
+    QVariant patientData = comboSelectPatient->currentData();
+    if (!patientData.isValid()) {
+        QMessageBox::warning(this, "No Patient Selected", "Please select a patient before summarizing.");
         return;
     }
+    int patientID = patientData.toInt();
+    
+    // Construct file path for the transcript
+    QString transcriptPath = "Patients/" + QString::number(patientID) + "/transcript_raw.txt";
+    
+    // Open and read the transcript
+    QFile file(transcriptPath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open transcript. Request aborted.";
+        return;
+    }
+
     currentTranscriptText = QTextStream(&file).readAll().trimmed();
     file.close();
 
-    // ANDRES: THIS IS WHERE THE TRANSCRIPT IS CREATED, 
-    // AUDIOHANDLER NEEDS TO BE ABLE TO GET THE TRANSCRIPT INTO THIS FUNCTION
-
+    // Create a transcript object
     Transcript *transcript = new Transcript(QTime::currentTime(), currentTranscriptText);
 
-    // Send the request to the LLM
+    // Send transcript to the LLM
     summaryGenerator->sendRequest(*transcript);
 }
+
 
 /**
  * @name handleSummaryReady
@@ -231,6 +269,28 @@ void MainWindow::handleSummaryReady()
 {
     // Retrieve structured summary from SummaryGenerator
     Summary summary = summaryGenerator->getSummary();
+
+    // Get selected patient ID
+    QVariant patientData = comboSelectPatient->currentData();
+    if (!patientData.isValid()) {
+        qWarning() << "No patient selected, cannot save summary!";
+        return;
+    }
+    int patientID = patientData.toInt();
+
+    // Construct summary file path
+    QString summaryPath = "Patients/" + QString::number(patientID) + "/summary.txt";
+    
+    // Save summary to file
+    QFile file(summaryPath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << summary.getText();
+        file.close();
+        qDebug() << "Summary saved to: " << summaryPath;
+    } else {
+        qDebug() << "Failed to save summary!";
+    }
 
     // Update the UI with the summary
     displaySummary(summary);
@@ -280,8 +340,14 @@ void MainWindow::setSummaryFormatter(SummaryFormatter *newSummaryFormatter)
  */
 void MainWindow::displaySummary(const Summary &summary)
 {
+    if (!summaryFormatter) {
+        qDebug() << "Warning: summaryFormatter is null, cannot display summary.";
+        return;
+    }
+
     summaryFormatter->generateLayout(summary, summarySection);
 }
+
 
 /**
  * @brief Handles constructing the settings pop-up menu.
@@ -315,12 +381,18 @@ void MainWindow::showSettings()
     peripheralsField->setFixedHeight(60); // Adjust height as needed
     peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
 
-    // #################### TODO: Add microphone checking ####################
-    if (true) {
-        peripheralsField->setText("Microphone ✅");
+    // #################### Check if a microphone is available ####################
+    const QList<QAudioDevice> audioDevices = QMediaDevices::audioInputs(); // Get available microphones
+
+    if (!audioDevices.isEmpty()) {
+        const QAudioDevice &defaultMic = audioDevices.first(); // Get default microphone
+        QString micName = defaultMic.description(); // Get microphone name
+        peripheralsField->setText("Microphone Detected --> [" + micName + "]");
     } else {
-        peripheralsField->setText("Microphone ❌");
+        peripheralsField->setText("No microphone detected.");
     }
+
+
 
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);
@@ -484,6 +556,9 @@ void MainWindow::on_addPatientButton_clicked() {
         // Update user interface to show new patient in dropdown
         comboSelectPatient->addItem(displayName, patientID);
         qDebug() << "New patient added: " << patientID << " - " << displayName;
+
+        // Refresh dropdown
+        loadPatientsIntoDropdown();
     }
 }
 
@@ -521,9 +596,49 @@ void MainWindow::on_removePatientButton_clicked() {
 void MainWindow::on_patientSelected(int index) {
     if (index == -1) return;
 
-    int patientID = comboSelectPatient->currentData().toInt();
+    patientID = comboSelectPatient->currentData().toInt();
     qDebug() << "Selected patient: " << patientID;
 
     lblPatientName->setText("Patient ID: " + QString::number(patientID));
+
+    // Load the transcript
+    QString savedTranscript = FileHandler::getInstance()->loadTranscript(patientID);
+    if (!savedTranscript.isEmpty()) {
+        qDebug() << "Transcript found, storing in currentTranscriptText.";
+        currentTranscriptText = savedTranscript;  // Store transcript
+    } else {
+        qDebug() << "No transcript found, clearing UI.";
+        currentTranscriptText.clear();
+    }
+
+    // Load the structured summary
+    qDebug() << "Attempting to load summary for patient ID: " << patientID;
+    QString savedSummaryText = FileHandler::getInstance()->loadSummaryText(patientID);
+
+    if (!savedSummaryText.isEmpty()) {
+        qDebug() << "Summary found, sending to SummaryGenerator...";
+        summaryGenerator->setSummaryText(savedSummaryText);
+
+        Summary summary = summaryGenerator->getSummary();
+        qDebug() << "Summary successfully retrieved, attempting to display...";
+        
+        displaySummary(summary);
+        qDebug() << "Summary display completed.";
+    } else {
+        qDebug() << "No saved summary found.";
+        // Clear the summary UI
+        QLayoutItem *child;
+        while ((child = summarySection->takeAt(0)) != nullptr) {
+            if (child->widget()) {
+                child->widget()->deleteLater();  // Safely delete the widget
+            }
+            delete child;  // Free the layout item
+        }
+
+    }
 }
 
+MainWindow::~MainWindow()
+{
+    // Qt automatically manages memory, no need for manual deletion
+}

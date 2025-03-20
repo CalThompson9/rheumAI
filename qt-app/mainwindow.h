@@ -28,7 +28,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() = default;  // Qt automatically manages memory, no need for manual deletion
+    ~MainWindow();
 
     void setSummaryFormatter(SummaryFormatter* summaryFormatter);
     void displaySummary(const Summary& summary);
@@ -59,6 +59,8 @@ private:
     SummaryGenerator *summaryGenerator;
 
     QString currentTranscriptText;
+
+    int patientID;
     
     Settings *settings;
 

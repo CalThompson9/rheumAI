@@ -9,6 +9,15 @@
  */
 
 #include "audiohandler.h"
+#include <QMediaDevices>
+#include <QAudioInput>
+#include <QAudioDevice>
+#include <QMediaRecorder>
+#include <QMediaFormat>
+#include <QCoreApplication>
+#if QT_CONFIG(permissions)
+  #include <QPermission>
+#endif
 
 // Replace with your Google Cloud API key and endpoint
 const QString API_URL = "https://speech.googleapis.com/v1/speech:recognize";
@@ -25,12 +34,6 @@ AudioHandler::AudioHandler() : QObject(nullptr)
     qDebug() << "Audio API Key:" << apiKey;
 
     networkManager = new QNetworkAccessManager(this);
-    captureSession.setAudioInput(&audioInput); // Add this line
-    captureSession.setRecorder(&recorder);     // Add this line
-
-    // Connect mediaFormatChanged signal to a slot to print a message
-    // connect(&recorder, &QMediaRecorder::audioChannelCountChanged, this, []()
-    //         { qDebug() << "Media format has changed. sample rate is "; });
 }
 
 /**
@@ -115,7 +118,7 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
 
     // Construct JSON payload
     QJsonObject configObj;
-    configObj["encoding"] = "LINEAR16"; // Adjust based on your WAV file
+    configObj["encoding"] = "LINEAR16";
     configObj["sampleRateHertz"] = 48000;
     configObj["languageCode"] = "en-CA";
     configObj["audioChannelCount"] = 2;
@@ -159,20 +162,63 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
  */
 void AudioHandler::startRecording(const QString &outputFile)
 {
-    recorder.setQuality(QMediaRecorder::HighQuality);
+    requestMicrophonePermission();
 
+    // Get available microphones
+    QList<QAudioDevice> devices = QMediaDevices::audioInputs();
+    if (devices.isEmpty())
+    {
+        qWarning() << "No microphone detected!";
+        return;
+    }
+
+    QAudioDevice defaultMic = devices.first();
+    qDebug() << "🎤 Using microphone:" << defaultMic.description();
+
+    // Get the preferred format and check requirements
+    QAudioFormat format = defaultMic.preferredFormat();
+
+    if (format.sampleRate() != 48000 || format.channelCount() != 2)
+    {
+        qWarning() << "Microphone does not support required format!";
+        qWarning() << "   Required: 48kHz, 2 channels";
+        qWarning() << "   Found: " << format.sampleRate() << "Hz, " << format.channelCount() << " channels";
+        return;
+    }
+
+    qDebug() << "Microphone meets requirements: 48kHz, 2 channels";
+
+    // Delete previous audio input if it exists
+    if (audioInput != nullptr)
+    {
+        delete audioInput;
+        audioInput = nullptr;
+    }
+
+    // Create QAudioInput with the validated format
+    audioInput = new QAudioInput(defaultMic);
+    captureSession.setAudioInput(audioInput);
+    captureSession.setRecorder(&recorder);
+
+    // Set up recorder output
     QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
     QString filePath = QDir(projectDir).filePath(outputFile);
     recorder.setOutputLocation(QUrl::fromLocalFile(filePath));
 
-    QMediaFormat format;
-    format.setFileFormat(QMediaFormat::Wave);
-    recorder.setMediaFormat(format);
-    recorder.record();
-    // qDebug() << "Media format has changed. from Record " << recorder.audioSampleRate();
+    // Set media format to Wave
+    QMediaFormat mediaFormat;
+    mediaFormat.setFileFormat(QMediaFormat::Wave);
+    recorder.setMediaFormat(mediaFormat);
 
-    // qDebug() << "Recording started with sample rate" << recorder.audioChannelCount();
+    // Apply required settings to recorder
+    recorder.setAudioSampleRate(48000);
+    recorder.setAudioChannelCount(2);
+
+    qDebug() << "🎙️ Starting recording. Output file:" << filePath;
+    recorder.record();
 }
+
+
 
 /**
  * @name pauseRecording
@@ -236,4 +282,57 @@ QString AudioHandler::getAPIKey() {
     }
 
     return "";
+}
+
+
+
+void AudioHandler::requestMicrophonePermission()
+{
+#if QT_CONFIG(permissions)
+    QMicrophonePermission microphonePermission;
+    switch (qApp->checkPermission(microphonePermission))
+    {
+    case Qt::PermissionStatus::Undetermined:
+        qDebug() << "Requesting microphone permission...";
+        qApp->requestPermission(microphonePermission, this, &AudioHandler::handlePermissionResponse);
+        return;
+    case Qt::PermissionStatus::Denied:
+        qWarning() << "Microphone permission denied!";
+        emit microphonePermissionDenied();  // Handle UI warning
+        return;
+    case Qt::PermissionStatus::Granted:
+        qDebug() << "Microphone permission granted!";
+        break;
+    }
+#else
+    qWarning() << "⚠️ Qt permissions API is disabled!";
+#endif
+}
+
+void AudioHandler::handlePermissionResponse()
+{
+    QMicrophonePermission microphonePermission;
+    if (qApp->checkPermission(microphonePermission) == Qt::PermissionStatus::Granted)
+    {
+        qDebug() << "Microphone permission granted!";
+        emit microphonePermissionGranted();
+    }
+    else
+    {
+        qWarning() << "User denied microphone permission.";
+        emit microphonePermissionDenied();
+    }
+}
+
+
+void AudioHandler::playRecording(const QString &filePath)
+{
+    if (!QFile::exists(filePath))
+    {
+        qWarning() << "Recorded file does not exist: " << filePath;
+        return;
+    }
+    qDebug() << "Playing recorded file:" << filePath;
+    QString command = "afplay " + filePath; // macOS playback command
+    system(command.toUtf8().constData());
 }

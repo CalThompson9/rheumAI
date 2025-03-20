@@ -80,6 +80,42 @@ QString FileHandler::readTranscript() {
     return content;
 }
 
+
+QString FileHandler::loadSummaryText(int patientID) {
+    QString summaryPath = patientDatabasePath + "/" + QString::number(patientID) + "/summary.txt";
+    QFile file(summaryPath);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "❌ No summary found for patient:" << patientID;
+        return "";
+    }
+
+    QTextStream in(&file);
+    QString summaryContent = in.readAll();
+    file.close();
+
+    qDebug() << "✅ Loaded summary from file (before returning):\n" << summaryContent;
+    return summaryContent;
+}
+
+
+QString FileHandler::loadTranscript(int patientID) {
+    QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
+    QFile file(transcriptPath);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "No transcript found for patient:" << patientID;
+        return "";
+    }
+
+    QTextStream in(&file);
+    QString transcriptContent = in.readAll();
+    file.close();
+
+    return transcriptContent;
+}
+
+
 /**
  * @name savePatientRecord
  * @brief Saves the patient record to file
@@ -102,6 +138,22 @@ void FileHandler::savePatientRecord(const PatientRecord &record) {
     file.write(doc.toJson());
     file.close();
     qDebug() << "Patient record saved to:" << file.fileName();
+}
+
+void FileHandler::saveTranscript(int patientID, const QString &transcript) {
+    QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
+    QFile file(transcriptPath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Could not save transcript!";
+        return;
+    }
+
+    file.resize(0);
+
+    QTextStream out(&file);
+    out << transcript;
+    file.close();
+    qDebug() << "Transcript saved to:" << transcriptPath;
 }
 
 

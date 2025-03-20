@@ -77,8 +77,6 @@ CURRENT STATUS:
 
 CLINICAL IMPRESSION: (Discuss the physician's overall impressions of the patient's health status and any concerns or areas of focus)
 
-PLAN:
-
 PLAN: (Outline the management and treatment plan discussed during the visit, including medications prescribed, therapies recommended, and any referrals to specialists or additional diagnostic tests. Extract all relevant information directly from the transcript)
 
 Patient Education: (Include all educational information provided to the patient regarding their condition, medications, or lifestyle modifications. List patient instructions clearly, in a numbered format. Each instructions should have additional detail on what was prescribed and be on its own line)
