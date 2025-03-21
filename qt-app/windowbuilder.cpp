@@ -20,7 +20,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnRemovePatient)
 {
     // Create UI elements
-    //btnConnectDevice = new QPushButton("Connect Device", centralWidget);
     btnSettings = new QPushButton("Settings", centralWidget);
     lblTitle = new QLabel(centralWidget);
     lblPatientName = new QLabel("[Select a Patient]", centralWidget);
@@ -38,8 +37,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     // Set logo as title without distortion
     QPixmap logoPixmap(":/logo.png");
     lblTitle->setPixmap(logoPixmap.scaled(300, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
-    
 
     lblPatientName->setAlignment(Qt::AlignCenter);
     lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
@@ -67,7 +64,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                                 "background-color: #C56E39;"
                                 "}";
 
-    //btnConnectDevice->setStyleSheet(blueButtonStyle);
     btnSettings->setStyleSheet(blueButtonStyle);
     btnSettings->setFixedWidth(100);
     btnSummarize->setStyleSheet(orangeButtonStyle);
@@ -131,10 +127,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     summaryHeader->addWidget(summaryTitle);
     summaryHeader->addWidget(selectSummaryLayout);
     summaryHeader->setSpacing(10);
-    
-
-
-
 
     // Create scrollable summary section
     QScrollArea *scrollArea = new QScrollArea(centralWidget);
