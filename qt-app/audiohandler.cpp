@@ -15,6 +15,8 @@
 #include <QMediaRecorder>
 #include <QMediaFormat>
 #include <QCoreApplication>
+#include <QHttpMultiPart>
+#include <QHttpPart>
 #if QT_CONFIG(permissions)
   #include <QPermission>
 #endif
@@ -58,38 +60,27 @@ AudioHandler *AudioHandler::getInstance()
  */
 Transcript AudioHandler::transcribe(const QString &filename)
 {
-    QString response = sendToGoogleSpeechAPI(filename);
+    QString response = sendToWhisperAPI(filename);
     if (response.isEmpty())
     {
         emit transcriptionCompleted("Transcription failed");
         return Transcript(getCurrentTime(), "");
     }
 
-    // Parse JSON response from Google Speech-to-Text
+    // Parse Whisper JSON response
     QJsonDocument doc = QJsonDocument::fromJson(response.toUtf8());
     if (!doc.isObject())
     {
-        qDebug() << "Invalid JSON response";
+        qDebug() << "Invalid JSON response from Whisper";
         emit transcriptionCompleted("Invalid response format");
         return Transcript(getCurrentTime(), "");
     }
 
-    QJsonObject jsonObj = doc.object();
-    QJsonArray results = jsonObj["results"].toArray();
-    QString transcribedText;
-    for (const QJsonValue &result : results)
-    {
-        QJsonObject resObj = result.toObject();
-        QJsonArray alternatives = resObj["alternatives"].toArray();
-        if (!alternatives.isEmpty())
-        {
-            transcribedText += alternatives[0].toObject()["transcript"].toString();
-        }
-    }
-
-    emit transcriptionCompleted(transcribedText);
-    return Transcript(getCurrentTime(), transcribedText);
+    QString text = doc.object().value("text").toString();
+    emit transcriptionCompleted(text);
+    return Transcript(getCurrentTime(), text);
 }
+
 
 /**
  * @name sendToGoogleSpeechAPI
@@ -97,44 +88,42 @@ Transcript AudioHandler::transcribe(const QString &filename)
  * @param[in] audioPath: Path to the audio file
  * @return Response from the API as a string
  */
-QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
+QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
 {
-    QUrl url(API_URL + QString::fromStdString("?key=") + apiKey);
+    QUrl url("https://api.openai.com/v1/audio/transcriptions");
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    // Read audio file
-    QFile file(audioPath);
-    if (!file.open(QIODevice::ReadOnly))
+    QString bearerToken = "Bearer " + apiKey;
+    request.setRawHeader("Authorization", bearerToken.toUtf8());
+
+    // Build multipart/form-data
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    // Add audio file
+    QFile *file = new QFile(audioPath);
+    if (!file->open(QIODevice::ReadOnly))
     {
-        qDebug() << "Could not open audio file: " << audioPath;
+        qWarning() << "Failed to open file for Whisper API:" << audioPath;
+        delete file;
         return "";
     }
-    QByteArray audioData = file.readAll();
-    file.close();
 
-    // Base64 encode the audio data (Google expects this for small files)
-    QString base64Audio = audioData.toBase64();
+    QHttpPart audioPart;
+    audioPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"" + QFileInfo(audioPath).fileName() + "\""));
+    audioPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("audio/wav"));
+    audioPart.setBodyDevice(file);
+    file->setParent(multiPart);
+    multiPart->append(audioPart);
 
-    // Construct JSON payload
-    QJsonObject configObj;
-    configObj["encoding"] = "LINEAR16";
-    configObj["sampleRateHertz"] = 48000;
-    configObj["languageCode"] = "en-CA";
-    configObj["audioChannelCount"] = 2;
-
-    QJsonObject audioObj;
-    audioObj["content"] = base64Audio;
-
-    QJsonObject requestBody;
-    requestBody["config"] = configObj;
-    requestBody["audio"] = audioObj;
-
-    QJsonDocument doc(requestBody);
-    QByteArray jsonData = doc.toJson();
+    // Add model name
+    QHttpPart modelPart;
+    modelPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"model\""));
+    modelPart.setBody("whisper-1");
+    multiPart->append(modelPart);
 
     // Send POST request
-    QNetworkReply *reply = networkManager->post(request, jsonData);
+    QNetworkReply *reply = networkManager->post(request, multiPart);
+    multiPart->setParent(reply); // ensure cleanup
 
     QEventLoop loop;
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
@@ -144,11 +133,11 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
     if (reply->error() == QNetworkReply::NoError)
     {
         response = reply->readAll();
-        qDebug() << "API Response: " << response;
+        qDebug() << "Whisper API Response:" << response;
     }
     else
     {
-        qDebug() << "Request failed: " << reply->errorString();
+        qWarning() << "Whisper request failed:" << reply->errorString();
     }
 
     reply->deleteLater();
@@ -174,19 +163,6 @@ void AudioHandler::startRecording(const QString &outputFile)
 
     QAudioDevice defaultMic = devices.first();
     qDebug() << "🎤 Using microphone:" << defaultMic.description();
-
-    // Get the preferred format and check requirements
-    QAudioFormat format = defaultMic.preferredFormat();
-
-    if (format.sampleRate() != 48000 || format.channelCount() != 2)
-    {
-        qWarning() << "Microphone does not support required format!";
-        qWarning() << "   Required: 48kHz, 2 channels";
-        qWarning() << "   Found: " << format.sampleRate() << "Hz, " << format.channelCount() << " channels";
-        return;
-    }
-
-    qDebug() << "Microphone meets requirements: 48kHz, 2 channels";
 
     // Delete previous audio input if it exists
     if (audioInput != nullptr)

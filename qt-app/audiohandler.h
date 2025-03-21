@@ -63,7 +63,7 @@ private:
     const QString API_URL = QString::fromStdString("https://speech.googleapis.com/v1/speech:recognize"); // API URL for Google Speech API
     QNetworkAccessManager *networkManager;                                                               // Network manager for API requests
 
-    QString sendToGoogleSpeechAPI(const QString &audioPath); // Send audio to Google Speech API
+    QString sendToWhisperAPI(const QString &audioPath); // Send audio to Google Speech API
     QTime getCurrentTime() const;                            // Get current time
     QString outputFilePath;                                  // Output file path for recording
     QMediaRecorder recorder;                                 // Media recorder for audio
