@@ -23,9 +23,6 @@
   #include <QPermission>
 #endif
 
-// Replace with your Google Cloud API key and endpoint
-const QString API_URL = "https://speech.googleapis.com/v1/speech:recognize";
-
 AudioHandler *AudioHandler::instance = nullptr;
 
 /**
