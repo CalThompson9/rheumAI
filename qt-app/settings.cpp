@@ -12,15 +12,16 @@
  */
 Settings::Settings(QObject *parent, LLMClient *llm, AudioHandler *audio)
     : QObject(parent),
-    llmClient(llm),
-    audioHandlerClient(audio),
-    llmKey(llm->apiKey),
-    audioKey(audio->apiKey)
+      llmClient(llm),
+      audioHandlerClient(audio),
+      llmKey(llm->apiKey),
+      audioKey(audio->apiKey),
+      openAIAudioKey(audio->openAIApiKey)
 {
 }
 
 /**
- *  * @name setLLMKey
+ * @name setLLMKey
  * @brief Sets LLM API key and modifies key storage file for continual use.
  * @param key
  */
@@ -31,12 +32,22 @@ void Settings::setLLMKey(QString newKey) {
 
 /**
  * @name setAudioKey
- * @brief Sets audio transcriber API key and modifies key storage file for continual use.
+ * @brief Sets Google audio transcriber API key and modifies key storage file for continual use.
  * @param key
  */
 void Settings::setAudioKey(QString newKey) {
     audioHandlerClient->apiKey = newKey;
     writeAPIKey("AUDIO", newKey);
+}
+
+/**
+ * @name setOpenAIAudioKey
+ * @brief Sets OpenAI Whisper audio API key and stores it persistently.
+ * @param key
+ */
+void Settings::setOpenAIAudioKey(QString newKey) {
+    audioHandlerClient->openAIApiKey = newKey;
+    writeAPIKey("OPENAI_AUDIO", newKey);
 }
 
 /**
@@ -51,7 +62,9 @@ void Settings::writeAPIKey(const QString &keyClient, const QString &key)
     if (keyClient == "LLM") {
         prefix = "GEMINI_API_KEY:";
     } else if (keyClient == "AUDIO") {
-        prefix = "AUDIO_API_KEY:";
+        prefix = "GOOGLE_AUDIO_API_KEY:";
+    } else if (keyClient == "OPENAI_AUDIO") {
+        prefix = "OPENAI_AUDIO_API_KEY:";
     } else {
         qWarning() << "Unknown keyClient:" << keyClient;
         return;
@@ -77,7 +90,7 @@ void Settings::writeAPIKey(const QString &keyClient, const QString &key)
     bool foundLine = false;
     for (int i = 0; i < lines.size(); ++i) {
         if (lines[i].startsWith(prefix)) {
-            lines[i] = prefix + " " + key; // Replace everything after prefix
+            lines[i] = prefix + " " + key;
             foundLine = true;
             break;
         }
