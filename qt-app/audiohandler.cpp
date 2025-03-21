@@ -6,6 +6,8 @@
  *
  * @author Andres Pedreros Castro (apedrero@uwo.ca)
  * @date Mar. 6, 2025
+ * @author Callum Thompson
+ * @date Mar. 21, 2025
  */
 
 #include "audiohandler.h"
@@ -32,11 +34,14 @@ AudioHandler *AudioHandler::instance = nullptr;
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
-    apiKey = getAPIKey();
-    qDebug() << "Audio API Key:" << apiKey;
+    apiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
+    openAIApiKey = getAPIKey("OPENAI_AUDIO_API_KEY:");
+    qDebug() << "Google API Key:" << apiKey;
+    qDebug() << "OpenAI API Key:" << openAIApiKey;
 
     networkManager = new QNetworkAccessManager(this);
 }
+
 
 /**
  * @name getInstance
@@ -58,29 +63,141 @@ AudioHandler *AudioHandler::getInstance()
  * @param[in] filename: Path to the audio file
  * @return Transcript object containing the transcribed text
  */
-Transcript AudioHandler::transcribe(const QString &filename)
+Transcript AudioHandler::transcribe(const QString& filename)
 {
-    QString response = sendToWhisperAPI(filename);
-    if (response.isEmpty())
-    {
+    double durationSecs = getAudioDuration(filename);
+    int channelCount = getAudioChannelCount(filename);
+
+    qDebug() << "Audio duration:" << durationSecs << "seconds";
+    qDebug() << "Channel count:" << channelCount;
+
+    QString response;
+
+    // Use Whisper if longer than 60s or not stereo (2 channels)
+    if (durationSecs > 60.0 || channelCount != 2) {
+        qDebug() << "Using Whisper (OpenAI)";
+        response = sendToWhisperAPI(filename);
+    } else {
+        qDebug() << "Using Google Speech-to-Text";
+        response = sendToGoogleSpeechAPI(filename);
+    }
+
+    if (response.isEmpty()) {
         emit transcriptionCompleted("Transcription failed");
         return Transcript(getCurrentTime(), "");
     }
 
-    // Parse Whisper JSON response
+    QString result;
     QJsonDocument doc = QJsonDocument::fromJson(response.toUtf8());
-    if (!doc.isObject())
-    {
-        qDebug() << "Invalid JSON response from Whisper";
+    if (!doc.isObject()) {
         emit transcriptionCompleted("Invalid response format");
         return Transcript(getCurrentTime(), "");
     }
 
-    QString text = doc.object().value("text").toString();
-    emit transcriptionCompleted(text);
-    return Transcript(getCurrentTime(), text);
+    if (durationSecs > 60.0 || channelCount != 2) {
+        result = doc.object().value("text").toString();
+    } else {
+        QJsonArray results = doc.object().value("results").toArray();
+        for (const QJsonValue& val : results) {
+            QJsonArray alternatives = val.toObject().value("alternatives").toArray();
+            if (!alternatives.isEmpty()) {
+                result += alternatives[0].toObject().value("transcript").toString();
+            }
+        }
+    }
+
+    emit transcriptionCompleted(result);
+    return Transcript(getCurrentTime(), result);
 }
 
+/**
+ * @name getAudioChannelCount
+ * @brief Retrieves the number of audio channels in a WAV file
+ * @param[in] audioPath: Path to the audio file
+ * @return Number of audio channels
+ */
+int AudioHandler::getAudioChannelCount(const QString& audioPath) const
+{
+    QFile file(audioPath);
+    if (!file.open(QIODevice::ReadOnly)) return -1;
+
+    file.seek(22); // Byte offset for number of channels in a WAV file header
+    char buffer[2];
+    file.read(buffer, 2);
+    file.close();
+
+    int channels = static_cast<unsigned char>(buffer[0]) |
+                   (static_cast<unsigned char>(buffer[1]) << 8);
+    return channels;
+}
+
+
+/**
+ * @name sendToWhisperAPI
+ * @brief Sends the audio file to Google Speech-to-Text API for transcription
+ * @param[in] audioPath: Path to the audio file
+ * @return Response from the API as a string
+ */
+QString AudioHandler::sendToWhisperAPI(const QString& audioPath)
+{
+    qDebug() << "Preparing to send audio to Whisper API...";
+    qDebug() << "Audio path:" << audioPath;
+    qDebug() << "OpenAI API Key (first 10 chars):" << openAIApiKey.left(10) << "...";
+
+    if (openAIApiKey.isEmpty()) {
+        qWarning() << "OpenAI API Key is empty!";
+        return "";
+    }
+
+    QUrl url("https://api.openai.com/v1/audio/transcriptions");
+    QNetworkRequest request(url);
+
+    QString bearerToken = "Bearer " + openAIApiKey;
+    request.setRawHeader("Authorization", bearerToken.toUtf8());
+
+    QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    QFile* file = new QFile(audioPath);
+    if (!file->open(QIODevice::ReadOnly)) {
+        qWarning() << "Failed to open file for Whisper API:" << audioPath;
+        delete file;
+        return "";
+    }
+
+    QHttpPart filePart;
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                       QVariant("form-data; name=\"file\"; filename=\"" + QFileInfo(audioPath).fileName() + "\""));
+    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("audio/wav"));
+    filePart.setBodyDevice(file);
+    file->setParent(multiPart);
+    multiPart->append(filePart);
+
+    QHttpPart modelPart;
+    modelPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"model\""));
+    modelPart.setBody("whisper-1");
+    multiPart->append(modelPart);
+
+    qDebug() << "Sending POST request to Whisper API...";
+    QNetworkReply* reply = networkManager->post(request, multiPart);
+    multiPart->setParent(reply); // cleanup
+
+    QEventLoop loop;
+    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    QString response;
+    if (reply->error() == QNetworkReply::NoError) {
+        response = reply->readAll();
+        qDebug() << "✅ Whisper API Response:" << response;
+    } else {
+        qWarning() << "❌ Whisper request failed:" << reply->errorString();
+        qDebug() << "Reply HTTP status code:" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        qDebug() << "Raw reply:" << reply->readAll();
+    }
+
+    reply->deleteLater();
+    return response;
+}
 
 /**
  * @name sendToGoogleSpeechAPI
@@ -88,61 +205,55 @@ Transcript AudioHandler::transcribe(const QString &filename)
  * @param[in] audioPath: Path to the audio file
  * @return Response from the API as a string
  */
-QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
+QString AudioHandler::sendToGoogleSpeechAPI(const QString& audioPath)
 {
-    QUrl url("https://api.openai.com/v1/audio/transcriptions");
+    QUrl url("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKey);
     QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    QString bearerToken = "Bearer " + apiKey;
-    request.setRawHeader("Authorization", bearerToken.toUtf8());
-
-    // Build multipart/form-data
-    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-
-    // Add audio file
-    QFile *file = new QFile(audioPath);
-    if (!file->open(QIODevice::ReadOnly))
-    {
-        qWarning() << "Failed to open file for Whisper API:" << audioPath;
-        delete file;
+    QFile file(audioPath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Could not open audio file: " << audioPath;
         return "";
     }
 
-    QHttpPart audioPart;
-    audioPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"" + QFileInfo(audioPath).fileName() + "\""));
-    audioPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("audio/wav"));
-    audioPart.setBodyDevice(file);
-    file->setParent(multiPart);
-    multiPart->append(audioPart);
+    QByteArray audioData = file.readAll();
+    file.close();
+    QString base64Audio = audioData.toBase64();
 
-    // Add model name
-    QHttpPart modelPart;
-    modelPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"model\""));
-    modelPart.setBody("whisper-1");
-    multiPart->append(modelPart);
+    QJsonObject config;
+    config["encoding"] = "LINEAR16";
+    config["sampleRateHertz"] = 48000;
+    config["languageCode"] = "en-CA";
+    config["audioChannelCount"] = 2;
 
-    // Send POST request
-    QNetworkReply *reply = networkManager->post(request, multiPart);
-    multiPart->setParent(reply); // ensure cleanup
+    QJsonObject audio;
+    audio["content"] = base64Audio;
+
+    QJsonObject root;
+    root["config"] = config;
+    root["audio"] = audio;
+
+    QJsonDocument doc(root);
+    QByteArray jsonData = doc.toJson();
+
+    QNetworkReply* reply = networkManager->post(request, jsonData);
 
     QEventLoop loop;
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     loop.exec();
 
     QString response;
-    if (reply->error() == QNetworkReply::NoError)
-    {
+    if (reply->error() == QNetworkReply::NoError) {
         response = reply->readAll();
-        qDebug() << "Whisper API Response:" << response;
-    }
-    else
-    {
-        qWarning() << "Whisper request failed:" << reply->errorString();
+    } else {
+        qWarning() << "Google request failed:" << reply->errorString();
     }
 
     reply->deleteLater();
     return response;
 }
+
 
 /**
  * @name startRecording
@@ -236,32 +347,10 @@ QTime AudioHandler::getCurrentTime() const
 }
 
 /**
- * @author Thomas Llamzon
- * @brief Reads keyFile upon class construction to set apiKey.
- * @return Returns LLM API Key.
-*/
-QString AudioHandler::getAPIKey() {
-
-    QFile file("keyFile.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "keyFile does not exist yet.";
-        return "";
-    }
-
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        if (line.startsWith("AUDIO_API_KEY:")) {
-            file.close();
-            return line.mid(QString("AUDIO_API_KEY:").length()).trimmed();
-        }
-    }
-
-    return "";
-}
-
-
-
+ * @name requestMicrophonePermission
+ * @brief Requests permission to use the microphone
+ * @details Uses the Qt Permissions API to request microphone access
+ */
 void AudioHandler::requestMicrophonePermission()
 {
 #if QT_CONFIG(permissions)
@@ -285,6 +374,11 @@ void AudioHandler::requestMicrophonePermission()
 #endif
 }
 
+/**
+ * @name handlePermissionResponse
+ * @brief Handles the response to the microphone permission request
+ * @details Emits signals based on the user's response
+ */
 void AudioHandler::handlePermissionResponse()
 {
     QMicrophonePermission microphonePermission;
@@ -300,7 +394,11 @@ void AudioHandler::handlePermissionResponse()
     }
 }
 
-
+/**
+ * @name playRecording
+ * @brief Plays the recorded audio file
+ * @param[in] filePath: Path to the audio file
+ */
 void AudioHandler::playRecording(const QString &filePath)
 {
     if (!QFile::exists(filePath))
@@ -311,4 +409,54 @@ void AudioHandler::playRecording(const QString &filePath)
     qDebug() << "Playing recorded file:" << filePath;
     QString command = "afplay " + filePath; // macOS playback command
     system(command.toUtf8().constData());
+}
+
+/**
+ * @name getAPIKey
+ * @brief Retrieves the API key from the key file
+ */
+QString AudioHandler::getAPIKey(const QString& keyPrefix)
+{
+    QFile file("keyFile.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "keyFile.txt not found.";
+        return "";
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (line.startsWith(keyPrefix)) {
+            return line.mid(keyPrefix.length()).trimmed();
+        }
+    }
+
+    return "";
+}
+
+/**
+ * @name setOpenAIApiKey
+ * @brief Sets the OpenAI API key
+ * @param[in] key: OpenAI API key
+ */
+void AudioHandler::setOpenAIApiKey(const QString& key)
+{
+    openAIApiKey = key;
+}
+
+/**
+ * @name getAudioDuration
+ * @brief Retrieves the duration of an audio file
+ * @param[in] audioPath: Path to the audio file
+ */
+double AudioHandler::getAudioDuration(const QString& audioPath) const
+{
+    QFile file(audioPath);
+    if (!file.open(QIODevice::ReadOnly)) return 0;
+
+    qint64 fileSize = file.size(); // in bytes
+    file.close();
+
+    // Assume 16-bit PCM, 2 channels, 48000Hz => 192000 bytes/sec
+    return fileSize / 192000.0;
 }

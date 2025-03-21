@@ -358,14 +358,14 @@ void MainWindow::showSettings()
     // ========== Layout ==========
     QDialog *settingsWindow = new QDialog(this);
     settingsWindow->setWindowTitle("Settings");
-    settingsWindow->setGeometry(0, 0, 800, 250);
+    settingsWindow->setGeometry(0, 0, 800, 300);
     settingsWindow->adjustSize();
 
     QRect parentRect = this->geometry();
     QSize dialogSize = settingsWindow->size();
 
-    int x = parentRect.x() + ((parentRect.width()-dialogSize.width()) / 2);
-    int y = parentRect.y() + ((parentRect.height()-dialogSize.height()) / 2);
+    int x = parentRect.x() + ((parentRect.width() - dialogSize.width()) / 2);
+    int y = parentRect.y() + ((parentRect.height() - dialogSize.height()) / 2);
 
     settingsWindow->move(x, y);
 
@@ -378,21 +378,15 @@ void MainWindow::showSettings()
 
     QTextEdit *peripheralsField = new QTextEdit(settingsWindow);
     peripheralsField->setReadOnly(true);
-    peripheralsField->setFixedHeight(60); // Adjust height as needed
+    peripheralsField->setFixedHeight(60);
     peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
 
-    // #################### Check if a microphone is available ####################
-    const QList<QAudioDevice> audioDevices = QMediaDevices::audioInputs(); // Get available microphones
-
-    if (!audioDevices.isEmpty()) {
-        const QAudioDevice &defaultMic = audioDevices.first(); // Get default microphone
-        QString micName = defaultMic.description(); // Get microphone name
-        peripheralsField->setText("Microphone Detected --> [" + micName + "]");
-    } else {
-        peripheralsField->setText("No microphone detected.");
-    }
-
-
+    const QList<QAudioDevice> audioDevices = QMediaDevices::audioInputs();
+    peripheralsField->setText(
+        !audioDevices.isEmpty()
+        ? "Microphone Detected --> [" + audioDevices.first().description() + "]"
+        : "No microphone detected."
+    );
 
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);
@@ -414,16 +408,16 @@ void MainWindow::showSettings()
             settings->setLLMKey(llmKeyField->text());
             handleSummarizeButtonClicked();
         } else {
-            qWarning() << "This field cannot be empty.";
+            qWarning() << "LLM key field cannot be empty.";
         }
     });
     connect(llmButtonBox, &QDialogButtonBox::rejected, this, [=]() {
         llmKeyField->clear();
     });
 
-    // ========== Audio Handler API Key ==========
+    // ========== Google Audio API Key ==========
     QHBoxLayout *audioLayout = new QHBoxLayout();
-    QLabel *audioLabel = new QLabel("Transcriber API Key:", settingsWindow);
+    QLabel *audioLabel = new QLabel("Google Transcriber API Key:", settingsWindow);
     QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
     audioKeyField->setText(settings->audioKey);
     QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
@@ -438,20 +432,42 @@ void MainWindow::showSettings()
             settings->setAudioKey(audioKeyField->text());
             handleSummarizeButtonClicked();
         } else {
-            qWarning() << "This field cannot be empty.";
+            qWarning() << "Google Audio key field cannot be empty.";
         }
     });
     connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
         audioKeyField->clear();
     });
 
+    // ========== OpenAI Audio API Key ==========
+    QHBoxLayout *openaiLayout = new QHBoxLayout();
+    QLabel *openaiLabel = new QLabel("OpenAI Whisper API Key:", settingsWindow);
+    QLineEdit *openaiKeyField = new QLineEdit(settingsWindow);
+    openaiKeyField->setText(settings->openAIAudioKey);
+    QDialogButtonBox *openaiButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
+
+    openaiLayout->addWidget(openaiLabel);
+    openaiLayout->addWidget(openaiKeyField);
+    openaiLayout->addWidget(openaiButtonBox);
+    mainLayout->addLayout(openaiLayout);
+
+    connect(openaiButtonBox, &QDialogButtonBox::accepted, this, [=]() {
+        if (!openaiKeyField->text().isEmpty()) {
+            settings->setOpenAIAudioKey(openaiKeyField->text());
+        } else {
+            qWarning() << "OpenAI Audio key field cannot be empty.";
+        }
+    });
+    connect(openaiButtonBox, &QDialogButtonBox::rejected, this, [=]() {
+        openaiKeyField->clear();
+    });
+
     // ========== Save & Close ==========
     QPushButton *saveCloseButton = new QPushButton("Close", settingsWindow);
     mainLayout->addWidget(saveCloseButton);
-
     connect(saveCloseButton, &QPushButton::clicked, settingsWindow, &QDialog::close);
 
-    // ========== Button sty ==========
+    // ========== Button Styling ==========
     const QString blueStyle = R"(
         QPushButton {
             background-color: #5371ff;
@@ -468,6 +484,7 @@ void MainWindow::showSettings()
             background-color: #006ae6;
         }
     )";
+
     const QString cancelStyle = R"(
         QPushButton {
             background-color: #AAAAAA;
@@ -485,26 +502,23 @@ void MainWindow::showSettings()
         }
     )";
 
-    QPushButton *llmOkButton = llmButtonBox->button(QDialogButtonBox::Ok);
-    QPushButton *llmCancelButton = llmButtonBox->button(QDialogButtonBox::Cancel);
-    QPushButton *wsprOkButton = audioButtonBox->button(QDialogButtonBox::Ok);
-    QPushButton *wsprCancelButton= audioButtonBox->button(QDialogButtonBox::Cancel);
+    // Apply styles to all OK and Cancel buttons
+    QList<QDialogButtonBox *> buttonBoxes = { llmButtonBox, audioButtonBox, openaiButtonBox };
+    for (QDialogButtonBox *box : buttonBoxes) {
+        QPushButton *ok = box->button(QDialogButtonBox::Ok);
+        QPushButton *cancel = box->button(QDialogButtonBox::Cancel);
+        ok->setDefault(false);
+        ok->setAutoDefault(false);
+        ok->setStyleSheet(blueStyle);
+        cancel->setStyleSheet(cancelStyle);
+    }
 
-    // Disable default style
-    llmOkButton->setDefault(false);
-    llmOkButton->setAutoDefault(false);
-    wsprOkButton->setDefault(false);
-    wsprOkButton->setAutoDefault(false);
-
-    llmOkButton->setStyleSheet(blueStyle);
-    llmCancelButton->setStyleSheet(cancelStyle);
-    wsprOkButton->setStyleSheet(blueStyle);
-    wsprCancelButton->setStyleSheet(cancelStyle);
     saveCloseButton->setStyleSheet(blueStyle);
 
     settingsWindow->exec();
     delete settingsWindow;
 }
+
 
 /**
  * @name on_addPatientButton_clicked

@@ -49,7 +49,9 @@ public:
     void handlePermissionResponse();
     void playRecording(const QString &filePath);
 
-    QString getAPIKey();
+    QString getAPIKey(const QString& prefix);
+    void setOpenAIApiKey(const QString& key);
+    double getAudioDuration(const QString& path) const;
 
     friend class Settings;
 
@@ -60,11 +62,13 @@ signals:
 
 private:
     QString apiKey;
-    const QString API_URL = QString::fromStdString("https://speech.googleapis.com/v1/speech:recognize"); // API URL for Google Speech API
+    QString openAIApiKey;
     QNetworkAccessManager *networkManager;                                                               // Network manager for API requests
 
     QString sendToWhisperAPI(const QString &audioPath); // Send audio to Google Speech API
+    QString sendToGoogleSpeechAPI(const QString &audioPath);
     QTime getCurrentTime() const;                            // Get current time
+    int getAudioChannelCount(const QString &audioPath) const; // Get audio channel count
     QString outputFilePath;                                  // Output file path for recording
     QMediaRecorder recorder;                                 // Media recorder for audio
     QMediaCaptureSession captureSession;                     // Media capture session

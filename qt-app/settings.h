@@ -27,6 +27,7 @@ public:
     Settings(QObject *parent = nullptr, LLMClient *llm = nullptr, AudioHandler *audio = nullptr);
     void setLLMKey(const QString newKey);
     void setAudioKey(const QString newKey);
+    void setOpenAIAudioKey(QString newKey);
     void writeAPIKey(const QString &keyClient, const QString &key);
 
 private:
@@ -34,6 +35,7 @@ private:
     AudioHandler *audioHandlerClient;
     QString llmKey;
     QString audioKey;
+    QString openAIAudioKey;
 };
 
 #endif // SETTINGS_H
