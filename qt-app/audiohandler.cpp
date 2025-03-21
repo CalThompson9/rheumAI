@@ -179,7 +179,7 @@ QString AudioHandler::sendToWhisperAPI(const QString& audioPath)
 
     qDebug() << "Sending POST request to Whisper API...";
     QNetworkReply* reply = networkManager->post(request, multiPart);
-    multiPart->setParent(reply); // cleanup
+    multiPart->setParent(reply);
 
     QEventLoop loop;
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
@@ -332,8 +332,6 @@ void AudioHandler::resumeRecording()
 void AudioHandler::stopRecording()
 {
     recorder.stop();
-    // qDebug() << "Recording ended with sample rate" << recorder.audioSampleRate();
-    // qDebug() << "Recording ended with channel" << recorder.audioChannelCount();
 }
 
 /**
@@ -363,7 +361,7 @@ void AudioHandler::requestMicrophonePermission()
         return;
     case Qt::PermissionStatus::Denied:
         qWarning() << "Microphone permission denied!";
-        emit microphonePermissionDenied();  // Handle UI warning
+        emit microphonePermissionDenied();
         return;
     case Qt::PermissionStatus::Granted:
         qDebug() << "Microphone permission granted!";
@@ -454,7 +452,7 @@ double AudioHandler::getAudioDuration(const QString& audioPath) const
     QFile file(audioPath);
     if (!file.open(QIODevice::ReadOnly)) return 0;
 
-    qint64 fileSize = file.size(); // in bytes
+    qint64 fileSize = file.size();
     file.close();
 
     // Assume 16-bit PCM, 2 channels, 48000Hz => 192000 bytes/sec

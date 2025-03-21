@@ -16,7 +16,7 @@ Settings::Settings(QObject *parent, LLMClient *llm, AudioHandler *audio)
       audioHandlerClient(audio),
       llmKey(llm->apiKey),
       audioKey(audio->apiKey),
-      openAIAudioKey(audio->openAIApiKey) // <-- new key
+      openAIAudioKey(audio->openAIApiKey)
 {
 }
 
