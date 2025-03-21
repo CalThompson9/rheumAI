@@ -16,7 +16,6 @@ mac {
 
 SOURCES += \
     addpatientdialog.cpp \
-    api.cpp \
     filehandler.cpp \
     llmclient.cpp \
     main.cpp \

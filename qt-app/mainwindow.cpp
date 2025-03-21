@@ -100,7 +100,8 @@ MainWindow::MainWindow(QWidget *parent)
             // Getting trancription and saving it to file
             Transcript currentTranscription = audioHandler->transcribe(filePath);
             qDebug() << "Transcription: " << currentTranscription.getContent();
-            FileHandler::getInstance()->saveTranscript(patientID, currentTranscription.getContent());
+            FileHandler::getInstance()->saveRawTranscript(patientID, currentTranscription);
+
 
             btnRecord->setText("Start Recording");
         }

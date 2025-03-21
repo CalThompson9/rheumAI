@@ -23,10 +23,9 @@ LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
 
-    //apiKey = getAPIKey();
-
+    apiKey = getAPIKey();
     qDebug() << "LLM API Key: " << apiKey;
-    apiKey = "AIzaSyC9Yvpr7fSvGERQw4FwEAgoDnYYC7ji-Qo";  // ⚠️ Hardcoded API Key NEEDS TO GO HERE. DO NOT PUSH WITH API KEY. ⚠️
+
 
 
     if (apiKey.isEmpty()) {

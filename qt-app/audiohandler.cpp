@@ -30,8 +30,7 @@ AudioHandler *AudioHandler::instance = nullptr;
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
-    //apiKey = getAPIKey();
-    apiKey = "AIzaSyBV63tBSl7HUCC149tEXKqfTW0j57hS_8g";
+    apiKey = getAPIKey();
     qDebug() << "Audio API Key:" << apiKey;
 
     networkManager = new QNetworkAccessManager(this);

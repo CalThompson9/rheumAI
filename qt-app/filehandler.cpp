@@ -84,6 +84,13 @@ QString FileHandler::readTranscript() {
 }
 
 
+/**
+ * @name loadSummaryText
+ * @brief Loads the summary text for a given patient.
+ * @param patientID The unique ID of the patient.
+ * @return The summary text if found, otherwise an empty string.
+ */
+
 QString FileHandler::loadSummaryText(int patientID) {
     QString summaryPath = patientDatabasePath + "/" + QString::number(patientID) + "/summary.txt";
     QFile file(summaryPath);
@@ -97,11 +104,17 @@ QString FileHandler::loadSummaryText(int patientID) {
     QString summaryContent = in.readAll();
     file.close();
 
-    qDebug() << "✅ Loaded summary from file (before returning):\n" << summaryContent;
+    qDebug() << "Loaded summary from file (before returning):\n" << summaryContent;
     return summaryContent;
 }
 
 
+/**
+ * @name loadTranscript
+ * @brief Loads the raw transcript for a given patient.
+ * @param patientID The unique ID of the patient.
+ * @return The transcript content if found, otherwise an empty string.
+ */
 QString FileHandler::loadTranscript(int patientID) {
     QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
     QFile file(transcriptPath);
@@ -143,21 +156,6 @@ void FileHandler::savePatientRecord(const PatientRecord &record) {
     qDebug() << "Patient record saved to:" << file.fileName();
 }
 
-void FileHandler::saveTranscript(int patientID, const QString &transcript) {
-    QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
-    QFile file(transcriptPath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Could not save transcript!";
-        return;
-    }
-
-    file.resize(0);
-
-    QTextStream out(&file);
-    out << transcript;
-    file.close();
-    qDebug() << "Transcript saved to:" << transcriptPath;
-}
 
 
 /**
@@ -211,6 +209,15 @@ void FileHandler::saveTranscriptToJson() {
     qDebug() << "Transcript saved as JSON to:" << jsonFilename;
 }
 
+
+
+
+/**
+ * @name saveRawTranscript
+ * @brief Saves the raw transcript to the selected patient's folder with a timestamp.
+ * @param patientID The unique ID of the patient.
+ * @param transcript The transcript object containing the session data.
+ */
 void FileHandler::saveRawTranscript(int patientID, const Transcript &transcript) {
     QString folderPath = "Patients/" + QString::number(patientID);
     QDir().mkpath(folderPath); // Ensure folder exists
