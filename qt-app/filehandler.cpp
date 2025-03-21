@@ -9,10 +9,13 @@
  */
 
 #include "filehandler.h"
+#include "transcript.h"
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QFile>
 #include <QDebug>
+#include <QDir>
+
 
 FileHandler* FileHandler::instance = nullptr;
 
@@ -86,7 +89,7 @@ QString FileHandler::loadSummaryText(int patientID) {
     QFile file(summaryPath);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "❌ No summary found for patient:" << patientID;
+        qDebug() << " No summary found for patient:" << patientID;
         return "";
     }
 
@@ -208,6 +211,25 @@ void FileHandler::saveTranscriptToJson() {
     qDebug() << "Transcript saved as JSON to:" << jsonFilename;
 }
 
+void FileHandler::saveRawTranscript(int patientID, const Transcript &transcript) {
+    QString folderPath = "Patients/" + QString::number(patientID);
+    QDir().mkpath(folderPath); // Ensure folder exists
+
+    QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
+    QString filePath = folderPath + "/raw_transcript_" + timestamp + ".txt";
+
+    QFile file(filePath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << "Timestamp: " << transcript.getTimestamp().toString("hh:mm:ss") << "\n\n";
+        out << transcript.getContent();
+        file.close();
+        qDebug() << " Raw transcript saved to: " << filePath;
+    } else {
+        qDebug() << " Failed to save raw transcript to: " << filePath;
+    }
+}
+
 /**
  * @name getTranscriptFilename
  * @brief Get the filepath to the transcript file
@@ -225,6 +247,8 @@ QString FileHandler::getTranscriptFilename() const {
 QString FileHandler::getJsonFilename() const {
     return jsonFilename;
 }
+
+
 
 /**
  * @name loadPatientJson
@@ -246,3 +270,5 @@ void FileHandler::loadPatientJson() {
     QJsonObject jsonObj = jsonDoc.object();
     qDebug() << "Loaded JSON data:" << jsonObj;
 }
+
+

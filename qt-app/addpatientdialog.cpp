@@ -12,6 +12,7 @@
 #include "addpatientdialog.h"
 #include "ui_addpatientdialog.h"
 #include <QMessageBox>
+#include <QPixmap>
 
 /**
  * @name AddPatientDialog (constructor)
@@ -21,6 +22,10 @@
 AddPatientDialog::AddPatientDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::AddPatientDialog) {
     ui->setupUi(this);
+    // Load the logo from resources and set it to the QLabel
+    QPixmap logo(":/logo.png");
+    ui->logoLabel->setPixmap(logo);
+    ui->logoLabel->setScaledContents(true);  // Ensure the image scales correctly
 }
 
 /**

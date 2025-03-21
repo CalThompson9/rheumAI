@@ -151,6 +151,8 @@ void MainWindow::handleLLMResponse(const QString &response)
         return;
     }
     int patientID = patientData.toInt();
+    Transcript transcript(QTime::currentTime(), response);
+    FileHandler::getInstance()->saveRawTranscript(patientID, transcript);
 
     // Ensure the patient's folder exists
     QDir patientDir("Patients/" + QString::number(patientID));
