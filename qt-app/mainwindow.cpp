@@ -44,10 +44,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(optionPlainLayout, &QAction::triggered, this, [=]()
             { handleSummaryLayoutChanged(nullptr); });
 
-    // Initialize summary layout formatter
-    summaryFormatter = new DetailedSummaryFormatter;
-    optionDetailedLayout->setEnabled(false);
-
     // Initialize SummaryGenerator
     summaryGenerator = new SummaryGenerator(this);
 
@@ -61,6 +57,25 @@ MainWindow::MainWindow(QWidget *parent)
     settings = Settings::getInstance(this, summaryGenerator->llmClient, audioHandler);
     connect(btnSettings, &QPushButton::clicked, settings, &Settings::showSettings);
     connect(settings, &Settings::okButtonClicked, this, &MainWindow::handleSummarizeButtonClicked);
+
+    // Initialize summary layout formatter from settings
+    QString defaultSummaryLayout = settings->getSummaryPreference();
+    if (defaultSummaryLayout.contains("Detailed Layout"))
+    {
+        summaryFormatter = new DetailedSummaryFormatter;  // TODO
+        optionDetailedLayout->setEnabled(false);
+    }
+    else if (defaultSummaryLayout.contains("Concise Layout"))
+    {
+        summaryFormatter = new ConciseSummaryFormatter;  // TODO
+        optionDetailedLayout->setEnabled(false);
+    }
+    else
+    {
+        qDebug() << "Unrecognized summary format in settings: " <<  defaultSummaryLayout << ". Using detailed layout instead...";
+        summaryFormatter = new DetailedSummaryFormatter;  // TODO
+        optionDetailedLayout->setEnabled(false);
+    }
 
     // Connect "Record" button to start and stop recording
     connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()

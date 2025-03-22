@@ -1,9 +1,6 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "llmclient.h"
-#include "audiohandler.h"
-#include "windowbuilder.h"
 #include <QObject>
 #include <QWidget>
 #include <QTextEdit>
@@ -18,6 +15,9 @@
 #include <QTextStream>
 #include <QMenu>
 #include <QAction>
+#include "llmclient.h"
+#include "audiohandler.h"
+#include "windowbuilder.h"
 
 /**
  * @author Thomas Llamzon
@@ -38,6 +38,7 @@ public:
     void setLLMKey(const QString newKey);
     void setAudioKey(const QString newKey);
     void setSummaryPreference(const QString pref);
+    QString getSummaryPreference() const;
 
 signals:
     void okButtonClicked();

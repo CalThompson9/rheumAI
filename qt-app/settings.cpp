@@ -24,6 +24,7 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
     audioKey(audio->apiKey),
     summaryLayoutPreference("")
 {
+    // No logic body
 }
 
 /**
@@ -87,18 +88,15 @@ void Settings::showSettings()
     selectLayoutButton->setText(summaryLayoutPreference);
     mainLayout->addLayout(summaryLayout);
 
-    // Connect dropdown menu option to Summary Formatter
+    // Connect dropdown menu option to change default summary format on
+    // application load
     connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
         setSummaryPreference("Detailed Layout");
         selectLayoutButton->setText(summaryLayoutPreference);
-
-        // CODE HERE ?
     });
     connect(optionConciseLayout, &QAction::triggered, this, [=]() {
         setSummaryPreference("Concise Layout");
         selectLayoutButton->setText(summaryLayoutPreference);
-
-        // CODE HERE ?
     });
 
     // ========== Connected Peripherals ==========
@@ -223,6 +221,17 @@ void Settings::setAudioKey(QString newKey) {
 void Settings::setSummaryPreference(QString pref) {
     summaryLayoutPreference = pref;
     storeConfig("SUMM", pref);
+}
+
+
+/**
+ * @name getSummaryPreference
+ * @brief Get the summary layout preference
+ * @return Summary layout preference (Detailed/Concise)
+ */
+QString Settings::getSummaryPreference() const
+{
+    return summaryLayoutPreference;
 }
 
 /**
