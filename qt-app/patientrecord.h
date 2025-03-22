@@ -15,43 +15,18 @@
 class PatientRecord {
 private:
     int patientID;
-    QString healthCard;
     QString firstName;
     QString lastName;
     QString dateOfBirth;
-    QString email;
-    QString phoneNumber;
-    QString address;
-    QString postalCode;
-    QString province;
-    QString country;
 
 public:
-    PatientRecord(
-        int id,
-        const QString& healthCard,
-        const QString &firstName,
-        const QString &lastName,
-        const QString &dob,
-        const QString &email,
-        const QString &phoneNumber,
-        const QString &address,
-        const QString &postalCode,
-        const QString &province,
-        const QString &country);
+    PatientRecord(int id, const QString &firstName, const QString &lastName, const QString &dob);
     PatientRecord(); // Default constructor
 
     int getID() const;
-    QString getHealthCard() const;
     QString getFirstName() const;
     QString getLastName() const;
     QString getDateOfBirth() const;
-    QString getEmail() const;
-    QString getPhoneNumber() const;
-    QString getAddress() const;
-    QString getPostalCode() const;
-    QString getProvince() const;
-    QString getCountry() const;
 
     QJsonObject toJson() const;
     static PatientRecord fromJson(const QJsonObject &json);
