@@ -1,7 +1,7 @@
 /**
  * @file mainwindow.h
  * @brief Declaration of MainWindow class
- * 
+ *
  * @author Andres Pedreros Castro (apedrero@uwo.ca)
  * @author Callum Thompson (cthom226@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
@@ -30,8 +30,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void setSummaryFormatter(SummaryFormatter* summaryFormatter);
-    void displaySummary(const Summary& summary);
+    void setSummaryFormatter(SummaryFormatter *summaryFormatter);
+    void displaySummary(const Summary &summary);
 
 private:
     QWidget *centralWidget;
@@ -44,10 +44,10 @@ private:
     QPushButton *btnRecord;
     QPushButton *btnSummarize;
     QPushButton *btnAddPatient;
-    QPushButton *btnRemovePatient;
+    QPushButton *btnArchivePatient;
     QTextEdit *textTranscription;
     QPushButton *selectSummaryLayout;
-    QMenu* summaryLayoutOptions;
+    QMenu *summaryLayoutOptions;
     QVBoxLayout *summarySection;
     LLMClient *llmClient;
 
@@ -61,11 +61,11 @@ private:
     QString currentTranscriptText;
 
     int patientID;
-    
+
     Settings *settings;
 
 private slots:
-    void handleSummaryLayoutChanged(SummaryFormatter* summaryFormatter);
+    void handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter);
     void handleSummarizeButtonClicked();
     void handleSummaryReady();
     void on_addPatientButton_clicked();
@@ -75,8 +75,8 @@ public slots:
     void on_patientSelected(int index);
     void on_removePatientButton_clicked();
     void loadPatientsIntoDropdown();
+    void loadArchivedPatientsIntoDropdown();
     void handleLLMResponse(const QString &response);
-
 };
 
 #endif // MAINWINDOW_H

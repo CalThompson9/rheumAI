@@ -1,11 +1,11 @@
 /**
  * @file windowbuilder.cpp
  * @brief Definition of WindowBuilder class
- * 
+ *
  * Provides methods to build the application's main user interface (UI), including
  * initializing UI elements, layout, and styling.
- * 
- * 
+ *
+ *
  * @author Andres Pedreros Castro (apedrero@uwo.ca)
  * @author Callum Thompson (cthom226@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
@@ -38,7 +38,8 @@
  *  @param[in,out] summarySection: Displays the LLM-generated summary
  *  @param[in,out] mainLayout: Main layout which contains all UI elements
  *  @param[in,out] btnAddPatient: "Add Patient" button
- *  @param[in,out] btnRemovePatient: "Remove Patient" button
+ *  @param[in,out] btnArchivePatient: "Remove Patient" button
+ *  @param[in,out] toggleSwitch: Toggle switch to show archived summaries
  */
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnSettings,
@@ -51,10 +52,11 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QVBoxLayout *&summarySection,
                             QVBoxLayout *&mainLayout,
                             QPushButton *&btnAddPatient,
-                            QPushButton *&btnRemovePatient)
+                            QPushButton *&btnArchivePatient,
+                            QPushButton *&toggleSwitch) // Add toggleSwitch parameter
 {
     // Create UI elements
-    //btnConnectDevice = new QPushButton("Connect Device", centralWidget);
+    // btnConnectDevice = new QPushButton("Connect Device", centralWidget);
     btnSettings = new QPushButton("Settings", centralWidget);
     lblTitle = new QLabel(centralWidget);
     lblPatientName = new QLabel("[Select a Patient]", centralWidget);
@@ -62,33 +64,48 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnRecord = new QPushButton("Record", centralWidget);
     btnSummarize = new QPushButton("Summarize", centralWidget);
     btnAddPatient = new QPushButton("Add", centralWidget);
-    btnRemovePatient = new QPushButton("Remove", centralWidget);
-    QLabel* summaryTitle = new QLabel("Summary");
+    btnArchivePatient = new QPushButton("Achive", centralWidget);
+    QLabel *summaryTitle = new QLabel("Summary");
     selectSummaryLayout = new QPushButton(centralWidget);
     selectSummaryLayout->setCheckable(true);
     selectSummaryLayout->setText("Select Summary Layout");
     selectSummaryLayout->setFixedWidth(300);
 
+    // Initialize toggle switch
+    toggleSwitch = new QPushButton("Show Archived", centralWidget);
+    toggleSwitch->setCheckable(true);
+    toggleSwitch->setStyleSheet(R"(
+        QPushButton {
+            background-color: #5371ff;
+            color: white;
+            border-radius: 8px;
+            padding: 6px 12px;
+        }
+        QPushButton:checked {
+            background-color: #AAAAAA;
+            color: black;
+        }
+    )");
+    toggleSwitch->setFixedWidth(400);
+
     // Set logo as title without distortion
     QPixmap logoPixmap(":/logo.png");
     lblTitle->setPixmap(logoPixmap.scaled(300, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
-    
 
     lblPatientName->setAlignment(Qt::AlignCenter);
     lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
 
     // Define button styles
     QString blueButtonStyle = "QPushButton {"
-                               "background-color: #5371ff;"
-                               "border-radius: 6px;"
-                               "color: white;"
-                               "padding: 6px;"
-                               "font-size: 12px;"
-                               "} "
-                               "QPushButton:hover {"
-                               "background-color: #425BD0;"
-                               "}";
+                              "background-color: #5371ff;"
+                              "border-radius: 6px;"
+                              "color: white;"
+                              "padding: 6px;"
+                              "font-size: 12px;"
+                              "} "
+                              "QPushButton:hover {"
+                              "background-color: #425BD0;"
+                              "}";
 
     QString orangeButtonStyle = "QPushButton {"
                                 "background-color: #FF914D;"
@@ -101,12 +118,12 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                                 "background-color: #C56E39;"
                                 "}";
 
-    //btnConnectDevice->setStyleSheet(blueButtonStyle);
+    // btnConnectDevice->setStyleSheet(blueButtonStyle);
     btnSettings->setStyleSheet(blueButtonStyle);
     btnSettings->setFixedWidth(100);
     btnSummarize->setStyleSheet(orangeButtonStyle);
     btnAddPatient->setStyleSheet(blueButtonStyle);
-    btnRemovePatient->setStyleSheet(orangeButtonStyle);
+    btnArchivePatient->setStyleSheet(orangeButtonStyle);
 
     // Record button styling (toggle between blue and red)
     QString recordBlueStyle = "QPushButton {"
@@ -132,12 +149,12 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                              "}";
 
     btnRecord->setStyleSheet(recordBlueStyle);
-    QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord, recordBlueStyle, recordRedStyle]() {
+    QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord, recordBlueStyle, recordRedStyle]()
+                     {
         static bool isRecording = false;
         isRecording = !isRecording;
         btnRecord->setStyleSheet(isRecording ? recordRedStyle : recordBlueStyle);
-        btnRecord->setText(isRecording ? "Stop Recording" : "Record");
-    });
+        btnRecord->setText(isRecording ? "Stop Recording" : "Record"); });
 
     // Layouts
     mainLayout = new QVBoxLayout(centralWidget);
@@ -158,17 +175,14 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     // Patient controls layout
     patientControlsLayout->addWidget(comboSelectPatient);
     patientControlsLayout->addWidget(btnAddPatient);
-    patientControlsLayout->addWidget(btnRemovePatient);
+    patientControlsLayout->addWidget(btnArchivePatient);
     patientControlsLayout->setSpacing(10);
 
     // Summary layout header and format selection
     summaryHeader->addWidget(summaryTitle);
     summaryHeader->addWidget(selectSummaryLayout);
+    summaryHeader->addWidget(toggleSwitch);
     summaryHeader->setSpacing(10);
-    
-
-
-
 
     // Create scrollable summary section
     QScrollArea *scrollArea = new QScrollArea(centralWidget);

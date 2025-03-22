@@ -1,7 +1,7 @@
 /**
  * @file windowbuilder.h
  * @brief Declaration of WindowBuilder class
- * 
+ *
  * @author Andres Pedreros Castro (apedrero@uwo.ca)
  * @author Callum Thompson (cthom226@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
@@ -26,7 +26,8 @@
 #include <QDialogButtonBox>
 #include <QCheckBox>
 
-class WindowBuilder {
+class WindowBuilder
+{
 public:
     static void setupUI(QWidget *centralWidget,
                         QPushButton *&btnSettings,
@@ -39,7 +40,8 @@ public:
                         QVBoxLayout *&summarySection,
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
-                        QPushButton *&btnRemovePatient);
+                        QPushButton *&btnArchivePatient,
+                        QPushButton *&toggleSwitch); // Add toggleSwitch parameter
 };
 
 #endif // WINDOWBUILDER_H
