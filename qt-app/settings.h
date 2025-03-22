@@ -16,6 +16,8 @@
 #include <QDialogButtonBox>
 #include <QFile>
 #include <QTextStream>
+#include <QMenu>
+#include <QAction>
 
 /**
  * @author Thomas Llamzon
@@ -49,6 +51,7 @@ private:
     AudioHandler *audioHandlerClient;
     QString llmKey;
     QString audioKey;
+    QString summaryLayoutPreference;
 
     static Settings *instance;
 };

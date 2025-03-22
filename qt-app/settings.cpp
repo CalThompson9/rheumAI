@@ -21,7 +21,8 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
     llmClient(llm),
     audioHandlerClient(audio),
     llmKey(llm->apiKey),
-    audioKey(audio->apiKey)
+    audioKey(audio->apiKey),
+    summaryLayoutPreference("")
 {
 }
 
@@ -68,6 +69,36 @@ void Settings::showSettings()
     settingsWindow->move(x, y);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(settingsWindow);
+
+    // ========== Summary Layout Preference ==========
+    QVBoxLayout *summaryLayout = new QVBoxLayout();
+
+    QLabel *sLabel = new QLabel("Default Summary Layout Preference:", settingsWindow);
+    summaryLayout->addWidget(sLabel);
+
+    QPushButton *selectLayoutButton = new QPushButton(settingsWindow);
+    QMenu *summaryLayoutOptions = new QMenu();
+    summaryLayout->addWidget(selectLayoutButton);
+
+    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
+    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
+
+    selectLayoutButton->setMenu(summaryLayoutOptions);
+    selectLayoutButton->setText(summaryLayoutPreference);
+    mainLayout->addLayout(summaryLayout);
+
+    connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
+        summaryLayoutPreference = "Detailed Layout";
+        selectLayoutButton->setText(summaryLayoutPreference);
+
+
+    });
+    connect(optionConciseLayout, &QAction::triggered, this, [=]() {
+        summaryLayoutPreference = "Concise Layout";
+        selectLayoutButton->setText(summaryLayoutPreference);
+
+
+    });
 
     // ========== Connected Peripherals ==========
     QVBoxLayout *peripheralsLayout = new QVBoxLayout();
