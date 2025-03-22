@@ -58,7 +58,6 @@ private slots:
     void on_addPatientButton_clicked();
 
 public slots:
-    void showSettings();
     void on_patientSelected(int index);
     void on_removePatientButton_clicked();
     void loadPatientsIntoDropdown();
