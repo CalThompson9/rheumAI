@@ -37,6 +37,7 @@ public:
 
     void setLLMKey(const QString newKey);
     void setAudioKey(const QString newKey);
+    void setSummaryPreference(const QString pref);
 
 signals:
     void okButtonClicked();
@@ -44,7 +45,7 @@ signals:
 private:
     Settings(QObject *parent, LLMClient *llm, AudioHandler *audio);
 
-    void writeAPIKey(const QString &keyClient, const QString &key);
+    void writeToKeyFile(const QString &keyClient, const QString &key);
 
     QObject *mainWindow;
     LLMClient *llmClient;

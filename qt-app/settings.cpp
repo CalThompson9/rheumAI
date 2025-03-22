@@ -87,17 +87,18 @@ void Settings::showSettings()
     selectLayoutButton->setText(summaryLayoutPreference);
     mainLayout->addLayout(summaryLayout);
 
+    // Connect dropdown menu option to Summary Formatter
     connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
-        summaryLayoutPreference = "Detailed Layout";
+        setSummaryPreference("Detailed Layout");
         selectLayoutButton->setText(summaryLayoutPreference);
 
-
+        // CODE HERE ?
     });
     connect(optionConciseLayout, &QAction::triggered, this, [=]() {
-        summaryLayoutPreference = "Concise Layout";
+        setSummaryPreference("Concise Layout");
         selectLayoutButton->setText(summaryLayoutPreference);
 
-
+        // CODE HERE ?
     });
 
     // ========== Connected Peripherals ==========
@@ -196,38 +197,49 @@ void Settings::showSettings()
 }
 
 /**
- * @name setLLMKey
+ * @name Settings::setLLMKey
  * @brief Sets LLM API key and modifies key storage file for continual use.
  * @param key
  */
 void Settings::setLLMKey(QString newKey) {
     llmClient->apiKey = newKey;
-    writeAPIKey("LLM", newKey);
+    writeToKeyFile("LLM", newKey);
 }
 
 /**
- * @name setAudioKey
+ * @name Settings::setAudioKey
  * @brief Sets audio transcriber API key and modifies key storage file for continual use.
  * @param key
  */
 void Settings::setAudioKey(QString newKey) {
     audioHandlerClient->apiKey = newKey;
-    writeAPIKey("AUDIO", newKey);
+    writeToKeyFile("AUDIO", newKey);
 }
 
 /**
- * @name writeAPIKey
- * @brief Writes API key to hidden key file storing API keys for continual use.
+ * @brief Settings::setSummaryPreference
+ * @param pref - Summary Layout Preference (Detailed/Concise)
+ */
+void Settings::setSummaryPreference(QString pref) {
+    summaryLayoutPreference = pref;
+    writeToKeyFile("SUMM", pref);
+}
+
+/**
+ * @name writeToKeyFile
+ * @brief Writes to hidden keyFile storing user settings configurations.
  * @param keyClient - Client to set API key for
  * @param key - User API key
  */
-void Settings::writeAPIKey(const QString &keyClient, const QString &key)
+void Settings::writeToKeyFile(const QString &keyClient, const QString &key)
 {
     QString prefix;
     if (keyClient == "LLM") {
         prefix = "GEMINI_API_KEY:";
     } else if (keyClient == "AUDIO") {
         prefix = "AUDIO_API_KEY:";
+    } else if (keyClient == "SUMM") {
+        prefix = "SUMMARY_LAYOUT_PREFERENCE:";
     } else {
         qWarning() << "Unknown keyClient:" << keyClient;
         return;
