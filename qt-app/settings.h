@@ -45,7 +45,7 @@ signals:
 private:
     Settings(QObject *parent, LLMClient *llm, AudioHandler *audio);
 
-    void writeToKeyFile(const QString &keyClient, const QString &key);
+    void storeConfig(const QString &config, const QString &value);
 
     QObject *mainWindow;
     LLMClient *llmClient;

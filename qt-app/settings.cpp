@@ -203,7 +203,7 @@ void Settings::showSettings()
  */
 void Settings::setLLMKey(QString newKey) {
     llmClient->apiKey = newKey;
-    writeToKeyFile("LLM", newKey);
+    storeConfig("LLM", newKey);
 }
 
 /**
@@ -213,7 +213,7 @@ void Settings::setLLMKey(QString newKey) {
  */
 void Settings::setAudioKey(QString newKey) {
     audioHandlerClient->apiKey = newKey;
-    writeToKeyFile("AUDIO", newKey);
+    storeConfig("AUDIO", newKey);
 }
 
 /**
@@ -222,26 +222,26 @@ void Settings::setAudioKey(QString newKey) {
  */
 void Settings::setSummaryPreference(QString pref) {
     summaryLayoutPreference = pref;
-    writeToKeyFile("SUMM", pref);
+    storeConfig("SUMM", pref);
 }
 
 /**
- * @name writeToKeyFile
- * @brief Writes to hidden keyFile storing user settings configurations.
- * @param keyClient - Client to set API key for
- * @param key - User API key
+ * @name storeConfig
+ * @brief Writes to hidden file storing user settings configurations.
+ * @param config - target setting to store
+ * @param value - value of user configuration
  */
-void Settings::writeToKeyFile(const QString &keyClient, const QString &key)
+void Settings::storeConfig(const QString &config, const QString &value)
 {
     QString prefix;
-    if (keyClient == "LLM") {
+    if (config == "LLM") {
         prefix = "GEMINI_API_KEY:";
-    } else if (keyClient == "AUDIO") {
+    } else if (config == "AUDIO") {
         prefix = "AUDIO_API_KEY:";
-    } else if (keyClient == "SUMM") {
+    } else if (config == "SUMM") {
         prefix = "SUMMARY_LAYOUT_PREFERENCE:";
     } else {
-        qWarning() << "Unknown keyClient:" << keyClient;
+        qWarning() << "Unknown keyClient:" << config;
         return;
     }
 
@@ -265,14 +265,14 @@ void Settings::writeToKeyFile(const QString &keyClient, const QString &key)
     bool foundLine = false;
     for (int i = 0; i < lines.size(); ++i) {
         if (lines[i].startsWith(prefix)) {
-            lines[i] = prefix + " " + key; // Replace everything after prefix
+            lines[i] = prefix + " " + value; // Replace everything after prefix
             foundLine = true;
             break;
         }
     }
 
     if (!foundLine) {
-        lines << prefix + " " + key;
+        lines << prefix + " " + value;
     }
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
