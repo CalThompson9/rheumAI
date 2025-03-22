@@ -1,12 +1,16 @@
 #include "settings.h"
 
 /**
- * @brief Settings::instance - Defining default null value for singleton instance of settings.
+ * @author Thomas Llamzon
+ */
+
+/**
+ * @brief Settings::instance - Defining default null value for static settings.
  */
 Settings* Settings::instance = nullptr;
 
 /**
- * @brief Private constructor for Settings class; ensures only the Settings class itself can initialize Settings.
+ * @brief Constructor for Settings class; The settings class handles user app configurations and settings menu construction.
  * @param parent - MainWindow
  * @param llm - LLM Client object
  * @param audio - Audio Handler object
@@ -28,7 +32,7 @@ Settings::~Settings() {
 }
 
 /**
- * @brief Settings::getInstance - Returns single static instance.
+ * @brief Returns single static instance.
  * @param parent - Main Window
  * @param llm - LLM Client object
  * @param audio - Audio Handler object
@@ -139,56 +143,22 @@ void Settings::showSettings()
 
     connect(closeButton, &QPushButton::clicked, settingsWindow, &QDialog::close);
 
-    // ========== Button sty ==========
-    const QString blueStyle = R"(
-        QPushButton {
-            background-color: #5371ff;
-            color: white;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 0 4px;
-            font-size: 14px;
-        }
-        QPushButton:hover {
-            background-color: #425BD0;
-        }
-        QPushButton:pressed {
-            background-color: #006ae6;
-        }
-    )";
-    const QString cancelStyle = R"(
-        QPushButton {
-            background-color: #AAAAAA;
-            color: black;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 0 4px;
-            font-size: 14px;
-        }
-        QPushButton:hover {
-            background-color: #949494;
-        }
-        QPushButton:pressed {
-            background-color: #5F5F5F;
-        }
-    )";
-
     QPushButton *llmOkButton = llmButtonBox->button(QDialogButtonBox::Ok);
     QPushButton *llmCancelButton = llmButtonBox->button(QDialogButtonBox::Cancel);
-    QPushButton *wsprOkButton = audioButtonBox->button(QDialogButtonBox::Ok);
-    QPushButton *wsprCancelButton= audioButtonBox->button(QDialogButtonBox::Cancel);
+    QPushButton *audioOkButton = audioButtonBox->button(QDialogButtonBox::Ok);
+    QPushButton *audioCancelButton= audioButtonBox->button(QDialogButtonBox::Cancel);
 
     // Disable default style
     llmOkButton->setDefault(false);
     llmOkButton->setAutoDefault(false);
-    wsprOkButton->setDefault(false);
-    wsprOkButton->setAutoDefault(false);
+    audioOkButton->setDefault(false);
+    audioOkButton->setAutoDefault(false);
 
-    llmOkButton->setStyleSheet(blueStyle);
-    llmCancelButton->setStyleSheet(cancelStyle);
-    wsprOkButton->setStyleSheet(blueStyle);
-    wsprCancelButton->setStyleSheet(cancelStyle);
-    closeButton->setStyleSheet(blueStyle);
+    llmOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
+    llmCancelButton->setStyleSheet(WindowBuilder::cancelStyle);
+    audioOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
+    audioCancelButton->setStyleSheet(WindowBuilder::cancelStyle);
+    closeButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
 
     settingsWindow->exec();
     delete settingsWindow;

@@ -3,6 +3,7 @@
 
 #include "llmclient.h"
 #include "audiohandler.h"
+#include "windowbuilder.h"
 #include <QObject>
 #include <QWidget>
 #include <QTextEdit>
@@ -18,9 +19,9 @@
 
 /**
  * @author Thomas Llamzon
- * @name Settings
- * @brief The Settings class is responsible constructing the settings menu and handling operations that occur within it.
+ * @brief Declaration file of settings class
  */
+
 class Settings : public QObject {
     Q_OBJECT
 
