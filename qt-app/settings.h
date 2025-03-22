@@ -1,3 +1,11 @@
+/**
+ * @file settings.h
+ * @brief Declaration of Settings class
+ * 
+ * @author Thomas Llamazon (tllamazon@uwo.ca
+ * @date Mar. 16, 2025
+ */
+
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
@@ -19,11 +27,6 @@
 #include "audiohandler.h"
 #include "windowbuilder.h"
 
-/**
- * @author Thomas Llamzon
- * @brief Declaration file of settings class
- */
-
 class Settings : public QObject {
     Q_OBJECT
 
@@ -31,7 +34,7 @@ class Settings : public QObject {
 
 public:
     static Settings* getInstance(QObject *parent, LLMClient *llm, AudioHandler *audio);
-    ~Settings();
+    ~Settings() = default;
 
     void showSettings();
 

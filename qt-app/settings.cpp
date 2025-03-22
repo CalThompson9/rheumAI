@@ -1,8 +1,15 @@
-#include "settings.h"
-
 /**
- * @author Thomas Llamzon
+ * @file settings.cpp
+ * @brief Definition of Settings class
+ * 
+ * The settings class handles user app configurations and settings menu construction.
+ * 
+ * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @date Mar. 16, 2025
  */
+
+#include "settings.h"
 
 /**
  * @brief Settings::instance - Defining default null value for static settings.
@@ -10,26 +17,26 @@
 Settings* Settings::instance = nullptr;
 
 /**
- * @brief Constructor for Settings class; The settings class handles user app configurations and settings menu construction.
+ * @name Settings (constructor)
+ * @brief Constructor for Settings class
  * @param parent - MainWindow
  * @param llm - LLM Client object
  * @param audio - Audio Handler object
  */
 Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
     : QObject(p),
-    mainWindow(p),
+      mainWindow(p),
       llmClient(llm),
       audioHandlerClient(audio),
       llmKey(llm->apiKey),
       audioKey(audio->apiKey),
       openAIAudioKey(audio->openAIApiKey)
 {
-    // Load summary format
+    // Load summary format from configuration file keyFile.txt
     summaryLayoutPreference = "";
     QFile file("keyFile.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "keyFile.txt not found.";
-        
     }
 
     QTextStream in(&file);
@@ -39,12 +46,6 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
             summaryLayoutPreference = line.mid(QString("SUMMARY_LAYOUT_PREFERENCE:").length()).trimmed();
         }
     }
-}
-
-/**
- * @brief Settings::~Settings - Destructor
- */
-Settings::~Settings() {
 }
 
 /**
@@ -209,10 +210,9 @@ void Settings::showSettings()
 }
 
 /**
- * @name Settings::setLLMKey
  * @name setLLMKey
  * @brief Sets LLM API key and modifies key storage file for continual use.
- * @param key
+ * @param[in] newKey: API key
  */
 void Settings::setLLMKey(QString newKey) {
     llmClient->apiKey = newKey;
@@ -220,9 +220,9 @@ void Settings::setLLMKey(QString newKey) {
 }
 
 /**
- * @name Settings::setAudioKey
+ * @name setAudioKey
  * @brief Sets Google audio transcriber API key and modifies key storage file for continual use.
- * @param key
+ * @param[in] newKey: API key
  */
 void Settings::setAudioKey(QString newKey) {
     audioHandlerClient->apiKey = newKey;
@@ -232,7 +232,7 @@ void Settings::setAudioKey(QString newKey) {
 /**
  * @name setOpenAIAudioKey
  * @brief Sets OpenAI Whisper audio API key and stores it persistently.
- * @param key
+ * @param[in] newKey: API key
  */
 void Settings::setOpenAIAudioKey(QString newKey) {
     audioHandlerClient->openAIApiKey = newKey;
@@ -241,7 +241,7 @@ void Settings::setOpenAIAudioKey(QString newKey) {
 
 /**
  * @brief Settings::setSummaryPreference
- * @param pref - Summary Layout Preference (Detailed/Concise)
+ * @param[in] pref - Summary Layout Preference (Detailed/Concise)
  */
 void Settings::setSummaryPreference(QString pref) {
     summaryLayoutPreference = pref;
@@ -262,8 +262,8 @@ QString Settings::getSummaryPreference() const
 /**
  * @name storeConfig
  * @brief Writes to hidden file storing user settings configurations.
- * @param config - target setting to store
- * @param value - value of user configuration
+ * @param[in] config - target setting to store
+ * @param[in] value - value of user configuration
  */
 void Settings::storeConfig(const QString &config, const QString &value)
 {
