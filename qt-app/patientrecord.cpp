@@ -29,10 +29,10 @@ PatientRecord::PatientRecord(
     const QString &lastName,
     const QString &dob,
     const QString &email,
-    const QString &phoneNumber;
-    const QString &address;
-    const QString &postalCode;
-    const QString &province;
+    const QString &phoneNumber,
+    const QString &address,
+    const QString &postalCode,
+    const QString &province,
     const QString &country
 ) : patientID(id),
     healthCard(healthCard),
@@ -66,7 +66,7 @@ PatientRecord::PatientRecord()
       postalCode(""),
       province(""),
       country("")
-{
+{ 
     // No logic body
 }
 

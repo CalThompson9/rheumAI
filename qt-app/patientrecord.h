@@ -53,7 +53,7 @@ public:
     QString getProvince() const;
     QString getCountry() const;
 
-    QJsonObject toJson() const;
+    QJsonObject toJson() const; 
     static PatientRecord fromJson(const QJsonObject &json);
 };
 

@@ -6,6 +6,7 @@
  * to enter the patient's details, including their name and date of birth.
  * 
  * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 16, 2025
  */
 
@@ -59,12 +60,86 @@ QString AddPatientDialog::getDateOfBirth() const {
 }
 
 /**
+ * @name getHealthCard
+ * @brief Gets the string entered in the health card field of the dialog box
+ * @return The entered health card number
+ */
+QString AddPatientDialog::getHealthCard() const {
+    return ui->healthCardInput->text().trimmed();
+}
+
+/**
+ * @name getEmail
+ * @brief Gets the string entered in the email field of the dialog box
+ * @return The entered email
+ */
+QString AddPatientDialog::getEmail() const {
+    return ui->emailInput->text().trimmed();
+}
+
+/**
+ * @name getPhoneNumber
+ * @brief Gets the string entered in the phone number field of the dialog box
+ * @return The entered phone number
+ */
+QString AddPatientDialog::getPhoneNumber() const {
+    return ui->phoneNumberInput->text().trimmed();
+}
+
+/**
+ * @name getAddress
+ * @brief Gets the string entered in the address field of the dialog box
+ * @return The entered address
+ */
+QString AddPatientDialog::getAddress() const {
+    return ui->addressInput->text().trimmed();
+}
+
+/**
+ * @name getPostalCode
+ * @brief Gets the string entered in the postal code field of the dialog box
+ * @return The entered postal code
+ */
+QString AddPatientDialog::getPostalCode() const {
+    return ui->postalCodeInput->text().trimmed();
+}
+
+/**
+ * @name getProvince
+ * @brief Gets the string entered in the province field of the dialog box
+ * @return The entered province
+ */
+QString AddPatientDialog::getProvince() const {
+    return ui->provinceInput->text().trimmed();
+}
+
+/**
+ * @name getCountry
+ * @brief Gets the string entered in the country field of the dialog box
+ * @return The entered country
+ */
+QString AddPatientDialog::getCountry() const {
+    return ui->countryInput->text().trimmed();
+}
+
+/**
  * @name accept
  * @brief Validate entered data, submit, and close the dialog window
  */
 void AddPatientDialog::accept() {
     // Validate inputs
-    if (getFirstName().isEmpty() || getLastName().isEmpty() || getDateOfBirth().isEmpty()) {
+    if (getFirstName().isEmpty() || 
+        getLastName().isEmpty() || 
+        getDateOfBirth().isEmpty() ||
+        getHealthCard().isEmpty() ||
+        getEmail().isEmpty() ||
+        getPhoneNumber().isEmpty() ||
+        getAddress().isEmpty() ||
+        getPostalCode().isEmpty() ||
+        getProvince().isEmpty() ||
+        getCountry().isEmpty()
+    )
+    {
         QMessageBox::warning(this, "Missing Information", "Please fill in all fields.");
         return;
     }

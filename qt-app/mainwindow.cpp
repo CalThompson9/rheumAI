@@ -533,6 +533,13 @@ void MainWindow::on_addPatientButton_clicked() {
         QString firstName = dialog.getFirstName();
         QString lastName = dialog.getLastName();
         QString dateOfBirth = dialog.getDateOfBirth();
+        QString healthCard = dialog.getHealthCard();
+        QString email = dialog.getEmail();
+        QString phoneNumber = dialog.getPhoneNumber();
+        QString address = dialog.getAddress();
+        QString postalCode = dialog.getPostalCode();
+        QString province = dialog.getProvince();
+        QString country = dialog.getCountry();
         QString baseName = firstName + " " + lastName;  // No DOB in dropdown
 
         int patientID = QDateTime::currentMSecsSinceEpoch() % 100000;
@@ -564,7 +571,19 @@ void MainWindow::on_addPatientButton_clicked() {
         }
 
         // Create and save new patient
-        PatientRecord newPatient(patientID, firstName, lastName, dateOfBirth);
+        PatientRecord newPatient(
+            patientID,
+            healthCard,
+            firstName,
+            lastName,
+            dateOfBirth,
+            email,
+            phoneNumber,
+            address,
+            postalCode,
+            province,
+            country
+        );
         FileHandler::getInstance()->savePatientRecord(newPatient);
 
         // Update user interface to show new patient in dropdown
