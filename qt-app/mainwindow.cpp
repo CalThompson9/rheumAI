@@ -82,22 +82,27 @@ MainWindow::MainWindow(QWidget *parent)
     connect(btnSettings, &QPushButton::clicked, settings, &Settings::showSettings);
     connect(settings, &Settings::okButtonClicked, this, &MainWindow::handleSummarizeButtonClicked);
 
+    // TODO: need to set the
+
     // Initialize summary layout formatter from settings
     QString defaultSummaryLayout = settings->getSummaryPreference();
+    selectSummaryLayout->setText(defaultSummaryLayout);
     if (defaultSummaryLayout.contains("Detailed Layout"))
     {
-        summaryFormatter = new DetailedSummaryFormatter;  // TODO
+        qDebug() << "Setting default summary format to: Detailed Layout";
+        summaryFormatter = new DetailedSummaryFormatter;
         optionDetailedLayout->setEnabled(false);
     }
     else if (defaultSummaryLayout.contains("Concise Layout"))
     {
-        summaryFormatter = new ConciseSummaryFormatter;  // TODO
-        optionDetailedLayout->setEnabled(false);
+        qDebug() << "Setting default summary format to: Concise Layout";
+        summaryFormatter = new ConciseSummaryFormatter;
+        optionConciseLayout->setEnabled(false);
     }
     else
     {
         qDebug() << "Unrecognized summary format in settings: " <<  defaultSummaryLayout << ". Using detailed layout instead...";
-        summaryFormatter = new DetailedSummaryFormatter;  // TODO
+        summaryFormatter = new DetailedSummaryFormatter;
         optionDetailedLayout->setEnabled(false);
     }
 

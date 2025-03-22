@@ -22,10 +22,23 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
       audioHandlerClient(audio),
       llmKey(llm->apiKey),
       audioKey(audio->apiKey),
-      openAIAudioKey(audio->openAIApiKey),
-      summaryLayoutPreference("")
+      openAIAudioKey(audio->openAIApiKey)
 {
-    // No logic body
+    // Load summary format
+    summaryLayoutPreference = "";
+    QFile file("keyFile.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "keyFile.txt not found.";
+        
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (line.startsWith("SUMMARY_LAYOUT_PREFERENCE:")) {
+            summaryLayoutPreference = line.mid(QString("SUMMARY_LAYOUT_PREFERENCE:").length()).trimmed();
+        }
+    }
 }
 
 /**
