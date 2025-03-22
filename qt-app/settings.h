@@ -37,6 +37,7 @@ public:
 
     void setLLMKey(const QString newKey);
     void setAudioKey(const QString newKey);
+    void setOpenAIAudioKey(QString newKey);
     void setSummaryPreference(const QString pref);
     QString getSummaryPreference() const;
 
@@ -53,6 +54,7 @@ private:
     AudioHandler *audioHandlerClient;
     QString llmKey;
     QString audioKey;
+    QString openAIAudioKey;
     QString summaryLayoutPreference;
 
     static Settings *instance;

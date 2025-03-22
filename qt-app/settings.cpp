@@ -18,11 +18,12 @@ Settings* Settings::instance = nullptr;
 Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
     : QObject(p),
     mainWindow(p),
-    llmClient(llm),
-    audioHandlerClient(audio),
-    llmKey(llm->apiKey),
-    audioKey(audio->apiKey),
-    summaryLayoutPreference("")
+      llmClient(llm),
+      audioHandlerClient(audio),
+      llmKey(llm->apiKey),
+      audioKey(audio->apiKey),
+      openAIAudioKey(audio->openAIApiKey),
+      summaryLayoutPreference("")
 {
     // No logic body
 }
@@ -196,6 +197,7 @@ void Settings::showSettings()
 
 /**
  * @name Settings::setLLMKey
+ * @name setLLMKey
  * @brief Sets LLM API key and modifies key storage file for continual use.
  * @param key
  */
@@ -206,12 +208,22 @@ void Settings::setLLMKey(QString newKey) {
 
 /**
  * @name Settings::setAudioKey
- * @brief Sets audio transcriber API key and modifies key storage file for continual use.
+ * @brief Sets Google audio transcriber API key and modifies key storage file for continual use.
  * @param key
  */
 void Settings::setAudioKey(QString newKey) {
     audioHandlerClient->apiKey = newKey;
     storeConfig("AUDIO", newKey);
+}
+
+/**
+ * @name setOpenAIAudioKey
+ * @brief Sets OpenAI Whisper audio API key and stores it persistently.
+ * @param key
+ */
+void Settings::setOpenAIAudioKey(QString newKey) {
+    audioHandlerClient->openAIApiKey = newKey;
+    storeConfig("OPENAI_AUDIO", newKey);
 }
 
 /**
@@ -246,7 +258,9 @@ void Settings::storeConfig(const QString &config, const QString &value)
     if (config == "LLM") {
         prefix = "GEMINI_API_KEY:";
     } else if (config == "AUDIO") {
-        prefix = "AUDIO_API_KEY:";
+        prefix = "GOOGLE_AUDIO_API_KEY:";
+    } else if (config == "OPENAI_AUDIO") {
+        prefix = "OPENAI_AUDIO_API_KEY:";
     } else if (config == "SUMM") {
         prefix = "SUMMARY_LAYOUT_PREFERENCE:";
     } else {
@@ -274,7 +288,7 @@ void Settings::storeConfig(const QString &config, const QString &value)
     bool foundLine = false;
     for (int i = 0; i < lines.size(); ++i) {
         if (lines[i].startsWith(prefix)) {
-            lines[i] = prefix + " " + value; // Replace everything after prefix
+            lines[i] = prefix + " " + value;
             foundLine = true;
             break;
         }

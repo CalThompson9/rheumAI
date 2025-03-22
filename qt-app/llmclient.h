@@ -1,3 +1,11 @@
+/**
+ * @file llmclient.h
+ * @brief Declaration of LLMClient class
+ * 
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @date Mar. 4, 2025
+ */
+
 #ifndef LLMCLIENT_H
 #define LLMCLIENT_H
 

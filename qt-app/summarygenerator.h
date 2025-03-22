@@ -42,6 +42,9 @@
     void summarizePhysicalExamination(const QString &response);
     void summarizeCurrentStatus(const QString &response);
     void summarizePlan(const QString &response);
+    void setSummary(const Summary& summary);
+    void setSummaryText(const QString& summaryText);
+
      
  
  private slots:

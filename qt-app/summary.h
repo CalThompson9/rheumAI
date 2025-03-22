@@ -3,10 +3,8 @@
  * @brief Declaration of Summary class
  * 
  * @author Joelene Hales (jhales5@uwo.ca)
- * @date Mar. 6, 2025
- * 
  * @author Callum Thompson (cthom226@uwo.ca)
- * @date Mar. 12, 2025
+ * @date Mar. 6, 2025
  */
 
 #ifndef SUMMARY_H
@@ -22,6 +20,8 @@ public:
     ~Summary() = default;
 
     Summary& operator=(const Summary& original);
+
+    QString getText() const;
 
     const QString& getIntervalHistory() const;
     void setIntervalHistory(const QString& intervalHistory);

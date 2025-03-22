@@ -2,12 +2,15 @@
  * @file concisesummaryformatter.cpp
  * @brief Definition of ConciseSummaryFormatter class
  * 
+ * Concise summary format displays the summaries of the current status and plan.
+ * 
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 7, 2025
  */
 
 #include <QLabel>
 #include "concisesummaryformatter.h"
+
 
 /**
  * @name generateLayout
