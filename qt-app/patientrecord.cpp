@@ -224,3 +224,45 @@ PatientRecord PatientRecord::fromJson(const QJsonObject &json)
         json["country"].toString()
         );
 }
+
+
+
+void PatientRecord::setFirstName(const QString &value) {
+    firstName = value;
+}
+
+void PatientRecord::setLastName(const QString &value) {
+    lastName = value;
+}
+
+void PatientRecord::setDateOfBirth(const QString &value) {
+    dateOfBirth = value;
+}
+
+void PatientRecord::setHealthCard(const QString &value) {
+    healthCard = value;
+}
+
+void PatientRecord::setEmail(const QString &value) {
+    email = value;
+}
+
+void PatientRecord::setPhoneNumber(const QString &value) {
+    phoneNumber = value;
+}
+
+void PatientRecord::setAddress(const QString &value) {
+    address = value;
+}
+
+void PatientRecord::setPostalCode(const QString &value) {
+    postalCode = value;
+}
+
+void PatientRecord::setProvince(const QString &value) {
+    province = value;
+}
+
+void PatientRecord::setCountry(const QString &value) {
+    country = value;
+}

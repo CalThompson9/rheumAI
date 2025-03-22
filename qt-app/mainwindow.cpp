@@ -14,6 +14,7 @@
  */
 
 #include "mainwindow.h"
+#include "editpatientinfo.h"
 #include "llmclient.h"
 #include "audiohandler.h"
 #include "detailedsummaryformatter.h"
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
                            selectSummaryLayout, summarySection,
-                           mainLayout, btnAddPatient, btnRemovePatient);
+                           mainLayout, btnAddPatient,btnEditPatient, btnRemovePatient);
 
     // Add summary layout options
     summaryLayoutOptions = new QMenu(this);
@@ -116,6 +117,7 @@ MainWindow::MainWindow(QWidget *parent)
     llmClient = new LLMClient(this);
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
+    connect(btnEditPatient, &::QPushButton::clicked, this, &MainWindow::on_editPatientButton_clicked);
     connect(btnRemovePatient, &QPushButton::clicked, this, &MainWindow::on_removePatientButton_clicked);
     connect(comboSelectPatient, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_patientSelected);
 
@@ -594,6 +596,46 @@ void MainWindow::on_addPatientButton_clicked() {
         loadPatientsIntoDropdown();
     }
 }
+
+
+void MainWindow::on_editPatientButton_clicked() {
+    int patientID = comboSelectPatient->currentData().toInt();
+    if (patientID == 0) return;
+
+    PatientRecord existing = FileHandler::getInstance()->loadPatientRecord(patientID);
+
+    editpatientinfo dialog(this);
+    dialog.setFirstName(existing.getFirstName());
+    dialog.setLastName(existing.getLastName());
+    dialog.setDateOfBirth(existing.getDateOfBirth());
+    dialog.setHealthCard(existing.getHealthCard());
+    dialog.setEmail(existing.getEmail());
+    dialog.setPhoneNumber(existing.getPhoneNumber());
+    dialog.setAddress(existing.getAddress());
+    dialog.setPostalCode(existing.getPostalCode());
+    dialog.setProvince(existing.getProvince());
+    dialog.setCountry(existing.getCountry());
+
+    if (dialog.exec() == QDialog::Accepted) {
+        existing.setFirstName(dialog.getFirstName());
+        existing.setLastName(dialog.getLastName());
+        existing.setDateOfBirth(dialog.getDateOfBirth());
+        existing.setHealthCard(dialog.getHealthCard());
+        existing.setEmail(dialog.getEmail());
+        existing.setPhoneNumber(dialog.getPhoneNumber());
+        existing.setAddress(dialog.getAddress());
+        existing.setPostalCode(dialog.getPostalCode());
+        existing.setProvince(dialog.getProvince());
+        existing.setCountry(dialog.getCountry());
+
+        FileHandler::getInstance()->savePatientRecord(existing);
+        qDebug() << "Patient updated: " << patientID;
+
+        loadPatientsIntoDropdown(); // Refresh display names if changed
+    }
+}
+
+
 
 
 /**

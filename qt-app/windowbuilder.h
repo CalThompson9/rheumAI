@@ -39,6 +39,7 @@ public:
                         QVBoxLayout *&summarySection,
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
+                        QPushButton *&btnEditPatient,
                         QPushButton *&btnRemovePatient);
 };
 

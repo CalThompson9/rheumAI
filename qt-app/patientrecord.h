@@ -53,6 +53,18 @@ public:
     QString getProvince() const;
     QString getCountry() const;
 
+    void setFirstName(const QString &firstName);
+    void setLastName(const QString &lastName);
+    void setDateOfBirth(const QString &dob);
+    void setHealthCard(const QString &card);
+    void setEmail(const QString &email);
+    void setPhoneNumber(const QString &phone);
+    void setAddress(const QString &address);
+    void setPostalCode(const QString &postalCode);
+    void setProvince(const QString &province);
+    void setCountry(const QString &country);
+
+
     QJsonObject toJson() const; 
     static PatientRecord fromJson(const QJsonObject &json);
 };
