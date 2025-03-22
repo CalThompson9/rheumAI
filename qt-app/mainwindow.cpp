@@ -294,7 +294,6 @@ void MainWindow::handleSummaryReady()
 
     // Update the UI with the summary
     displaySummary(summary);
-    btnSummarize->setText("Regenerate Summary");
 }
 
 /**
@@ -638,7 +637,6 @@ void MainWindow::on_patientSelected(int index) {
         qDebug() << "Summary successfully retrieved, attempting to display...";
         
         displaySummary(summary);
-        btnSummarize->setText("Regenerate Summary");
         qDebug() << "Summary display completed.";
     } else {
         qDebug() << "No saved summary found.";
@@ -650,7 +648,6 @@ void MainWindow::on_patientSelected(int index) {
             }
             delete child;  // Free the layout item
         }
-        btnSummarize->setText("Summarize");
 
     }
 }
