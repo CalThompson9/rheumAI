@@ -63,6 +63,7 @@ private:
     QString currentTranscriptText;
 
     int patientID;
+    bool archiveMode;
 
     Settings *settings;
 
@@ -71,6 +72,7 @@ private slots:
     void handleSummarizeButtonClicked();
     void handleSummaryReady();
     void on_addPatientButton_clicked();
+    void handleArchiveToggled();
 
 public slots:
     void on_patientSelected(int index);

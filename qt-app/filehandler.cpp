@@ -23,10 +23,12 @@ FileHandler *FileHandler::instance = nullptr;
  * @name FileHandler (constructor)
  * @brief Initializes the FileHandler instance
  */
-FileHandler::FileHandler()
+FileHandler::FileHandler() :
+    patientDatabasePath("Patients"),
+    archivedDatabasePath("Archived")
 {
-    patientDatabasePath = "Patients";   // Base directory
-    QDir().mkpath(patientDatabasePath); // Ensure it exists
+    QDir().mkpath(patientDatabasePath);
+    QDir().mkpath(archivedDatabasePath);
 }
 
 /**
@@ -91,6 +93,11 @@ QString FileHandler::readTranscript()
     return content;
 }
 
+/**
+ * @brief FileHandler::loadSummaryText
+ * @param patientID
+ * @return
+ */
 QString FileHandler::loadSummaryText(int patientID)
 {
     QString summaryPath = patientDatabasePath + "/" + QString::number(patientID) + "/summary.txt";
@@ -212,7 +219,7 @@ PatientRecord FileHandler::loadPatientRecord(int patientID)
 PatientRecord FileHandler::archivePatientRecord(int patientID)
 {
     QString patientPath = patientDatabasePath + "/" + QString::number(patientID);
-    QString archivePath = "archived/" + QString::number(patientID);
+    QString archivePath = "Archived/" + QString::number(patientID);
     QDir().mkpath(archivePath); // Ensure archive folder exists
 
     QDir patientDir(patientPath);
@@ -234,13 +241,50 @@ PatientRecord FileHandler::archivePatientRecord(int patientID)
     }
 
     // Remove the old patient folder
-    if (!QDir(patientPath).removeRecursively())
-    {
-        qDebug() << "Failed to remove old patient folder:" << patientPath;
+    if (!QDir(patientPath).removeRecursively()) {
+        qDebug() << "‼️ Failed to remove old patient folder:" << patientPath;
+    } else {
+        qDebug() << "🗳️ Patient folder ARCHIVED for ID:" << patientID;
     }
-    else
+
+    return loadPatientRecord(patientID);
+}
+
+/**
+ * @name unarchivePatientRecord
+ * @brief Moves a patient record to the 'Patients' folder
+ * @param[in] patientID: Patient ID of record to unarchive
+ * @return Patient record that was unarchived
+ */
+PatientRecord FileHandler::unarchivePatientRecord(int patientID)
+{
+    QString archivePath = archivedDatabasePath + "/" + QString::number(patientID);
+    QString patientPath = "Patients/" + QString::number(patientID);
+    QDir().mkpath(archivePath); // Ensure archive folder exists
+
+    QDir archiveDir(archivePath);
+    if (!archiveDir.exists())
     {
-        qDebug() << "Patient folder archived for ID:" << patientID;
+        qDebug() << "Archive folder does not exist for ID:" << patientID;
+        return PatientRecord();
+    }
+
+    // Move all files from the archived folder to the patients folder
+    for (const QString &fileName : archiveDir.entryList(QDir::Files))
+    {
+        QString srcFilePath = archivePath + "/" + fileName;
+        QString destFilePath = patientPath + "/" + fileName;
+        if (!QFile::rename(srcFilePath, destFilePath))
+        {
+            qDebug() << "Failed to move file:" << srcFilePath << "to" << destFilePath;
+        }
+    }
+
+    // Remove the old patient folder
+    if (!QDir(archivePath).removeRecursively()) {
+        qDebug() << "‼️ Failed to remove old archive folder:" << archivePath;
+    } else {
+        qDebug() << "🗃️ Patient folder UNARCHIVED for ID:" << patientID;
     }
 
     return loadPatientRecord(patientID);

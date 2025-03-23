@@ -34,7 +34,7 @@
  * @param[in] parent: Parent widget
  */
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent), archiveMode(false)
 {
     setGeometry(0, 0, 1200, 800);
 
@@ -58,29 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
     selectSummaryLayout->setMenu(summaryLayoutOptions);
     selectSummaryLayout->setText("Detailed Layout");
 
-    // Add logic for toggleSwitch
-    connect(toggleSwitch, &QPushButton::toggled, this, [=](bool checked) {
-        if (checked) { qDebug() << "Switching to archived patients.";
-
-            toggleSwitch->setText("Show All Active Patients");
-            btnArchivePatient->setText("Unarchive");
-
-            loadArchivedPatientsIntoDropdown(); // Load archived patients
-
-            patientID = comboSelectPatient->currentData().toInt();
-            lblPatientName->setText("Patient ID: " + QString::number(patientID));
-
-        } else { qDebug() << "Switching to active patients.";
-
-            toggleSwitch->setText("Show All Archived Patients");
-            btnArchivePatient->setText("Archive");
-
-            loadPatientsIntoDropdown(); // Load active patients
-
-            patientID = comboSelectPatient->currentData().toInt();
-            lblPatientName->setText("Patient ID: " + QString::number(patientID));
-        }
-    });
+    // Connect archive mode button
+    connect(toggleSwitch, &QPushButton::clicked, this, &MainWindow::handleArchiveToggled);
 
     // Connect selection of each option to update summary layout format
     connect(optionDetailedLayout, &QAction::triggered, this, [=]()
@@ -532,14 +511,46 @@ void MainWindow::on_removePatientButton_clicked()
  */
 void MainWindow::on_archivePatientButton_clicked()
 {
-    int index = comboSelectPatient->currentIndex();
-    if (index == -1)
-        return;
 
-    // Patient's folder moves from Archived --> Patients
+    int index = comboSelectPatient->currentIndex();
+    if (index == -1) return;
+
+    if (archiveMode) { // ARCHIVE MODE --> Handle UNARCHIVING
+        FileHandler::getInstance()->unarchivePatientRecord(comboSelectPatient->currentData().toInt()); // Unarchive Patient
+
+    } else { // ACTIVE MODE --> Handle ARCHIVING
+        FileHandler::getInstance()->archivePatientRecord(comboSelectPatient->currentData().toInt()); // Archive Patient
+    }
 
     comboSelectPatient->removeItem(index);
 }
+
+/**
+ * @brief handleArchiveToggled
+ */
+void MainWindow::handleArchiveToggled()
+{
+    archiveMode = !archiveMode; // Toggle archive mode
+
+    if (archiveMode) // ARCHIVE MODE
+    {
+        // Update UI
+        toggleSwitch->setText("Show All Active Patients");
+        btnArchivePatient->setText("Unarchive Patient");
+        loadArchivedPatientsIntoDropdown();
+        patientID = comboSelectPatient->currentData().toInt();
+        lblPatientName->setText("Patient ID: " + QString::number(patientID));
+
+    } else // ACTIVE MODE
+    {
+        toggleSwitch->setText("Show All Archived Patients");
+        btnArchivePatient->setText("Archive Patient");
+        loadPatientsIntoDropdown();
+        patientID = comboSelectPatient->currentData().toInt();
+        lblPatientName->setText("Patient ID: " + QString::number(patientID));
+    }
+}
+
 
 /**
  * @name on_patientSelected

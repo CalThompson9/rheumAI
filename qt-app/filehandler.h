@@ -28,6 +28,7 @@ private:
     QString transcriptFilename;
     QString jsonFilename;
     QString patientDatabasePath;
+    QString archivedDatabasePath;
 
     FileHandler(); // Private constructor (Singleton pattern)
 
@@ -43,6 +44,7 @@ public:
 
     PatientRecord loadPatientRecord(int patientID);
     PatientRecord archivePatientRecord(int patientID);
+    PatientRecord unarchivePatientRecord(int patientID);
 
     QString getTranscriptFilename() const;
     QString getJsonFilename() const;

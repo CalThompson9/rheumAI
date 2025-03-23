@@ -131,16 +131,16 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     comboSelectPatient = new QComboBox(centralWidget);
     btnRecord = new QPushButton("Record", centralWidget);
     btnSummarize = new QPushButton("Summarize", centralWidget);
-    btnAddPatient = new QPushButton("Add", centralWidget);
-    btnDeletePatient = new QPushButton("Delete", centralWidget);
-    btnArchivePatient = new QPushButton("Archive", centralWidget);
+    btnAddPatient = new QPushButton("Add Patient", centralWidget);
+    btnDeletePatient = new QPushButton("Delete Patient", centralWidget);
+    btnArchivePatient = new QPushButton("Archive Patient", centralWidget);
     QLabel *summaryTitle = new QLabel("Summary");
     selectSummaryLayout = new QPushButton(centralWidget);
     selectSummaryLayout->setCheckable(true);
     selectSummaryLayout->setText("Select Summary Layout");
     selectSummaryLayout->setFixedWidth(300);
 
-    // Initialize toggle switch
+    // Initialize Archive toggle
     toggleSwitch = new QPushButton("Show All Archived Patients", centralWidget);
     toggleSwitch->setCheckable(true);
     toggleSwitch->setStyleSheet(greyButtonStyle);
