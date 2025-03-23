@@ -32,6 +32,7 @@ public:
 
     void setSummaryFormatter(SummaryFormatter* summaryFormatter);
     void displaySummary(const Summary& summary);
+    void viewPatient();
 
 private:
     QWidget *centralWidget;

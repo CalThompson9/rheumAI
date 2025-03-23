@@ -463,7 +463,7 @@ void MainWindow::on_patientSelected(int index) {
     patientID = comboSelectPatient->currentData().toInt();
     qDebug() << "Selected patient: " << patientID;
 
-    lblPatientName->setText("Patient ID: " + QString::number(patientID));
+    viewPatient();
 
     // Load the transcript
     QString savedTranscript = FileHandler::getInstance()->loadTranscript(patientID);
@@ -503,6 +503,28 @@ void MainWindow::on_patientSelected(int index) {
 
     }
 }
+
+/**
+ * @name viewPatient
+ * @brief When switched to a patient, display their information in the top corner
+ * @details This function is called when a patient is selected from the dropdown
+ */
+void MainWindow::viewPatient() {
+    QVariant patientData = comboSelectPatient->currentData();
+    if (!patientData.isValid()) {
+        qWarning() << "No patient selected, cannot view patient!";
+        return;
+    }
+
+    int patientID = patientData.toInt();
+    PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID);
+
+    QString info = "Name: " + patient.getFirstName() + " " + patient.getLastName() +
+                   " \nDOB: " + patient.getDateOfBirth() +
+                   " \nID: " + QString::number(patientID);
+    lblPatientName->setText(info);
+}
+
 
 MainWindow::~MainWindow()
 {

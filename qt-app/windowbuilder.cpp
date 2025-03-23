@@ -154,8 +154,14 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     QPixmap logoPixmap(":/logo.png");
     lblTitle->setPixmap(logoPixmap.scaled(300, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    lblPatientName->setAlignment(Qt::AlignCenter);
+    lblPatientName->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    lblPatientName->setContentsMargins(15, 0, 0, 0);  // Optional: padding from the left
     lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
+    lblPatientName->setFixedWidth(250);  // or use setMaximumWidth if you want flexibility
+    lblPatientName->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    lblPatientName->setTextInteractionFlags(Qt::TextSelectableByMouse);  // Optional, allows copying
+    lblPatientName->setToolTip(lblPatientName->text());  // Show full info on hover
+
 
     btnSettings->setStyleSheet(blueButtonStyle);
     btnSettings->setFixedWidth(100);
@@ -173,19 +179,21 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
 
     // Layouts
     mainLayout = new QVBoxLayout(centralWidget);
-    QHBoxLayout *topBarLayout = new QHBoxLayout();
+    QGridLayout *topBarLayout = new QGridLayout();
     QHBoxLayout *patientControlsLayout = new QHBoxLayout();
     QHBoxLayout *summaryHeader = new QHBoxLayout();
     QHBoxLayout *recordSummarizeLayout = new QHBoxLayout();
     summarySection = new QVBoxLayout();
 
     // Top bar layout
-    topBarLayout->addStretch();
-    topBarLayout->addWidget(lblTitle);
-    topBarLayout->addStretch();
-    topBarLayout->addWidget(btnSettings);
+    topBarLayout->addWidget(lblPatientName, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    topBarLayout->addWidget(lblTitle, 0, 1, Qt::AlignHCenter);  // Center column
+    topBarLayout->addWidget(btnSettings, 0, 2, Qt::AlignRight | Qt::AlignVCenter);
+    topBarLayout->setColumnStretch(0, 1);
+    topBarLayout->setColumnStretch(1, 0);  // Don't stretch the logo
+    topBarLayout->setColumnStretch(2, 1);    
     // Padding on left
-    topBarLayout->setContentsMargins(125, 0, 0, 0);
+    topBarLayout->setContentsMargins(0, 0, 0, 0);
 
     // Patient controls layout
     patientControlsLayout->addWidget(comboSelectPatient);
@@ -213,7 +221,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
 
     // Add layouts to main layout
     mainLayout->addLayout(topBarLayout);
-    mainLayout->addWidget(lblPatientName);
     mainLayout->addLayout(patientControlsLayout);
     mainLayout->addLayout(summaryHeader);
     mainLayout->addWidget(scrollArea);
