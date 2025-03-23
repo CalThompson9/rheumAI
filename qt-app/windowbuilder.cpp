@@ -41,6 +41,88 @@
  *  @param[in,out] btnArchivePatient: "Remove Patient" button
  *  @param[in,out] toggleSwitch: Toggle switch to show archived summaries
  */
+// ==================== Define button styles ====================
+const QString WindowBuilder::blueButtonStyle =
+    "QPushButton {"
+    "background-color: #5371ff;"
+    "border-radius: 6px;"
+    "color: white;"
+    "padding: 6px;"
+    "font-size: 12px;"
+    "} "
+    "QPushButton:hover {"
+    "background-color: #425BD0;"
+    "}";
+
+const QString WindowBuilder::orangeButtonStyle =
+    "QPushButton {"
+    "background-color: #FF914D;"
+    "border-radius: 6px;"
+    "color: white;"
+    "padding: 6px;"
+    "font-size: 12px;"
+    "} "
+    "QPushButton:hover {"
+    "background-color: #C56E39;"
+    "}";
+
+const QString WindowBuilder::recordBlueStyle =
+    "QPushButton {"
+    "background-color: #5371ff;"
+    "border-radius: 6px;"
+    "color: white;"
+    "padding: 6px;"
+    "font-size: 12px;"
+    "} "
+    "QPushButton:hover {"
+    "background-color: #425BD0;"
+    "}";
+
+const QString WindowBuilder::recordRedStyle =
+    "QPushButton {"
+    "background-color: red;"
+    "border-radius: 6px;"
+    "color: white;"
+    "padding: 6px;"
+    "font-size: 12px;"
+    "} "
+    "QPushButton:hover {"
+    "background-color: darkred;"
+    "}";
+
+const QString WindowBuilder::settingsBlueButtonStyle =
+    "QPushButton {"
+    "background-color: #5371ff;"
+    "color: white;"
+    "border-radius: 8px;"
+    "padding: 10px;"
+    "margin: 0 4px;"
+    "font-size: 14px;"
+    "} "
+    "QPushButton:hover {;"
+    "background-color: #425BD0;"
+    "} "
+    "QPushButton:pressed {"
+    "background-color: #006ae6;"
+    "} ";
+
+const QString WindowBuilder::cancelStyle =
+    "QPushButton {"
+    "background-color: #AAAAAA;"
+    "color: black;"
+    "border-radius: 8px;"
+    "padding: 10px;"
+    "margin: 0 4px;"
+    "font-size: 14px;"
+    "} "
+    "QPushButton:hover {"
+    "background-color: #949494;"
+    "} "
+    "QPushButton:pressed {"
+    "background-color: #5F5F5F;"
+    "} ";
+
+// ==================== Window Constructor ====================
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnSettings,
                             QLabel *&lblTitle,
@@ -56,7 +138,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&toggleSwitch) // Add toggleSwitch parameter
 {
     // Create UI elements
-    // btnConnectDevice = new QPushButton("Connect Device", centralWidget);
     btnSettings = new QPushButton("Settings", centralWidget);
     lblTitle = new QLabel(centralWidget);
     lblPatientName = new QLabel("[Select a Patient]", centralWidget);
@@ -74,18 +155,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     // Initialize toggle switch
     toggleSwitch = new QPushButton("Show Archived", centralWidget);
     toggleSwitch->setCheckable(true);
-    toggleSwitch->setStyleSheet(R"(
-        QPushButton {
-            background-color: #5371ff;
-            color: white;
-            border-radius: 8px;
-            padding: 6px 12px;
-        }
-        QPushButton:checked {
-            background-color: #AAAAAA;
-            color: black;
-        }
-    )");
+    toggleSwitch->setStyleSheet(blueButtonStyle);
     toggleSwitch->setFixedWidth(400);
 
     // Set logo as title without distortion
@@ -95,62 +165,14 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     lblPatientName->setAlignment(Qt::AlignCenter);
     lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
 
-    // Define button styles
-    QString blueButtonStyle = "QPushButton {"
-                              "background-color: #5371ff;"
-                              "border-radius: 6px;"
-                              "color: white;"
-                              "padding: 6px;"
-                              "font-size: 12px;"
-                              "} "
-                              "QPushButton:hover {"
-                              "background-color: #425BD0;"
-                              "}";
-
-    QString orangeButtonStyle = "QPushButton {"
-                                "background-color: #FF914D;"
-                                "border-radius: 6px;"
-                                "color: white;"
-                                "padding: 6px;"
-                                "font-size: 12px;"
-                                "} "
-                                "QPushButton:hover {"
-                                "background-color: #C56E39;"
-                                "}";
-
-    // btnConnectDevice->setStyleSheet(blueButtonStyle);
     btnSettings->setStyleSheet(blueButtonStyle);
     btnSettings->setFixedWidth(100);
     btnSummarize->setStyleSheet(orangeButtonStyle);
     btnAddPatient->setStyleSheet(blueButtonStyle);
-    btnArchivePatient->setStyleSheet(orangeButtonStyle);
-
-    // Record button styling (toggle between blue and red)
-    QString recordBlueStyle = "QPushButton {"
-                              "background-color: #5371ff;"
-                              "border-radius: 6px;"
-                              "color: white;"
-                              "padding: 6px;"
-                              "font-size: 12px;"
-                              "} "
-                              "QPushButton:hover {"
-                              "background-color: #425BD0;"
-                              "}";
-
-    QString recordRedStyle = "QPushButton {"
-                             "background-color: red;"
-                             "border-radius: 6px;"
-                             "color: white;"
-                             "padding: 6px;"
-                             "font-size: 12px;"
-                             "} "
-                             "QPushButton:hover {"
-                             "background-color: darkred;"
-                             "}";
+    btnRemovePatient->setStyleSheet(orangeButtonStyle);
 
     btnRecord->setStyleSheet(recordBlueStyle);
-    QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord, recordBlueStyle, recordRedStyle]()
-                     {
+    QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord]() {
         static bool isRecording = false;
         isRecording = !isRecording;
         btnRecord->setStyleSheet(isRecording ? recordRedStyle : recordBlueStyle);
