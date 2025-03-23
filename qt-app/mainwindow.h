@@ -32,6 +32,7 @@ public:
 
     void setSummaryFormatter(SummaryFormatter *summaryFormatter);
     void displaySummary(const Summary &summary);
+    void viewPatient();
 
 private:
     QWidget *centralWidget;
@@ -75,6 +76,7 @@ private slots:
     void on_addPatientButton_clicked();
     void on_editPatientButton_clicked();
     void handleArchiveToggled();
+
 
 public slots:
     void on_patientSelected(int index);
