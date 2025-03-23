@@ -341,7 +341,7 @@ void MainWindow::handleSummaryReady()
  * @name loadPatientsIntoDropdown
  * @brief Handles adding a new patient record
  */
-void MainWindow::loadPatientsIntoDropdown()
+bool MainWindow::loadPatientsIntoDropdown()
 {
     comboSelectPatient->clear(); // Clear dropdown before loading
     qDebug() << "Loading patients from Patients folder...";
@@ -350,12 +350,14 @@ void MainWindow::loadPatientsIntoDropdown()
     if (!patientsDir.exists())
     {
         qDebug() << "Patients directory does not exist!";
-        return;
+        return false;
     }
 
+    bool empty = true;
     QStringList patientFolders = patientsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     for (const QString &folderName : patientFolders)
     {
+        empty = false;
         int patientID = folderName.toInt(); // Convert folder name to int
         PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID);
         QString displayName = patient.getFirstName() + " " + patient.getLastName() + " [" + QString::number(patientID) + "]";
@@ -363,13 +365,14 @@ void MainWindow::loadPatientsIntoDropdown()
     }
 
     qDebug() << "Loaded patients into dropdown.";
+    return empty;
 }
 
 /**
  * @name loadArchivedPatientsIntoDropdown
  * @brief Handles loading archived patients into the dropdown
  */
-void MainWindow::loadArchivedPatientsIntoDropdown()
+bool MainWindow::loadArchivedPatientsIntoDropdown()
 {
     comboSelectPatient->clear(); // Clear dropdown before loading
     qDebug() << "Loading archived patients from Archived folder...";
@@ -378,12 +381,14 @@ void MainWindow::loadArchivedPatientsIntoDropdown()
     if (!archivedDir.exists())
     {
         qDebug() << "Archived directory does not exist!";
-        return;
+        return true;
     }
 
+    bool empty = true;
     QStringList patientFolders = archivedDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     for (const QString &folderName : patientFolders)
     {
+        empty = false;
         int patientID = folderName.toInt();                                               // Convert folder name to int
         PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID); // Load archived record
         QString displayName = patient.getFirstName() + " " + patient.getLastName() + " [" + QString::number(patientID) + "]";
@@ -391,6 +396,7 @@ void MainWindow::loadArchivedPatientsIntoDropdown()
     }
 
     qDebug() << "Loaded archived patients into dropdown.";
+    return empty;
 }
 
 /**
@@ -589,7 +595,7 @@ void MainWindow::on_archivePatientButton_clicked()
 
     if (archiveMode)
     {                                                                                                  // ARCHIVE MODE --> Handle UNARCHIVING
-        FileHandler::getInstance()->unarchivePatientRecord(comboSelectPatient->currentData().toInt()); // Unarchive Patient
+        FileHandler::getInstance()->unarchivePatientRecord(comboSelectPatient->currentData().toInt()); // Unarchive Patient 
     }
     else
     {                                                                                                // ACTIVE MODE --> Handle ARCHIVING
@@ -597,6 +603,7 @@ void MainWindow::on_archivePatientButton_clicked()
     }
 
     comboSelectPatient->removeItem(index);
+    checkDropdownEmpty();
 }
 
 /**
@@ -608,13 +615,10 @@ void MainWindow::handleArchiveToggled()
 
     if (archiveMode) // IN ARCHIVE MODE
     {
-        // Update UI
         toggleSwitch->setText("Show All Active Patients");
         btnArchivePatient->setText("Unarchive Patient");
-        loadArchivedPatientsIntoDropdown();
+
         viewPatient();
-        patientID = comboSelectPatient->currentData().toInt();
-        lblPatientName->setText("Patient ID: " + QString::number(patientID));
 
         btnAddPatient->setEnabled(false);
         btnEditPatient->setEnabled(false);
@@ -627,16 +631,46 @@ void MainWindow::handleArchiveToggled()
     {
         toggleSwitch->setText("Show All Archived Patients");
         btnArchivePatient->setText("Archive Patient");
-        loadPatientsIntoDropdown();
+
         viewPatient();
-        patientID = comboSelectPatient->currentData().toInt();
-        lblPatientName->setText("Patient ID: " + QString::number(patientID));
 
         btnAddPatient->setEnabled(true);
         btnEditPatient->setEnabled(true);
         btnAddPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
         btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
         toggleSwitch->setStyleSheet(WindowBuilder::greyButtonStyle);
+    }
+
+    checkDropdownEmpty();
+}
+
+/**
+ * @brief MainWindow::checkDropdownEmpty
+ * @details Checks if Archive,
+ *
+ */
+void MainWindow::checkDropdownEmpty() {
+
+    bool empty = true;
+    if (archiveMode) empty = loadArchivedPatientsIntoDropdown();
+    else             empty = loadPatientsIntoDropdown();
+
+    if (empty) {
+        lblPatientName->setText("Name: \nDOB: \nPhone: \nEmail: \nAddress: \nProvince: \nCountry: ");
+        btnEditPatient->setEnabled(false);
+        btnDeletePatient->setEnabled(false);
+        btnArchivePatient->setEnabled(false);
+        btnEditPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+        btnDeletePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+        btnArchivePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+    }
+    else {
+        btnEditPatient->setEnabled(true);
+        btnDeletePatient->setEnabled(true);
+        btnArchivePatient->setEnabled(true);
+        btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
+        btnDeletePatient->setStyleSheet(WindowBuilder::redButtonStyle);
+        btnArchivePatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
     }
 }
 
@@ -712,8 +746,11 @@ MainWindow::~MainWindow()
  * @brief When switched to a patient, display their information in the top corner
  * @details This function is called when a patient is selected from the dropdown
  */
-void MainWindow::viewPatient() {
+void MainWindow::viewPatient()
+{
     QVariant patientData = comboSelectPatient->currentData();
+    QString info;
+
     if (!patientData.isValid()) {
         qWarning() << "No patient selected, cannot view patient!";
         return;
@@ -722,7 +759,7 @@ void MainWindow::viewPatient() {
     int patientID = patientData.toInt();
     PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID);
 
-    QString info = 
+    info =
         "Name: " + patient.getFirstName() + " " + patient.getLastName() + "\n" +
         "DOB: " + patient.getDateOfBirth() + "\n" +
         "Phone: " + patient.getPhoneNumber() + "\n" +

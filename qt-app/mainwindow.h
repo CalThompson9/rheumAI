@@ -76,14 +76,14 @@ private slots:
     void on_addPatientButton_clicked();
     void on_editPatientButton_clicked();
     void handleArchiveToggled();
-
+    void checkDropdownEmpty();
 
 public slots:
     void on_patientSelected(int index);
     void on_removePatientButton_clicked();
     void on_archivePatientButton_clicked();
-    void loadPatientsIntoDropdown();
-    void loadArchivedPatientsIntoDropdown();
+    bool loadPatientsIntoDropdown();
+    bool loadArchivedPatientsIntoDropdown();
     void handleLLMResponse(const QString &response);
 };
 
