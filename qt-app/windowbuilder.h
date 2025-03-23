@@ -50,6 +50,7 @@ public:
     static const QString redButtonStyle;
     static const QString greyButtonStyle;
     static const QString settingsBlueButtonStyle;
+    static const QString disabledButtonStyle;
 };
 
 #endif // WINDOWBUILDER_H

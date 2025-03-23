@@ -108,6 +108,15 @@ const QString WindowBuilder::greyButtonStyle =
     "background-color: #5F5F5F;"
     "} ";
 
+const QString WindowBuilder::disabledButtonStyle =
+    "QPushButton {"
+    "background-color: #454545;"
+    "color: #5e5e5e;"
+    "border-radius: 8px;"
+    "padding: 6px;"
+    "font-size: 12px;"
+    "} ";
+
 // ==================== Window Constructor ====================
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnSettings,

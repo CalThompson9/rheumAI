@@ -606,7 +606,7 @@ void MainWindow::handleArchiveToggled()
 {
     archiveMode = !archiveMode; // Toggle archive mode
 
-    if (archiveMode) // ARCHIVE MODE
+    if (archiveMode) // IN ARCHIVE MODE
     {
         // Update UI
         toggleSwitch->setText("Show All Active Patients");
@@ -615,8 +615,15 @@ void MainWindow::handleArchiveToggled()
         viewPatient();
         patientID = comboSelectPatient->currentData().toInt();
         lblPatientName->setText("Patient ID: " + QString::number(patientID));
+
+        btnAddPatient->setEnabled(false);
+        btnEditPatient->setEnabled(false);
+        btnAddPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+        btnEditPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+        toggleSwitch->setStyleSheet(WindowBuilder::blueButtonStyle);
+
     }
-    else // ACTIVE MODE
+    else // IN ACTIVE MODE
     {
         toggleSwitch->setText("Show All Archived Patients");
         btnArchivePatient->setText("Archive Patient");
@@ -624,6 +631,12 @@ void MainWindow::handleArchiveToggled()
         viewPatient();
         patientID = comboSelectPatient->currentData().toInt();
         lblPatientName->setText("Patient ID: " + QString::number(patientID));
+
+        btnAddPatient->setEnabled(true);
+        btnEditPatient->setEnabled(true);
+        btnAddPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
+        btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
+        toggleSwitch->setStyleSheet(WindowBuilder::greyButtonStyle);
     }
 }
 
