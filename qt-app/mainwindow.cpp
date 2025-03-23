@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
                            selectSummaryLayout, summarySection,
-                           mainLayout, btnAddPatient,btnEditPatient, btnDeletePatient, btnArchivePatient,
+                           mainLayout, btnAddPatient, btnEditPatient, btnDeletePatient, btnArchivePatient,
                            toggleSwitch); // Pass toggleSwitch to WindowBuilder
 
     // Add summary layout options
@@ -103,7 +103,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     else
     {
-        qDebug() << "Unrecognized summary format in settings: " <<  defaultSummaryLayout << ". Using detailed layout instead...";
+        qDebug() << "Unrecognized summary format in settings: " << defaultSummaryLayout << ". Using detailed layout instead...";
         summaryFormatter = new DetailedSummaryFormatter;
         optionDetailedLayout->setEnabled(false);
     }
@@ -488,8 +488,7 @@ void MainWindow::on_addPatientButton_clicked()
             address,
             postalCode,
             province,
-            country
-        );
+            country);
         FileHandler::getInstance()->savePatientRecord(newPatient);
 
         // Update user interface to show new patient in dropdown
@@ -503,7 +502,6 @@ void MainWindow::on_addPatientButton_clicked()
 }
 
 
-
 /**
  * @name on_editPatientButton_clicked
  * @brief Handler function called when the "Edit Patient" button is pressed
@@ -511,9 +509,11 @@ void MainWindow::on_addPatientButton_clicked()
  * patient's details. Once the user submits the form, the file of the existing selected
  * patient is updated with the changed fields.
  */
-void MainWindow::on_editPatientButton_clicked() {
+void MainWindow::on_editPatientButton_clicked()
+{
     int patientID = comboSelectPatient->currentData().toInt();
-    if (patientID == 0) return;
+    if (patientID == 0)
+        return;
 
     PatientRecord existing = FileHandler::getInstance()->loadPatientRecord(patientID);
 
@@ -529,7 +529,8 @@ void MainWindow::on_editPatientButton_clicked() {
     dialog.setProvince(existing.getProvince());
     dialog.setCountry(existing.getCountry());
 
-    if (dialog.exec() == QDialog::Accepted) {
+    if (dialog.exec() == QDialog::Accepted)
+    {
         existing.setFirstName(dialog.getFirstName());
         existing.setLastName(dialog.getLastName());
         existing.setDateOfBirth(dialog.getDateOfBirth());
@@ -548,8 +549,6 @@ void MainWindow::on_editPatientButton_clicked() {
         viewPatient();
     }
 }
-
-
 
 /**
  * @name on_removePatientButton_clicked
@@ -573,8 +572,7 @@ void MainWindow::on_removePatientButton_clicked()
         qDebug() << "Failed to delete patient record!";
     }
 
-    // Update user interface to remove patient from dropdown IF not viewing already archived patients
-    comboSelectPatient->removeItem(index);
+    comboSelectPatient->removeItem(index); // Update patient dropdown
 }
 
 /**
@@ -586,12 +584,15 @@ void MainWindow::on_archivePatientButton_clicked()
 {
 
     int index = comboSelectPatient->currentIndex();
-    if (index == -1) return;
+    if (index == -1)
+        return;
 
-    if (archiveMode) { // ARCHIVE MODE --> Handle UNARCHIVING
+    if (archiveMode)
+    {                                                                                                  // ARCHIVE MODE --> Handle UNARCHIVING
         FileHandler::getInstance()->unarchivePatientRecord(comboSelectPatient->currentData().toInt()); // Unarchive Patient
-
-    } else { // ACTIVE MODE --> Handle ARCHIVING
+    }
+    else
+    {                                                                                                // ACTIVE MODE --> Handle ARCHIVING
         FileHandler::getInstance()->archivePatientRecord(comboSelectPatient->currentData().toInt()); // Archive Patient
     }
 
@@ -613,8 +614,8 @@ void MainWindow::handleArchiveToggled()
         loadArchivedPatientsIntoDropdown();
         patientID = comboSelectPatient->currentData().toInt();
         lblPatientName->setText("Patient ID: " + QString::number(patientID));
-
-    } else // ACTIVE MODE
+    }
+    else // ACTIVE MODE
     {
         toggleSwitch->setText("Show All Archived Patients");
         btnArchivePatient->setText("Archive Patient");
@@ -623,7 +624,6 @@ void MainWindow::handleArchiveToggled()
         lblPatientName->setText("Patient ID: " + QString::number(patientID));
     }
 }
-
 
 /**
  * @name on_patientSelected
@@ -686,35 +686,6 @@ void MainWindow::on_patientSelected(int index)
         btnSummarize->setText("Summarize");
     }
 }
-
-/**
- * @name viewPatient
- * @brief When switched to a patient, display their information in the top corner
- * @details This function is called when a patient is selected from the dropdown
- */
-void MainWindow::viewPatient() {
-    QVariant patientData = comboSelectPatient->currentData();
-    if (!patientData.isValid()) {
-        qWarning() << "No patient selected, cannot view patient!";
-        return;
-    }
-
-    int patientID = patientData.toInt();
-    PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID);
-
-    QString info = 
-        "Name: " + patient.getFirstName() + " " + patient.getLastName() + "\n" +
-        "DOB: " + patient.getDateOfBirth() + "\n" +
-        "Phone: " + patient.getPhoneNumber() + "\n" +
-        "Email: " + patient.getEmail() + "\n" +
-        "Address: " + patient.getAddress() + "\n" +
-        "Province: " + patient.getProvince() + "\n" +
-        "Country: " + patient.getCountry();
-
-    lblPatientName->setText(info);
-}
-
-
 
 MainWindow::~MainWindow()
 {
