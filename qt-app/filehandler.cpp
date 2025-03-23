@@ -1,10 +1,13 @@
 /**
  * @file filehandler.cpp
  * @brief Definition of FileHandler class
- * 
+ *
  * Handles reading and writing patient files.
- * 
+ *
  * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @author Andres Pedreros (apedrero@uwo.ca)
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @author Callum Thompson (cthom226@uwo.ca)
  * @date Mar. 16, 2025
  */
 
@@ -14,15 +17,18 @@
 #include <QFile>
 #include <QDebug>
 
-FileHandler* FileHandler::instance = nullptr;
+FileHandler *FileHandler::instance = nullptr;
 
 /**
  * @name FileHandler (constructor)
  * @brief Initializes the FileHandler instance
  */
-FileHandler::FileHandler() {
-    patientDatabasePath = "Patients";  // Base directory
-    QDir().mkpath(patientDatabasePath);  // Ensure it exists
+FileHandler::FileHandler() :
+    patientDatabasePath("Patients"),
+    archivedDatabasePath("Archived")
+{
+    QDir().mkpath(patientDatabasePath);
+    QDir().mkpath(archivedDatabasePath);
 }
 
 /**
@@ -30,7 +36,8 @@ FileHandler::FileHandler() {
  * @brief Returns the singleton instance of FileHandler
  * @return Singleton instance of FileHandler
  */
-FileHandler* FileHandler::getInstance() {
+FileHandler *FileHandler::getInstance()
+{
     if (!instance)
         instance = new FileHandler();
     return instance;
@@ -41,7 +48,8 @@ FileHandler* FileHandler::getInstance() {
  * @brief Sets the filepath to the transcript file
  * @param[in] filepath: Filepath to transcript file
  */
-void FileHandler::setTranscriptFilename(const QString &filepath) {
+void FileHandler::setTranscriptFilename(const QString &filepath)
+{
     transcriptFilename = filepath;
 }
 
@@ -50,7 +58,8 @@ void FileHandler::setTranscriptFilename(const QString &filepath) {
  * @brief Sets the filepath to the patient information JSON file
  * @param[in] filepath: Filepath to the patient information JSON file
  */
-void FileHandler::setJsonFilename(const QString &filepath) {
+void FileHandler::setJsonFilename(const QString &filepath)
+{
     jsonFilename = filepath;
 }
 
@@ -60,14 +69,17 @@ void FileHandler::setJsonFilename(const QString &filepath) {
  * @details Transcript filepath must first be set using `setTranscriptFilename`
  * @return Transcript data, or an empty string if the file could not be read
  */
-QString FileHandler::readTranscript() {
-    if (transcriptFilename.isEmpty()) {
+QString FileHandler::readTranscript()
+{
+    if (transcriptFilename.isEmpty())
+    {
         qDebug() << "Transcript file is not set!";
         return "";
     }
 
     QFile file(transcriptFilename);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         qDebug() << "Could not open transcript file for reading";
         return "";
     }
@@ -76,16 +88,23 @@ QString FileHandler::readTranscript() {
     QString content = in.readAll();
     file.close();
 
-    qDebug() << "Transcript Read:\n" << content;
+    qDebug() << "Transcript Read:\n"
+             << content;
     return content;
 }
 
-
-QString FileHandler::loadSummaryText(int patientID) {
+/**
+ * @brief FileHandler::loadSummaryText
+ * @param patientID
+ * @return
+ */
+QString FileHandler::loadSummaryText(int patientID)
+{
     QString summaryPath = patientDatabasePath + "/" + QString::number(patientID) + "/summary.txt";
     QFile file(summaryPath);
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         qDebug() << "❌ No summary found for patient:" << patientID;
         return "";
     }
@@ -94,16 +113,18 @@ QString FileHandler::loadSummaryText(int patientID) {
     QString summaryContent = in.readAll();
     file.close();
 
-    qDebug() << "✅ Loaded summary from file (before returning):\n" << summaryContent;
+    qDebug() << "✅ Loaded summary from file (before returning):\n"
+             << summaryContent;
     return summaryContent;
 }
 
-
-QString FileHandler::loadTranscript(int patientID) {
+QString FileHandler::loadTranscript(int patientID)
+{
     QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
     QFile file(transcriptPath);
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         qDebug() << "No transcript found for patient:" << patientID;
         return "";
     }
@@ -115,7 +136,6 @@ QString FileHandler::loadTranscript(int patientID) {
     return transcriptContent;
 }
 
-
 /**
  * @name savePatientRecord
  * @brief Saves the patient record to file
@@ -124,12 +144,14 @@ QString FileHandler::loadTranscript(int patientID) {
  * @warning If the file already exists, it will be overwritten
  * @param[in] record: Patient record to save
  */
-void FileHandler::savePatientRecord(const PatientRecord &record) {
+void FileHandler::savePatientRecord(const PatientRecord &record)
+{
     QString patientPath = patientDatabasePath + "/" + QString::number(record.getID());
-    QDir().mkpath(patientPath);  // Ensure patient folder exists
+    QDir().mkpath(patientPath); // Ensure patient folder exists
 
     QFile file(patientPath + "/patient_info.json");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
         qDebug() << "Could not save patient record!";
         return;
     }
@@ -140,10 +162,12 @@ void FileHandler::savePatientRecord(const PatientRecord &record) {
     qDebug() << "Patient record saved to:" << file.fileName();
 }
 
-void FileHandler::saveTranscript(int patientID, const QString &transcript) {
+void FileHandler::saveTranscript(int patientID, const QString &transcript)
+{
     QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
     QFile file(transcriptPath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
         qDebug() << "Could not save transcript!";
         return;
     }
@@ -156,19 +180,26 @@ void FileHandler::saveTranscript(int patientID, const QString &transcript) {
     qDebug() << "Transcript saved to:" << transcriptPath;
 }
 
-
 /**
  * @name loadPatientRecord
  * @brief Reads a patient record from file
  * @param[in] patientID: Patient ID of record to read
  * @return Read patient record, or an empty record if the file could not be read
  */
-PatientRecord FileHandler::loadPatientRecord(int patientID) {
+PatientRecord FileHandler::loadPatientRecord(int patientID)
+{
+
     QString filePath = patientDatabasePath + "/" + QString::number(patientID) + "/patient_info.json";
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Could not load patient record!";
-        return PatientRecord();
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QString archivePath = "archived/" + QString::number(patientID)+"/patient_info.json";
+        QFile file(archivePath);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            qDebug() << "Could not load patient record!";
+            return PatientRecord();
+        }
     }
 
     QByteArray fileData = file.readAll();
@@ -179,26 +210,108 @@ PatientRecord FileHandler::loadPatientRecord(int patientID) {
     return PatientRecord::fromJson(doc.object());
 }
 
+/**
+ * @name archivePatientRecord
+ * @brief Moves a patient record to the archive folder
+ * @param[in] patientID: Patient ID of record to archive
+ * @return Patient record that was archived
+ */
+PatientRecord FileHandler::archivePatientRecord(int patientID)
+{
+    QString patientPath = patientDatabasePath + "/" + QString::number(patientID);
+    QString archivePath = "Archived/" + QString::number(patientID);
+    QDir().mkpath(archivePath); // Ensure archive folder exists
+
+    QDir patientDir(patientPath);
+    if (!patientDir.exists())
+    {
+        qDebug() << "Patient folder does not exist for ID:" << patientID;
+        return PatientRecord();
+    }
+
+    // Move all files from the patient folder to the archive folder
+    for (const QString &fileName : patientDir.entryList(QDir::Files))
+    {
+        QString srcFilePath = patientPath + "/" + fileName;
+        QString destFilePath = archivePath + "/" + fileName;
+        if (!QFile::rename(srcFilePath, destFilePath))
+        {
+            qDebug() << "Failed to move file:" << srcFilePath << "to" << destFilePath;
+        }
+    }
+
+    // Remove the old patient folder
+    if (!QDir(patientPath).removeRecursively()) {
+        qDebug() << "‼️ Failed to remove old patient folder:" << patientPath;
+    } else {
+        qDebug() << "🗳️ Patient folder ARCHIVED for ID:" << patientID;
+    }
+
+    return loadPatientRecord(patientID);
+}
+
+/**
+ * @name unarchivePatientRecord
+ * @brief Moves a patient record to the 'Patients' folder
+ * @param[in] patientID: Patient ID of record to unarchive
+ * @return Patient record that was unarchived
+ */
+PatientRecord FileHandler::unarchivePatientRecord(int patientID)
+{
+    QString archivePath = archivedDatabasePath + "/" + QString::number(patientID);
+    QString patientPath = "Patients/" + QString::number(patientID);
+    QDir().mkpath(archivePath); // Ensure archive folder exists
+
+    QDir archiveDir(archivePath);
+    if (!archiveDir.exists())
+    {
+        qDebug() << "Archive folder does not exist for ID:" << patientID;
+        return PatientRecord();
+    }
+
+    // Move all files from the archived folder to the patients folder
+    for (const QString &fileName : archiveDir.entryList(QDir::Files))
+    {
+        QString srcFilePath = archivePath + "/" + fileName;
+        QString destFilePath = patientPath + "/" + fileName;
+        if (!QFile::rename(srcFilePath, destFilePath))
+        {
+            qDebug() << "Failed to move file:" << srcFilePath << "to" << destFilePath;
+        }
+    }
+
+    // Remove the old patient folder
+    if (!QDir(archivePath).removeRecursively()) {
+        qDebug() << "‼️ Failed to remove old archive folder:" << archivePath;
+    } else {
+        qDebug() << "🗃️ Patient folder UNARCHIVED for ID:" << patientID;
+    }
+
+    return loadPatientRecord(patientID);
+}
 
 /**
  * @name saveTranscriptToJson
- * @brief Convert the currently stored transcript text into JSON format and save it 
+ * @brief Convert the currently stored transcript text into JSON format and save it
  * @details Transcript filepath must first be set using `setTranscriptFilename`.
  */
-void FileHandler::saveTranscriptToJson() {
+void FileHandler::saveTranscriptToJson()
+{
     QString transcriptText = readTranscript();
-    if (transcriptText.isEmpty()) return;
+    if (transcriptText.isEmpty())
+        return;
 
     // Convert to JSON format
     QJsonObject jsonObj;
-    jsonObj["patientID"] = 12345;  // Mock Patient ID
-    jsonObj["date"] = "2024-03-07";  // Mock Date
+    jsonObj["patientID"] = 12345;   // Mock Patient ID
+    jsonObj["date"] = "2024-03-07"; // Mock Date
     jsonObj["transcript"] = transcriptText;
 
     QJsonDocument jsonDoc(jsonObj);
 
     QFile jsonFile(jsonFilename);
-    if (!jsonFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
         qDebug() << "Could not open JSON file for writing";
         return;
     }
@@ -213,7 +326,8 @@ void FileHandler::saveTranscriptToJson() {
  * @brief Get the filepath to the transcript file
  * @return Filepath to the transcript file
  */
-QString FileHandler::getTranscriptFilename() const {
+QString FileHandler::getTranscriptFilename() const
+{
     return transcriptFilename;
 }
 
@@ -222,7 +336,8 @@ QString FileHandler::getTranscriptFilename() const {
  * @brief Gets the filepath to the patient information JSON file
  * @return Filepath to the patient information JSON file
  */
-QString FileHandler::getJsonFilename() const {
+QString FileHandler::getJsonFilename() const
+{
     return jsonFilename;
 }
 
@@ -232,9 +347,11 @@ QString FileHandler::getJsonFilename() const {
  * print it
  * @details Patient information filepath must first be set using `setJsonFilename`
  */
-void FileHandler::loadPatientJson() {
+void FileHandler::loadPatientJson()
+{
     QFile jsonFile(jsonFilename);
-    if (!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         qDebug() << "Could not open JSON file for reading";
         return;
     }

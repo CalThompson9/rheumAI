@@ -1,10 +1,10 @@
 /**
  * @file mainwindow.cpp
  * @brief Definition of MainWindow class
- * 
+ *
  * Main window owns and manages the lifetime UI elements, processes button
  * press signals, and manages summary generation.
- * 
+ *
  * @author Andres Pedreros Castro (apedrero@uwo.ca)
  * @author Callum Thompson (cthom226@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
@@ -23,12 +23,10 @@
 #include "transcript.h"
 #include "summarygenerator.h"
 #include "addpatientdialog.h"
-#include <QMessageBox> 
+#include <QMessageBox>
 #include <QMediaDevices>
 #include <QAudioDevice>
 #include <QTimer>
-
-
 
 /**
  * @name MainWindow (constructor)
@@ -36,10 +34,9 @@
  * @param[in] parent: Parent widget
  */
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent), archiveMode(false)
 {
     setGeometry(0, 0, 1200, 800);
-
 
     // Create central widget
     centralWidget = new QWidget(this);
@@ -49,7 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
                            selectSummaryLayout, summarySection,
-                           mainLayout, btnAddPatient, btnRemovePatient);
+                           mainLayout, btnAddPatient, btnDeletePatient, btnArchivePatient,
+                           toggleSwitch); // Pass toggleSwitch to WindowBuilder
 
     // Add summary layout options
     summaryLayoutOptions = new QMenu(this);
@@ -59,6 +57,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     selectSummaryLayout->setMenu(summaryLayoutOptions);
     selectSummaryLayout->setText("Detailed Layout");
+
+    // Connect archive mode button
+    connect(toggleSwitch, &QPushButton::clicked, this, &MainWindow::handleArchiveToggled);
 
     // Connect selection of each option to update summary layout format
     connect(optionDetailedLayout, &QAction::triggered, this, [=]()
@@ -137,18 +138,20 @@ MainWindow::MainWindow(QWidget *parent)
     llmClient = new LLMClient(this);
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
-    connect(btnRemovePatient, &QPushButton::clicked, this, &MainWindow::on_removePatientButton_clicked);
+    connect(btnDeletePatient, &QPushButton::clicked, this, &MainWindow::on_removePatientButton_clicked);
+    connect(btnArchivePatient, &QPushButton::clicked, this, &MainWindow::on_archivePatientButton_clicked);
     connect(comboSelectPatient, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_patientSelected);
 
     // Connect "Record" button to LLM API request
 
     // NEW: Load existing patients on startup**
     loadPatientsIntoDropdown();
-        if (comboSelectPatient->count() > 0) {
-        QTimer::singleShot(100, this, [this]() {
+    if (comboSelectPatient->count() > 0)
+    {
+        QTimer::singleShot(100, this, [this]()
+                           {
             comboSelectPatient->setCurrentIndex(0);
-            on_patientSelected(0);
-        });
+            on_patientSelected(0); });
     }
 
     // Connect "Summarize" button to summarize transcripts and update window
@@ -167,7 +170,8 @@ void MainWindow::handleLLMResponse(const QString &response)
 
     // Get selected patient ID
     QVariant patientData = comboSelectPatient->currentData();
-    if (!patientData.isValid()) {
+    if (!patientData.isValid())
+    {
         qWarning() << "No patient selected, cannot save transcript!";
         return;
     }
@@ -175,19 +179,23 @@ void MainWindow::handleLLMResponse(const QString &response)
 
     // Ensure the patient's folder exists
     QDir patientDir("Patients/" + QString::number(patientID));
-    if (!patientDir.exists()) {
+    if (!patientDir.exists())
+    {
         patientDir.mkpath(".");
     }
 
     // Save the transcript to file
     QString transcriptPath = patientDir.filePath("transcript_raw.txt");
     QFile file(transcriptPath);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
         QTextStream out(&file);
         out << response;
         file.close();
         qDebug() << "Transcript saved to: " << transcriptPath;
-    } else {
+    }
+    else
+    {
         qDebug() << "Failed to save transcript!";
     }
 }
@@ -207,44 +215,47 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
 
     // Clear existing summary display
     QLayoutItem *child;
-    while ((child = summarySection->takeAt(0)) != nullptr) {
-        delete child->widget();  // Ensure previous widget is deleted
+    while ((child = summarySection->takeAt(0)) != nullptr)
+    {
+        delete child->widget(); // Ensure previous widget is deleted
         delete child;
     }
 
-    if (selectedOption->text() == "Plain Text") {
+    if (selectedOption->text() == "Plain Text")
+    {
         qDebug() << "Switching to plain text (transcript) mode.";
 
         // Ensure the transcript is actually loaded
-        if (currentTranscriptText.isEmpty()) {
+        if (currentTranscriptText.isEmpty())
+        {
             qDebug() << "No transcript available.";
             return;
         }
 
         // Create a QLabel inside the summary section (INSTEAD OF ADDING ANYTHING ELSE)
         QLabel *transcriptLabel = new QLabel(currentTranscriptText);
-        transcriptLabel->setWordWrap(true);  // Ensure proper wrapping
-        transcriptLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);  // Positioning fix
+        transcriptLabel->setWordWrap(true);                          // Ensure proper wrapping
+        transcriptLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft); // Positioning fix
 
         // Add it inside the summary layout
         summarySection->addWidget(transcriptLabel);
 
         qDebug() << "Transcript displayed inside summary section.";
     }
-    else {
+    else
+    {
         // Display summary with the selected format
         setSummaryFormatter(summaryFormatter);
         displaySummary(summaryGenerator->getSummary());
     }
 
     // Update menu UI
-    for (QAction *layoutAction : summaryLayoutOptions->actions()) {
+    for (QAction *layoutAction : summaryLayoutOptions->actions())
+    {
         layoutAction->setEnabled(layoutAction != selectedOption);
         selectSummaryLayout->setText(selectedOption->text());
     }
 }
-
-
 
 /**
  * @name handleSummarizeButtonClicked
@@ -255,18 +266,20 @@ void MainWindow::handleSummarizeButtonClicked()
 {
     // Get selected patient ID
     QVariant patientData = comboSelectPatient->currentData();
-    if (!patientData.isValid()) {
+    if (!patientData.isValid())
+    {
         QMessageBox::warning(this, "No Patient Selected", "Please select a patient before summarizing.");
         return;
     }
     int patientID = patientData.toInt();
-    
+
     // Construct file path for the transcript
     QString transcriptPath = "Patients/" + QString::number(patientID) + "/transcript_raw.txt";
-    
+
     // Open and read the transcript
     QFile file(transcriptPath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         qWarning() << "Failed to open transcript. Request aborted.";
         return;
     }
@@ -281,7 +294,6 @@ void MainWindow::handleSummarizeButtonClicked()
     summaryGenerator->sendRequest(*transcript);
 }
 
-
 /**
  * @name handleSummaryReady
  * @brief Processes and displays the structured summary after LLM response
@@ -293,7 +305,8 @@ void MainWindow::handleSummaryReady()
 
     // Get selected patient ID
     QVariant patientData = comboSelectPatient->currentData();
-    if (!patientData.isValid()) {
+    if (!patientData.isValid())
+    {
         qWarning() << "No patient selected, cannot save summary!";
         return;
     }
@@ -301,15 +314,18 @@ void MainWindow::handleSummaryReady()
 
     // Construct summary file path
     QString summaryPath = "Patients/" + QString::number(patientID) + "/summary.txt";
-    
+
     // Save summary to file
     QFile file(summaryPath);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
         QTextStream out(&file);
         out << summary.getText();
         file.close();
         qDebug() << "Summary saved to: " << summaryPath;
-    } else {
+    }
+    else
+    {
         qDebug() << "Failed to save summary!";
     }
 
@@ -322,30 +338,60 @@ void MainWindow::handleSummaryReady()
  * @name loadPatientsIntoDropdown
  * @brief Handles adding a new patient record
  */
-void MainWindow::loadPatientsIntoDropdown() {
-    comboSelectPatient->clear();  // Clear dropdown before loading
+void MainWindow::loadPatientsIntoDropdown()
+{
+    comboSelectPatient->clear(); // Clear dropdown before loading
     qDebug() << "Loading patients from Patients folder...";
     QDir patientsDir("Patients");
 
-    if (!patientsDir.exists()) {
+    if (!patientsDir.exists())
+    {
         qDebug() << "Patients directory does not exist!";
         return;
     }
 
     QStringList patientFolders = patientsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    for (const QString &folderName : patientFolders) {
-        int patientID = folderName.toInt();  // Convert folder name to int
+    for (const QString &folderName : patientFolders)
+    {
+        int patientID = folderName.toInt(); // Convert folder name to int
         PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID);
         QString displayName = patient.getFirstName() + " " + patient.getLastName() + " [" + QString::number(patientID) + "]";
         comboSelectPatient->addItem(displayName, patientID);
     }
 
     qDebug() << "Loaded patients into dropdown.";
-
 }
 
 /**
- * @name setSummaryLayout
+ * @name loadArchivedPatientsIntoDropdown
+ * @brief Handles loading archived patients into the dropdown
+ */
+void MainWindow::loadArchivedPatientsIntoDropdown()
+{
+    comboSelectPatient->clear(); // Clear dropdown before loading
+    qDebug() << "Loading archived patients from Archived folder...";
+    QDir archivedDir("Archived");
+
+    if (!archivedDir.exists())
+    {
+        qDebug() << "Archived directory does not exist!";
+        return;
+    }
+
+    QStringList patientFolders = archivedDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (const QString &folderName : patientFolders)
+    {
+        int patientID = folderName.toInt();                                               // Convert folder name to int
+        PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID); // Load archived record
+        QString displayName = patient.getFirstName() + " " + patient.getLastName() + " [" + QString::number(patientID) + "]";
+        comboSelectPatient->addItem(displayName, patientID);
+    }
+
+    qDebug() << "Loaded archived patients into dropdown.";
+}
+
+/**
+ * @name setSummaryFormatter
  * @brief Set the formatter used to create the summary
  * @param[in] summaryFormatter: Summary layout formatter
  */
@@ -362,7 +408,8 @@ void MainWindow::setSummaryFormatter(SummaryFormatter *newSummaryFormatter)
  */
 void MainWindow::displaySummary(const Summary &summary)
 {
-    if (!summaryFormatter) {
+    if (!summaryFormatter)
+    {
         qDebug() << "Warning: summaryFormatter is null, cannot display summary.";
         return;
     }
@@ -377,39 +424,45 @@ void MainWindow::displaySummary(const Summary &summary)
  * patient's details. Once the user submits the form, a new record file is created
  * with the input data, and the user interface is updated.
  */
-void MainWindow::on_addPatientButton_clicked() {
+void MainWindow::on_addPatientButton_clicked()
+{
     AddPatientDialog dialog(this);
-    if (dialog.exec() == QDialog::Accepted) {
+    if (dialog.exec() == QDialog::Accepted)
+    {
         QString firstName = dialog.getFirstName();
         QString lastName = dialog.getLastName();
         QString dateOfBirth = dialog.getDateOfBirth();
-        QString baseName = firstName + " " + lastName;  // No DOB in dropdown
+        QString baseName = firstName + " " + lastName; // No DOB in dropdown
 
         int patientID = QDateTime::currentMSecsSinceEpoch() % 100000;
 
         // Check if a patient with the same name already exists
         int duplicateCount = 0;
-        for (int i = 0; i < comboSelectPatient->count(); ++i) {
+        for (int i = 0; i < comboSelectPatient->count(); ++i)
+        {
             QVariant storedID = comboSelectPatient->itemData(i);
             PatientRecord existingPatient = FileHandler::getInstance()->loadPatientRecord(storedID.toInt());
 
             if (existingPatient.getFirstName() == firstName &&
                 existingPatient.getLastName() == lastName &&
-                existingPatient.getDateOfBirth() == dateOfBirth) {
+                existingPatient.getDateOfBirth() == dateOfBirth)
+            {
                 QMessageBox::warning(this, "Duplicate Patient",
                                      "A patient with this name and birthdate already exists!");
                 return;
             }
 
             // If the same name exists, increase counter
-            if (comboSelectPatient->itemText(i).startsWith(baseName)) {
+            if (comboSelectPatient->itemText(i).startsWith(baseName))
+            {
                 duplicateCount++;
             }
         }
 
         // If duplicate, add a counter [1], [2], etc.
         QString displayName = baseName;
-        if (duplicateCount > 0) {
+        if (duplicateCount > 0)
+        {
             displayName += " [" + QString::number(duplicateCount) + "]";
         }
 
@@ -426,30 +479,79 @@ void MainWindow::on_addPatientButton_clicked() {
     }
 }
 
-
 /**
  * @name on_removePatientButton_clicked
  * @brief Handler function called when the "Remove Patient" button is pressed
  * @details Removes the record file for the selected patient, and updates the
  * user interface.
  */
-void MainWindow::on_removePatientButton_clicked() {
+void MainWindow::on_removePatientButton_clicked()
+{
     int index = comboSelectPatient->currentIndex();
-    if (index == -1) return;  // No patient selected
-
-    int patientID = comboSelectPatient->currentData().toInt();
-    QString patientFolder = "Patients/" + QString::number(patientID);
+    if (index == -1)
+        return; // No patient selected
 
     // Remove patient folder
-    if (QDir(patientFolder).removeRecursively()) {
+    if (FileHandler::getInstance()->archivePatientRecord(patientID).getID() == patientID)
+    {
         qDebug() << "Patient record deleted: " << patientID;
-    } else {
+    }
+    else
+    {
         qDebug() << "Failed to delete patient record!";
     }
 
-    // Update user interface to remove patient from dropdown
+    // Update user interface to remove patient from dropdown IF not viewing already archived patients
     comboSelectPatient->removeItem(index);
 }
+
+/**
+ * @brief MainWindow::on_archivePatientButton_clicked
+ * @brief Handler function called when the "Archive Patient" button is pressed
+ * @details Returns patient to active patients directory.
+ */
+void MainWindow::on_archivePatientButton_clicked()
+{
+
+    int index = comboSelectPatient->currentIndex();
+    if (index == -1) return;
+
+    if (archiveMode) { // ARCHIVE MODE --> Handle UNARCHIVING
+        FileHandler::getInstance()->unarchivePatientRecord(comboSelectPatient->currentData().toInt()); // Unarchive Patient
+
+    } else { // ACTIVE MODE --> Handle ARCHIVING
+        FileHandler::getInstance()->archivePatientRecord(comboSelectPatient->currentData().toInt()); // Archive Patient
+    }
+
+    comboSelectPatient->removeItem(index);
+}
+
+/**
+ * @brief handleArchiveToggled
+ */
+void MainWindow::handleArchiveToggled()
+{
+    archiveMode = !archiveMode; // Toggle archive mode
+
+    if (archiveMode) // ARCHIVE MODE
+    {
+        // Update UI
+        toggleSwitch->setText("Show All Active Patients");
+        btnArchivePatient->setText("Unarchive Patient");
+        loadArchivedPatientsIntoDropdown();
+        patientID = comboSelectPatient->currentData().toInt();
+        lblPatientName->setText("Patient ID: " + QString::number(patientID));
+
+    } else // ACTIVE MODE
+    {
+        toggleSwitch->setText("Show All Archived Patients");
+        btnArchivePatient->setText("Archive Patient");
+        loadPatientsIntoDropdown();
+        patientID = comboSelectPatient->currentData().toInt();
+        lblPatientName->setText("Patient ID: " + QString::number(patientID));
+    }
+}
+
 
 /**
  * @name on_patientSelected
@@ -457,8 +559,10 @@ void MainWindow::on_removePatientButton_clicked() {
  * @details Updates the UI to display the select patient's ID
  * @param[in] index: Index of option selected in the dropdown
  */
-void MainWindow::on_patientSelected(int index) {
-    if (index == -1) return;
+void MainWindow::on_patientSelected(int index)
+{
+    if (index == -1)
+        return;
 
     patientID = comboSelectPatient->currentData().toInt();
     qDebug() << "Selected patient: " << patientID;
@@ -467,10 +571,13 @@ void MainWindow::on_patientSelected(int index) {
 
     // Load the transcript
     QString savedTranscript = FileHandler::getInstance()->loadTranscript(patientID);
-    if (!savedTranscript.isEmpty()) {
+    if (!savedTranscript.isEmpty())
+    {
         qDebug() << "Transcript found, storing in currentTranscriptText.";
-        currentTranscriptText = savedTranscript;  // Store transcript
-    } else {
+        currentTranscriptText = savedTranscript; // Store transcript
+    }
+    else
+    {
         qDebug() << "No transcript found, clearing UI.";
         currentTranscriptText.clear();
     }
@@ -479,28 +586,32 @@ void MainWindow::on_patientSelected(int index) {
     qDebug() << "Attempting to load summary for patient ID: " << patientID;
     QString savedSummaryText = FileHandler::getInstance()->loadSummaryText(patientID);
 
-    if (!savedSummaryText.isEmpty()) {
+    if (!savedSummaryText.isEmpty())
+    {
         qDebug() << "Summary found, sending to SummaryGenerator...";
         summaryGenerator->setSummaryText(savedSummaryText);
 
         Summary summary = summaryGenerator->getSummary();
         qDebug() << "Summary successfully retrieved, attempting to display...";
-        
+
         displaySummary(summary);
         btnSummarize->setText("Regenerate Summary");
         qDebug() << "Summary display completed.";
-    } else {
+    }
+    else
+    {
         qDebug() << "No saved summary found.";
         // Clear the summary UI
         QLayoutItem *child;
-        while ((child = summarySection->takeAt(0)) != nullptr) {
-            if (child->widget()) {
-                child->widget()->deleteLater();  // Safely delete the widget
+        while ((child = summarySection->takeAt(0)) != nullptr)
+        {
+            if (child->widget())
+            {
+                child->widget()->deleteLater(); // Safely delete the widget
             }
-            delete child;  // Free the layout item
+            delete child; // Free the layout item
         }
         btnSummarize->setText("Summarize");
-
     }
 }
 
