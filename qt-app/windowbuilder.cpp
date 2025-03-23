@@ -218,7 +218,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
 
     // Add layouts to main layout
     mainLayout->addLayout(topBarLayout);
-    mainLayout->addLayout(patientSelectLayout);
     mainLayout->addLayout(patientControlsLayout);
     mainLayout->addLayout(summaryHeader);
     mainLayout->addWidget(scrollArea);
