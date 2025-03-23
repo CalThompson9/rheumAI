@@ -133,6 +133,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QVBoxLayout *&summarySection,
                             QVBoxLayout *&mainLayout,
                             QPushButton *&btnAddPatient,
+                            QPushButton *&btnEditPatient,
                             QPushButton *&btnRemovePatient)
 {
     // Create UI elements
@@ -143,6 +144,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnRecord = new QPushButton("Record", centralWidget);
     btnSummarize = new QPushButton("Summarize", centralWidget);
     btnAddPatient = new QPushButton("Add", centralWidget);
+    btnEditPatient = new QPushButton("Edit", centralWidget);
     btnRemovePatient = new QPushButton("Remove", centralWidget);
     QLabel* summaryTitle = new QLabel("Summary");
     selectSummaryLayout = new QPushButton(centralWidget);
@@ -162,6 +164,8 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnSummarize->setStyleSheet(orangeButtonStyle);
     btnAddPatient->setStyleSheet(blueButtonStyle);
     btnRemovePatient->setStyleSheet(orangeButtonStyle);
+    btnEditPatient->setStyleSheet(blueButtonStyle);
+
 
     btnRecord->setStyleSheet(recordBlueStyle);
     QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord]() {
@@ -190,7 +194,9 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     // Patient controls layout
     patientControlsLayout->addWidget(comboSelectPatient);
     patientControlsLayout->addWidget(btnAddPatient);
+    patientControlsLayout->addWidget(btnEditPatient);
     patientControlsLayout->addWidget(btnRemovePatient);
+
     patientControlsLayout->setSpacing(10);
 
     // Summary layout header and format selection
