@@ -103,8 +103,6 @@ void Settings::showSettings()
     selectLayoutButton->setText(summaryLayoutPreference);
     mainLayout->addLayout(summaryLayout);
 
-    // Connect dropdown menu option to change default summary format on
-    // application load
     connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
         setSummaryPreference("Detailed Layout");
         selectLayoutButton->setText(summaryLayoutPreference);
@@ -121,15 +119,15 @@ void Settings::showSettings()
 
     QTextEdit *peripheralsField = new QTextEdit(settingsWindow);
     peripheralsField->setReadOnly(true);
-    peripheralsField->setFixedHeight(60); // Adjust height as needed
+    peripheralsField->setFixedHeight(60);
     peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
 
-    // #################### TODO: Add microphone checking ####################
-    if (true) {
-        peripheralsField->setText("Microphone ✅");
-    } else {
-        peripheralsField->setText("Microphone ❌");
-    }
+    const QList<QAudioDevice> audioDevices = QMediaDevices::audioInputs();
+    peripheralsField->setText(
+        !audioDevices.isEmpty()
+            ? "Microphone Detected --> [" + audioDevices.first().description() + "]"
+            : "No microphone detected."
+        );
 
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);
@@ -158,9 +156,9 @@ void Settings::showSettings()
         llmKeyField->clear();
     });
 
-    // ========== Audio Handler API Key ==========
+    // ========== Google Audio API Key ==========
     QHBoxLayout *audioLayout = new QHBoxLayout();
-    QLabel *audioLabel = new QLabel("Transcriber API Key:", settingsWindow);
+    QLabel *audioLabel = new QLabel("Google Transcriber API Key:", settingsWindow);
     QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
     audioKeyField->setText(audioKey);
     QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
@@ -175,11 +173,35 @@ void Settings::showSettings()
             setAudioKey(audioKeyField->text());
             okButtonClicked();
         } else {
-            qWarning() << "This field cannot be empty.";
+            qWarning() << "Google Audio key field cannot be empty.";
         }
     });
     connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
         audioKeyField->clear();
+    });
+
+    // ========== OpenAI Audio API Key ==========
+    QHBoxLayout *openaiLayout = new QHBoxLayout();
+    QLabel *openaiLabel = new QLabel("OpenAI Whisper API Key:", settingsWindow);
+    QLineEdit *openaiKeyField = new QLineEdit(settingsWindow);
+    openaiKeyField->setText(openAIAudioKey);
+    QDialogButtonBox *openaiButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
+
+    openaiLayout->addWidget(openaiLabel);
+    openaiLayout->addWidget(openaiKeyField);
+    openaiLayout->addWidget(openaiButtonBox);
+    mainLayout->addLayout(openaiLayout);
+
+    connect(openaiButtonBox, &QDialogButtonBox::accepted, this, [=]() {
+        if (!openaiKeyField->text().isEmpty()) {
+            setOpenAIAudioKey(openaiKeyField->text());
+            okButtonClicked();
+        } else {
+            qWarning() << "OpenAI Audio key field cannot be empty.";
+        }
+    });
+    connect(openaiButtonBox, &QDialogButtonBox::rejected, this, [=]() {
+        openaiKeyField->clear();
     });
 
     // ========== Close Settings Menu ==========
@@ -188,23 +210,30 @@ void Settings::showSettings()
 
     connect(closeButton, &QPushButton::clicked, settingsWindow, &QDialog::close);
 
+    // ========== Button Styling ==========
     QPushButton *llmOkButton = llmButtonBox->button(QDialogButtonBox::Ok);
     QPushButton *llmCancelButton = llmButtonBox->button(QDialogButtonBox::Cancel);
     QPushButton *audioOkButton = audioButtonBox->button(QDialogButtonBox::Ok);
     QPushButton *audioCancelButton= audioButtonBox->button(QDialogButtonBox::Cancel);
+    QPushButton *openAIOkButton = openaiButtonBox->button(QDialogButtonBox::Ok);
+    QPushButton *openAICancelButton = openaiButtonBox->button(QDialogButtonBox::Cancel);
 
-    // Disable default style
     llmOkButton->setDefault(false);
     llmOkButton->setAutoDefault(false);
     audioOkButton->setDefault(false);
     audioOkButton->setAutoDefault(false);
+    openAIOkButton->setDefault(false);
+    openAIOkButton->setAutoDefault(false);
 
     llmOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
     llmCancelButton->setStyleSheet(WindowBuilder::cancelStyle);
     audioOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
     audioCancelButton->setStyleSheet(WindowBuilder::cancelStyle);
+    openAIOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
+    openAICancelButton->setStyleSheet(WindowBuilder::cancelStyle);
     closeButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
 
+    // ========================================
     settingsWindow->exec();
     delete settingsWindow;
 }
@@ -323,4 +352,3 @@ void Settings::storeConfig(const QString &config, const QString &value)
 
     file.close();
 }
-

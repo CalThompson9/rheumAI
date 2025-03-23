@@ -23,6 +23,8 @@
 #include <QTextStream>
 #include <QMenu>
 #include <QAction>
+#include <QMediaDevices>
+#include <QtMultimedia/qaudiodevice.h>
 #include "llmclient.h"
 #include "audiohandler.h"
 #include "windowbuilder.h"
