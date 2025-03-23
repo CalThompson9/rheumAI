@@ -44,6 +44,7 @@ private:
     QPushButton *btnRecord;
     QPushButton *btnSummarize;
     QPushButton *btnAddPatient;
+    QPushButton *btnEditPatient;
     QPushButton *btnDeletePatient;
     QPushButton *btnArchivePatient;
     QPushButton *toggleSwitch;
@@ -72,6 +73,7 @@ private slots:
     void handleSummarizeButtonClicked();
     void handleSummaryReady();
     void on_addPatientButton_clicked();
+    void on_editPatientButton_clicked();
     void handleArchiveToggled();
 
 public slots:

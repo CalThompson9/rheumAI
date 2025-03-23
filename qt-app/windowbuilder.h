@@ -40,6 +40,7 @@ public:
                         QVBoxLayout *&summarySection,
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
+                        QPushButton *&btnEditPatient,
                         QPushButton *&btnDeletePatient,
                         QPushButton *&btnArchivePatient,
                         QPushButton *&toggleSwitch);

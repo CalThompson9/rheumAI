@@ -16,6 +16,7 @@ mac {
 
 SOURCES += \
     addpatientdialog.cpp \
+    editpatientinfo.cpp \
     filehandler.cpp \
     llmclient.cpp \
     main.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
 
 HEADERS += \
     addpatientdialog.h \
+    editpatientinfo.h \
     filehandler.h \
     llmclient.h \
     mainwindow.h \
@@ -49,6 +51,7 @@ HEADERS += \
 
 FORMS += \
     addpatientdialog.ui \
+    editpatientinfo.ui \
     mainwindow.ui
 
 # Default rules for deployment.
