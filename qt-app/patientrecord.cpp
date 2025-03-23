@@ -20,14 +20,19 @@
  * @param[in] firstName: Patient's first name
  * @param[in] lastName: Patient's last name
  * @param[in] dateOfBirth: Patient's date of birth
- * TODO: Documentation
+ * @param[in] email: Patient's email
+ * @param[in] phoneNumber: Patient's phone number
+ * @param[in] address: Patient's address
+ * @param[in] postalCode: Patient's postal code
+ * @param[in] province: Patient's province
+ * @param[in] country: Patient's country
  */
 PatientRecord::PatientRecord(
     int id,
     const QString& healthCard,
     const QString &firstName,
     const QString &lastName,
-    const QString &dob,
+    const QString &dateOfBirth,
     const QString &email,
     const QString &phoneNumber,
     const QString &address,
