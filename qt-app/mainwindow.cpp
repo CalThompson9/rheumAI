@@ -568,8 +568,7 @@ void MainWindow::on_removePatientButton_clicked()
         qDebug() << "Failed to delete patient record!";
     }
 
-    // Update user interface to remove patient from dropdown IF not viewing already archived patients
-    comboSelectPatient->removeItem(index);
+    comboSelectPatient->removeItem(index); // Update patient dropdown
 }
 
 /**
