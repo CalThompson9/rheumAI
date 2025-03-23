@@ -42,12 +42,11 @@ MainWindow::MainWindow(QWidget *parent)
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
 
-    QPushButton *toggleSwitch = nullptr; // Declare toggleSwitch pointer
     WindowBuilder::setupUI(centralWidget, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
                            selectSummaryLayout, summarySection,
-                           mainLayout, btnAddPatient, btnArchivePatient,
+                           mainLayout, btnAddPatient, btnDeletePatient, btnArchivePatient,
                            toggleSwitch); // Pass toggleSwitch to WindowBuilder
 
     // Add summary layout options
@@ -60,17 +59,28 @@ MainWindow::MainWindow(QWidget *parent)
     selectSummaryLayout->setText("Detailed Layout");
 
     // Add logic for toggleSwitch
-    connect(toggleSwitch, &QPushButton::toggled, this, [=](bool checked)
-            {
-        if (checked) {
-            qDebug() << "Switching to archived patients.";
-            toggleSwitch->setText("Show Active");
+    connect(toggleSwitch, &QPushButton::toggled, this, [=](bool checked) {
+        if (checked) { qDebug() << "Switching to archived patients.";
+
+            toggleSwitch->setText("Show All Active Patients");
+            btnArchivePatient->setText("Unarchive");
+
             loadArchivedPatientsIntoDropdown(); // Load archived patients
-        } else {
-            qDebug() << "Switching to active patients.";
-            toggleSwitch->setText("Show Archived");
+
+            patientID = comboSelectPatient->currentData().toInt();
+            lblPatientName->setText("Patient ID: " + QString::number(patientID));
+
+        } else { qDebug() << "Switching to active patients.";
+
+            toggleSwitch->setText("Show All Archived Patients");
+            btnArchivePatient->setText("Archive");
+
             loadPatientsIntoDropdown(); // Load active patients
-        } });
+
+            patientID = comboSelectPatient->currentData().toInt();
+            lblPatientName->setText("Patient ID: " + QString::number(patientID));
+        }
+    });
 
     // Connect selection of each option to update summary layout format
     connect(optionDetailedLayout, &QAction::triggered, this, [=]()
@@ -149,7 +159,8 @@ MainWindow::MainWindow(QWidget *parent)
     llmClient = new LLMClient(this);
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
-    connect(btnArchivePatient, &QPushButton::clicked, this, &MainWindow::on_removePatientButton_clicked);
+    connect(btnDeletePatient, &QPushButton::clicked, this, &MainWindow::on_removePatientButton_clicked);
+    connect(btnArchivePatient, &QPushButton::clicked, this, &MainWindow::on_archivePatientButton_clicked);
     connect(comboSelectPatient, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_patientSelected);
 
     // Connect "Record" button to LLM API request
@@ -510,7 +521,23 @@ void MainWindow::on_removePatientButton_clicked()
         qDebug() << "Failed to delete patient record!";
     }
 
-    // Update user interface to remove patient from dropdown
+    // Update user interface to remove patient from dropdown IF not viewing already archived patients
+    comboSelectPatient->removeItem(index);
+}
+
+/**
+ * @brief MainWindow::on_archivePatientButton_clicked
+ * @brief Handler function called when the "Archive Patient" button is pressed
+ * @details Returns patient to active patients directory.
+ */
+void MainWindow::on_archivePatientButton_clicked()
+{
+    int index = comboSelectPatient->currentIndex();
+    if (index == -1)
+        return;
+
+    // Patient's folder moves from Archived --> Patients
+
     comboSelectPatient->removeItem(index);
 }
 

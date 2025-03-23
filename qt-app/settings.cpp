@@ -226,11 +226,11 @@ void Settings::showSettings()
     openAIOkButton->setAutoDefault(false);
 
     llmOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
-    llmCancelButton->setStyleSheet(WindowBuilder::cancelStyle);
+    llmCancelButton->setStyleSheet(WindowBuilder::greyButtonStyle);
     audioOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
-    audioCancelButton->setStyleSheet(WindowBuilder::cancelStyle);
+    audioCancelButton->setStyleSheet(WindowBuilder::greyButtonStyle);
     openAIOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
-    openAICancelButton->setStyleSheet(WindowBuilder::cancelStyle);
+    openAICancelButton->setStyleSheet(WindowBuilder::greyButtonStyle);
     closeButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
 
     // ========================================

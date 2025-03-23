@@ -44,7 +44,9 @@ private:
     QPushButton *btnRecord;
     QPushButton *btnSummarize;
     QPushButton *btnAddPatient;
+    QPushButton *btnDeletePatient;
     QPushButton *btnArchivePatient;
+    QPushButton *toggleSwitch;
     QTextEdit *textTranscription;
     QPushButton *selectSummaryLayout;
     QMenu *summaryLayoutOptions;
@@ -73,6 +75,7 @@ private slots:
 public slots:
     void on_patientSelected(int index);
     void on_removePatientButton_clicked();
+    void on_archivePatientButton_clicked();
     void loadPatientsIntoDropdown();
     void loadArchivedPatientsIntoDropdown();
     void handleLLMResponse(const QString &response);
