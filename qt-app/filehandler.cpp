@@ -23,9 +23,8 @@ FileHandler *FileHandler::instance = nullptr;
  * @name FileHandler (constructor)
  * @brief Initializes the FileHandler instance
  */
-FileHandler::FileHandler() :
-    patientDatabasePath("Patients"),
-    archivedDatabasePath("Archived")
+FileHandler::FileHandler() : patientDatabasePath("Patients"),
+                             archivedDatabasePath("Archived")
 {
     QDir().mkpath(patientDatabasePath);
     QDir().mkpath(archivedDatabasePath);
@@ -193,13 +192,15 @@ PatientRecord FileHandler::loadPatientRecord(int patientID)
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        QString archivePath = "archived/" + QString::number(patientID)+"/patient_info.json";
-        QFile file(archivePath);
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        QString archivePath = archivedDatabasePath + "/" + QString::number(patientID) + "/patient_info.json";
+        QFile archive(archivePath);
+        if (!archive.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            qDebug() << "Could not load patient record!";
-            return PatientRecord();
+            qDebug() << "Could not load patient record from either active or archived database!";
+            return PatientRecord(); // Return an empty record if both fail
         }
+        file.setFileName(archivePath);                    // Update file to point to the archive path
+        file.open(QIODevice::ReadOnly | QIODevice::Text); // Open the archive file
     }
 
     QByteArray fileData = file.readAll();
@@ -219,7 +220,7 @@ PatientRecord FileHandler::loadPatientRecord(int patientID)
 PatientRecord FileHandler::archivePatientRecord(int patientID)
 {
     QString patientPath = patientDatabasePath + "/" + QString::number(patientID);
-    QString archivePath = "Archived/" + QString::number(patientID);
+    QString archivePath = archivedDatabasePath + "/" + QString::number(patientID);
     QDir().mkpath(archivePath); // Ensure archive folder exists
 
     QDir patientDir(patientPath);
@@ -241,10 +242,13 @@ PatientRecord FileHandler::archivePatientRecord(int patientID)
     }
 
     // Remove the old patient folder
-    if (!QDir(patientPath).removeRecursively()) {
-        qDebug() << "‼️ Failed to remove old patient folder:" << patientPath;
-    } else {
-        qDebug() << "🗳️ Patient folder ARCHIVED for ID:" << patientID;
+    if (!QDir(patientPath).removeRecursively())
+    {
+        qDebug() << "Failed to remove old patient folder:" << patientPath;
+    }
+    else
+    {
+        qDebug() << "Patient folder ARCHIVED for ID:" << patientID;
     }
 
     return loadPatientRecord(patientID);
@@ -259,8 +263,8 @@ PatientRecord FileHandler::archivePatientRecord(int patientID)
 PatientRecord FileHandler::unarchivePatientRecord(int patientID)
 {
     QString archivePath = archivedDatabasePath + "/" + QString::number(patientID);
-    QString patientPath = "Patients/" + QString::number(patientID);
-    QDir().mkpath(archivePath); // Ensure archive folder exists
+    QString patientPath = patientDatabasePath + "/" + QString::number(patientID);
+    QDir().mkpath(patientPath); // Ensure archive folder exists
 
     QDir archiveDir(archivePath);
     if (!archiveDir.exists())
@@ -281,10 +285,13 @@ PatientRecord FileHandler::unarchivePatientRecord(int patientID)
     }
 
     // Remove the old patient folder
-    if (!QDir(archivePath).removeRecursively()) {
-        qDebug() << "‼️ Failed to remove old archive folder:" << archivePath;
-    } else {
-        qDebug() << "🗃️ Patient folder UNARCHIVED for ID:" << patientID;
+    if (!QDir(archivePath).removeRecursively())
+    {
+        qDebug() << "Failed to remove old archive folder:" << archivePath;
+    }
+    else
+    {
+        qDebug() << "Patient folder UNARCHIVED for ID:" << patientID;
     }
 
     return loadPatientRecord(patientID);

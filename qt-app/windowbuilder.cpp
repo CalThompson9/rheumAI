@@ -160,7 +160,8 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnArchivePatient->setStyleSheet(orangeButtonStyle);
 
     btnRecord->setStyleSheet(blueButtonStyle);
-    QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord]() {
+    QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord]()
+                     {
         static bool isRecording = false;
         isRecording = !isRecording;
         btnRecord->setStyleSheet(isRecording ? redButtonStyle : blueButtonStyle);
@@ -185,8 +186,8 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     // Patient controls layout
     patientControlsLayout->addWidget(comboSelectPatient);
     patientControlsLayout->addWidget(btnAddPatient);
-    patientControlsLayout->addWidget(btnArchivePatient);
     patientControlsLayout->addWidget(btnDeletePatient);
+    patientControlsLayout->addWidget(btnArchivePatient);
     patientControlsLayout->addWidget(toggleSwitch);
     patientControlsLayout->setSpacing(10);
 
