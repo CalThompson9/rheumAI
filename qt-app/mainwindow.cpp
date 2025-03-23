@@ -148,6 +148,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // NEW: Load existing patients on startup**
     loadPatientsIntoDropdown();
+    viewPatient();
     if (comboSelectPatient->count() > 0)
     {
         QTimer::singleShot(100, this, [this]()
@@ -497,6 +498,7 @@ void MainWindow::on_addPatientButton_clicked()
 
         // Refresh dropdown
         loadPatientsIntoDropdown();
+        viewPatient();
     }
 }
 
@@ -543,6 +545,7 @@ void MainWindow::on_editPatientButton_clicked() {
         qDebug() << "Patient updated: " << patientID;
 
         loadPatientsIntoDropdown(); // Refresh display names if changed
+        viewPatient();
     }
 }
 
@@ -699,11 +702,18 @@ void MainWindow::viewPatient() {
     int patientID = patientData.toInt();
     PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID);
 
-    QString info = "Name: " + patient.getFirstName() + " " + patient.getLastName() +
-                   " \nDOB: " + patient.getDateOfBirth() +
-                   " \nID: " + QString::number(patientID);
+    QString info = 
+        "Name: " + patient.getFirstName() + " " + patient.getLastName() + "\n" +
+        "DOB: " + patient.getDateOfBirth() + "\n" +
+        "Phone: " + patient.getPhoneNumber() + "\n" +
+        "Email: " + patient.getEmail() + "\n" +
+        "Address: " + patient.getAddress() + "\n" +
+        "Province: " + patient.getProvince() + "\n" +
+        "Country: " + patient.getCountry();
+
     lblPatientName->setText(info);
 }
+
 
 
 MainWindow::~MainWindow()
