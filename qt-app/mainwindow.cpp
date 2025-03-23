@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     selectSummaryLayout->setText("Detailed Layout");
 
     // Connect archive mode button
+    qDebug() << "🗃️ ARCHIVE MODE:" << archiveMode;
     connect(toggleSwitch, &QPushButton::clicked, this, &MainWindow::handleArchiveToggled);
 
     // Connect selection of each option to update summary layout format
@@ -502,7 +503,7 @@ void MainWindow::on_addPatientButton_clicked()
         qDebug() << "New patient added: " << patientID << " - " << displayName;
 
         // Refresh dropdown
-        loadPatientsIntoDropdown();
+        checkDropdownEmpty();
         viewPatient();
     }
 }
@@ -579,6 +580,7 @@ void MainWindow::on_removePatientButton_clicked()
     }
 
     comboSelectPatient->removeItem(index); // Update patient dropdown
+    checkDropdownEmpty();
 }
 
 /**
@@ -612,6 +614,7 @@ void MainWindow::on_archivePatientButton_clicked()
 void MainWindow::handleArchiveToggled()
 {
     archiveMode = !archiveMode; // Toggle archive mode
+    qDebug() << "🗃️ ARCHIVE MODE:" << archiveMode;
 
     if (archiveMode) // IN ARCHIVE MODE
     {
@@ -622,8 +625,12 @@ void MainWindow::handleArchiveToggled()
 
         btnAddPatient->setEnabled(false);
         btnEditPatient->setEnabled(false);
+        btnRecord->setEnabled(false);
+        btnSummarize->setEnabled(false);
         btnAddPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
         btnEditPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+        btnRecord->setStyleSheet(WindowBuilder::disabledButtonStyle);
+        btnSummarize->setStyleSheet(WindowBuilder::disabledButtonStyle);
         toggleSwitch->setStyleSheet(WindowBuilder::blueButtonStyle);
 
     }
@@ -636,8 +643,12 @@ void MainWindow::handleArchiveToggled()
 
         btnAddPatient->setEnabled(true);
         btnEditPatient->setEnabled(true);
+        btnRecord->setEnabled(true);
+        btnSummarize->setEnabled(true);
         btnAddPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
         btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
+        btnRecord->setStyleSheet(WindowBuilder::blueButtonStyle);
+        btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
         toggleSwitch->setStyleSheet(WindowBuilder::greyButtonStyle);
     }
 
@@ -651,11 +662,12 @@ void MainWindow::handleArchiveToggled()
  */
 void MainWindow::checkDropdownEmpty() {
 
-    bool empty = true;
+    bool empty;
     if (archiveMode) empty = loadArchivedPatientsIntoDropdown();
     else             empty = loadPatientsIntoDropdown();
 
-    if (empty) {
+    if (empty)
+    {
         lblPatientName->setText("Name: \nDOB: \nPhone: \nEmail: \nAddress: \nProvince: \nCountry: ");
         btnEditPatient->setEnabled(false);
         btnDeletePatient->setEnabled(false);
@@ -663,14 +675,29 @@ void MainWindow::checkDropdownEmpty() {
         btnEditPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
         btnDeletePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
         btnArchivePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+
+        if (!archiveMode) { // Prevent Record & Summarize when there are no patients
+            btnRecord->setEnabled(false);
+            btnSummarize->setEnabled(false);
+            btnRecord->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            btnSummarize->setStyleSheet(WindowBuilder::disabledButtonStyle);
+        }
     }
-    else {
+    else
+    {
         btnEditPatient->setEnabled(true);
         btnDeletePatient->setEnabled(true);
         btnArchivePatient->setEnabled(true);
         btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
         btnDeletePatient->setStyleSheet(WindowBuilder::redButtonStyle);
         btnArchivePatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
+
+        if (!archiveMode) {
+            btnRecord->setEnabled(true);
+            btnSummarize->setEnabled(true);
+            btnRecord->setStyleSheet(WindowBuilder::blueButtonStyle);
+            btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
+        }
     }
 }
 
