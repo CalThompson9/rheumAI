@@ -86,6 +86,5 @@ CMakeLists.txt.user*
 .uic/
 /build*/
 
-# Api (not needed anymore)
-api.h
-
+# Redundant ignores for safety
+keyFile.txt
