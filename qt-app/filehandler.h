@@ -20,7 +20,6 @@
 #include <QDir>
 #include "patientrecord.h"
 #include "summary.h"
-#include "transact.h"
 #include "transcript.h"
 
 class FileHandler {

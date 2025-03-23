@@ -62,7 +62,6 @@ void SummaryGenerator::handleLLMResponse(const QString &response)
 }
 
 /**
-<<<<<<< HEAD
  * @name setSummary
  * @brief Sets the summary object with the given text
  * @param[in] newSummary: New summary object to set
@@ -154,13 +153,13 @@ void SummaryGenerator::summarizePlan(const QString &response)
 QString SummaryGenerator::extractSectionFromResponse(const QString &response, const QString &sectionName)
 {
     QString searchPattern = "**" + sectionName + "**";
-    qDebug() << "🔍 Searching for section: " << searchPattern;
+    qDebug() << " Searching for section: " << searchPattern;
 
     int startIndex = response.indexOf(searchPattern);
     if (startIndex == -1)
     {
-        qWarning() << "❌ Section not found in LLM response: " << sectionName;
-        qWarning() << "📜 Raw response:\n" << response;  // Print raw response when a section is missing
+        qWarning() << " Section not found in LLM response: " << sectionName;
+        qWarning() << " Raw response:\n" << response;  // Print raw response when a section is missing
         return "No " + sectionName.toLower() + " found.";
     }
 
@@ -172,7 +171,7 @@ QString SummaryGenerator::extractSectionFromResponse(const QString &response, co
 
     QString extractedSection = response.mid(startIndex + searchPattern.length(), endIndex - (startIndex + searchPattern.length())).trimmed();
     
-    qDebug() << "✅ Extracted section for " << sectionName << ":\n" << extractedSection;
+    qDebug() << " Extracted section for " << sectionName << ":\n" << extractedSection;
     return extractedSection;
 }
 
