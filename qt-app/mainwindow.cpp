@@ -612,6 +612,7 @@ void MainWindow::handleArchiveToggled()
         toggleSwitch->setText("Show All Active Patients");
         btnArchivePatient->setText("Unarchive Patient");
         loadArchivedPatientsIntoDropdown();
+        viewPatient();
         patientID = comboSelectPatient->currentData().toInt();
         lblPatientName->setText("Patient ID: " + QString::number(patientID));
     }
@@ -620,6 +621,7 @@ void MainWindow::handleArchiveToggled()
         toggleSwitch->setText("Show All Archived Patients");
         btnArchivePatient->setText("Archive Patient");
         loadPatientsIntoDropdown();
+        viewPatient();
         patientID = comboSelectPatient->currentData().toInt();
         lblPatientName->setText("Patient ID: " + QString::number(patientID));
     }
@@ -690,4 +692,31 @@ void MainWindow::on_patientSelected(int index)
 MainWindow::~MainWindow()
 {
     // Qt automatically manages memory, no need for manual deletion
+}
+
+/**
+ * @name viewPatient
+ * @brief When switched to a patient, display their information in the top corner
+ * @details This function is called when a patient is selected from the dropdown
+ */
+void MainWindow::viewPatient() {
+    QVariant patientData = comboSelectPatient->currentData();
+    if (!patientData.isValid()) {
+        qWarning() << "No patient selected, cannot view patient!";
+        return;
+    }
+
+    int patientID = patientData.toInt();
+    PatientRecord patient = FileHandler::getInstance()->loadPatientRecord(patientID);
+
+    QString info = 
+        "Name: " + patient.getFirstName() + " " + patient.getLastName() + "\n" +
+        "DOB: " + patient.getDateOfBirth() + "\n" +
+        "Phone: " + patient.getPhoneNumber() + "\n" +
+        "Email: " + patient.getEmail() + "\n" +
+        "Address: " + patient.getAddress() + "\n" +
+        "Province: " + patient.getProvince() + "\n" +
+        "Country: " + patient.getCountry();
+
+    lblPatientName->setText(info);
 }
