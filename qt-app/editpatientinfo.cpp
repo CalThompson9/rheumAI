@@ -19,9 +19,9 @@
  * @brief Initializes a new dialog box to edit patient details
  * @param[in] parent: Qt parent widget
  */
-editpatientinfo::editpatientinfo(QWidget *parent)
+EditPatientInfo::EditPatientInfo(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::editpatientinfo)
+    , ui(new Ui::EditPatientInfo)
 {
     ui->setupUi(this);
     QPixmap logo(":/logo.png"); // Resource path
@@ -33,7 +33,7 @@ editpatientinfo::editpatientinfo(QWidget *parent)
  * @name ~EditPatientInfo (destructor)
  * @brief Cleans up dynamically allocated user interface
  */
-editpatientinfo::~editpatientinfo()
+EditPatientInfo::~EditPatientInfo()
 {
     delete ui;
 }
@@ -44,61 +44,61 @@ editpatientinfo::~editpatientinfo()
  * @name setFirstName
  * @brief Sets/Updates the string entered in the first name field of the dialog box
  */
-void editpatientinfo::setFirstName(const QString &firstName) { ui->firstNameInput->setText(firstName); }
+void EditPatientInfo::setFirstName(const QString &firstName) { ui->firstNameInput->setText(firstName); }
 
 /**
  * @name setLastName
  * @brief Sets/Updates the string entered in the last name field of the dialog box
  */
-void editpatientinfo::setLastName(const QString &lastName) { ui->lastNameInput->setText(lastName); }
+void EditPatientInfo::setLastName(const QString &lastName) { ui->lastNameInput->setText(lastName); }
 
 /**
  * @name gsetDateOfBirth
  * @brief Sets/Updates the string entered in the date of birth field of the dialog box
  */
-void editpatientinfo::setDateOfBirth(const QString &dob) { ui->dobInput->setDate(QDate::fromString(dob, "yyyy-MM-dd")); }
+void EditPatientInfo::setDateOfBirth(const QString &dob) { ui->dobInput->setDate(QDate::fromString(dob, "yyyy-MM-dd")); }
 
 /**
  * @name setHealthCard
  * @brief Sets/Updates the string entered in the health card field of the dialog box
  */
-void editpatientinfo::setHealthCard(const QString &card) { ui->healthCardInput->setText(card); }
+void EditPatientInfo::setHealthCard(const QString &card) { ui->healthCardInput->setText(card); }
 
 /**
  * @name setEmail
  * @brief Sets/Updates the string entered in the email field of the dialog box
  */
-void editpatientinfo::setEmail(const QString &email) { ui->emailInput->setText(email); }
+void EditPatientInfo::setEmail(const QString &email) { ui->emailInput->setText(email); }
 
 /**
  * @name setPhoneNumber
  * @brief Sets/Updates the string entered in the phone number field of the dialog box
  */
-void editpatientinfo::setPhoneNumber(const QString &phone) { ui->phoneNumberInput->setText(phone); }
+void EditPatientInfo::setPhoneNumber(const QString &phone) { ui->phoneNumberInput->setText(phone); }
 
 /**
  * @name setAddress
  * @brief Sets/Updates the string entered in the address field of the dialog box
  */
-void editpatientinfo::setAddress(const QString &address) { ui->addressInput->setText(address); }
+void EditPatientInfo::setAddress(const QString &address) { ui->addressInput->setText(address); }
 
 /**
  * @name setPostalCode
  * @brief Sets/Updates the string entered in the postal code field of the dialog box
  */
-void editpatientinfo::setPostalCode(const QString &postalCode) { ui->postalCodeInput->setText(postalCode); }
+void EditPatientInfo::setPostalCode(const QString &postalCode) { ui->postalCodeInput->setText(postalCode); }
 
 /**
  * @name setProvince
  * @brief Sets/Updates the string entered in the province field of the dialog box
  */
-void editpatientinfo::setProvince(const QString &province) { ui->provinceInput->setText(province); }
+void EditPatientInfo::setProvince(const QString &province) { ui->provinceInput->setText(province); }
 
 /**
  * @name setCountry
  * @brief Sets/Updates the string entered in the country field of the dialog box
  */
-void editpatientinfo::setCountry(const QString &country) { ui->countryInput->setText(country); }
+void EditPatientInfo::setCountry(const QString &country) { ui->countryInput->setText(country); }
 
 // Getters
 
@@ -107,67 +107,67 @@ void editpatientinfo::setCountry(const QString &country) { ui->countryInput->set
  * @brief Gets the string entered in the first name field of the dialog box
  * @return The entered first name
  */
-QString editpatientinfo::getFirstName() const { return ui->firstNameInput->text(); }
+QString EditPatientInfo::getFirstName() const { return ui->firstNameInput->text(); }
 
 /**
  * @name getLastName
  * @brief Gets the string entered in the last name field of the dialog box
  * @return The entered last name
  */
-QString editpatientinfo::getLastName() const { return ui->lastNameInput->text(); }
+QString EditPatientInfo::getLastName() const { return ui->lastNameInput->text(); }
 
 /**
  * @name getDateOfBirth
  * @brief Gets the string entered in the date of birth field of the dialog box
  * @return The entered date of birth
  */
-QString editpatientinfo::getDateOfBirth() const { return ui->dobInput->date().toString("yyyy-MM-dd"); }
+QString EditPatientInfo::getDateOfBirth() const { return ui->dobInput->date().toString("yyyy-MM-dd"); }
 
 /**
  * @name getHealthCard
  * @brief Gets the string entered in the health card field of the dialog box
  * @return The entered health card number
  */
-QString editpatientinfo::getHealthCard() const { return ui->healthCardInput->text(); }
+QString EditPatientInfo::getHealthCard() const { return ui->healthCardInput->text(); }
 
 /**
  * @name getEmail
  * @brief Gets the string entered in the email field of the dialog box
  * @return The entered email
  */
-QString editpatientinfo::getEmail() const { return ui->emailInput->text(); }
+QString EditPatientInfo::getEmail() const { return ui->emailInput->text(); }
 
 /**
  * @name getPhoneNumber
  * @brief Gets the string entered in the phone number field of the dialog box
  * @return The entered phone number
  */
-QString editpatientinfo::getPhoneNumber() const { return ui->phoneNumberInput->text(); }
+QString EditPatientInfo::getPhoneNumber() const { return ui->phoneNumberInput->text(); }
 
 /**
  * @name getAddress
  * @brief Gets the string entered in the address field of the dialog box
  * @return The entered address
  */
-QString editpatientinfo::getAddress() const { return ui->addressInput->text(); }
+QString EditPatientInfo::getAddress() const { return ui->addressInput->text(); }
 
 /**
  * @name getPostalCode
  * @brief Gets the string entered in the postal code field of the dialog box
  * @return The entered postal code
  */
-QString editpatientinfo::getPostalCode() const { return ui->postalCodeInput->text(); }
+QString EditPatientInfo::getPostalCode() const { return ui->postalCodeInput->text(); }
 
 /**
  * @name getProvince
  * @brief Gets the string entered in the province field of the dialog box
  * @return The entered province
  */
-QString editpatientinfo::getProvince() const { return ui->provinceInput->text(); }
+QString EditPatientInfo::getProvince() const { return ui->provinceInput->text(); }
 
 /**
  * @name getCountry
  * @brief Gets the string entered in the country field of the dialog box
  * @return The entered country
  */
-QString editpatientinfo::getCountry() const { return ui->countryInput->text(); }
+QString EditPatientInfo::getCountry() const { return ui->countryInput->text(); }

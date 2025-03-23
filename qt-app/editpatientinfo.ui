@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>editpatientinfo</class>
- <widget class="QDialog" name="editpatientinfo">
+ <class>EditPatientInfo</class>
+ <widget class="QDialog" name="EditPatientInfo">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -291,7 +291,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>editpatientinfo</receiver>
+   <receiver>EditPatientInfo</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -307,7 +307,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>editpatientinfo</receiver>
+   <receiver>EditPatientInfo</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

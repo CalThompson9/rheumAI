@@ -43,7 +43,7 @@ PatientRecord::PatientRecord(
     healthCard(healthCard),
     firstName(firstName),
     lastName(lastName),
-    dateOfBirth(dob),
+    dateOfBirth(dateOfBirth),
     email(email),
     phoneNumber(phoneNumber),
     address(address),

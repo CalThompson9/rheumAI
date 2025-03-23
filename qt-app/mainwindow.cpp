@@ -523,7 +523,7 @@ void MainWindow::on_editPatientButton_clicked()
 
     PatientRecord existing = FileHandler::getInstance()->loadPatientRecord(patientID);
 
-    editpatientinfo dialog(this);
+    EditPatientInfo dialog(this);
     dialog.setFirstName(existing.getFirstName());
     dialog.setLastName(existing.getLastName());
     dialog.setDateOfBirth(existing.getDateOfBirth());
