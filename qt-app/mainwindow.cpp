@@ -598,6 +598,14 @@ void MainWindow::on_addPatientButton_clicked() {
 }
 
 
+
+/**
+ * @name on_editPatientButton_clicked
+ * @brief Handler function called when the "Edit Patient" button is pressed
+ * @details Displays a dialog window that prompts the user to edit the
+ * patient's details. Once the user submits the form, the file of the existing selected
+ * patient is updated with the changed fields.
+ */
 void MainWindow::on_editPatientButton_clicked() {
     int patientID = comboSelectPatient->currentData().toInt();
     if (patientID == 0) return;

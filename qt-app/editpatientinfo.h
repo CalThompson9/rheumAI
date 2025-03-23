@@ -1,3 +1,12 @@
+/**
+ * @file editpatientinfo.h
+ * @brief Declaration of EditPatientInfo class
+ *
+ * @author Kalundi Serumaga (kserumag@uwo.ca)
+ * @author Joelene Hales (jhales5@uwo.ca)
+ * @date Mar. 22, 2025
+ */
+
 #ifndef EDITPATIENTINFO_H
 #define EDITPATIENTINFO_H
 
