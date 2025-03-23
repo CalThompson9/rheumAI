@@ -40,6 +40,13 @@ public:
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
                         QPushButton *&btnRemovePatient);
+
+    static const QString blueButtonStyle;
+    static const QString orangeButtonStyle;
+    static const QString recordBlueStyle;
+    static const QString recordRedStyle;
+    static const QString settingsBlueButtonStyle;
+    static const QString cancelStyle;
 };
 
 #endif // WINDOWBUILDER_H

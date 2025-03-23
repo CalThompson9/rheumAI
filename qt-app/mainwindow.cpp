@@ -68,10 +68,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(optionPlainLayout, &QAction::triggered, this, [=]()
             { handleSummaryLayoutChanged(nullptr); });
 
-    // Initialize summary layout formatter
-    summaryFormatter = new DetailedSummaryFormatter;
-    optionDetailedLayout->setEnabled(false);
-
     // Initialize SummaryGenerator
     summaryGenerator = new SummaryGenerator(this);
 
@@ -81,9 +77,34 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialize AudioHandler and connect transcription signal to LLMClient
     AudioHandler *audioHandler = AudioHandler::getInstance();
 
-    // Settings
-    settings = new Settings(this, summaryGenerator->llmClient, audioHandler);
-    connect(btnSettings, &QPushButton::clicked, this, &MainWindow::showSettings);
+    // Initialize settings
+    settings = Settings::getInstance(this, summaryGenerator->llmClient, audioHandler);
+    connect(btnSettings, &QPushButton::clicked, settings, &Settings::showSettings);
+    connect(settings, &Settings::okButtonClicked, this, &MainWindow::handleSummarizeButtonClicked);
+
+    // TODO: need to set the
+
+    // Initialize summary layout formatter from settings
+    QString defaultSummaryLayout = settings->getSummaryPreference();
+    selectSummaryLayout->setText(defaultSummaryLayout);
+    if (defaultSummaryLayout.contains("Detailed Layout"))
+    {
+        qDebug() << "Setting default summary format to: Detailed Layout";
+        summaryFormatter = new DetailedSummaryFormatter;
+        optionDetailedLayout->setEnabled(false);
+    }
+    else if (defaultSummaryLayout.contains("Concise Layout"))
+    {
+        qDebug() << "Setting default summary format to: Concise Layout";
+        summaryFormatter = new ConciseSummaryFormatter;
+        optionConciseLayout->setEnabled(false);
+    }
+    else
+    {
+        qDebug() << "Unrecognized summary format in settings: " <<  defaultSummaryLayout << ". Using detailed layout instead...";
+        summaryFormatter = new DetailedSummaryFormatter;
+        optionDetailedLayout->setEnabled(false);
+    }
 
     // Connect "Record" button to start and stop recording
     connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
@@ -348,178 +369,6 @@ void MainWindow::displaySummary(const Summary &summary)
 
     summaryFormatter->generateLayout(summary, summarySection);
 }
-
-
-/**
- * @brief Handles constructing the settings pop-up menu.
- * @todo MOVE FUNCTION TO SETTINGS OR WINDOWBUILDER FOR CLEARER CODE STRUCTURE
- */
-void MainWindow::showSettings()
-{
-    // ========== Layout ==========
-    QDialog *settingsWindow = new QDialog(this);
-    settingsWindow->setWindowTitle("Settings");
-    settingsWindow->setGeometry(0, 0, 800, 300);
-    settingsWindow->adjustSize();
-
-    QRect parentRect = this->geometry();
-    QSize dialogSize = settingsWindow->size();
-
-    int x = parentRect.x() + ((parentRect.width() - dialogSize.width()) / 2);
-    int y = parentRect.y() + ((parentRect.height() - dialogSize.height()) / 2);
-
-    settingsWindow->move(x, y);
-
-    QVBoxLayout *mainLayout = new QVBoxLayout(settingsWindow);
-
-    // ========== Connected Peripherals ==========
-    QVBoxLayout *peripheralsLayout = new QVBoxLayout();
-    QLabel *cpLabel = new QLabel("Connected Peripherals:", settingsWindow);
-    peripheralsLayout->addWidget(cpLabel);
-
-    QTextEdit *peripheralsField = new QTextEdit(settingsWindow);
-    peripheralsField->setReadOnly(true);
-    peripheralsField->setFixedHeight(60);
-    peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
-
-    const QList<QAudioDevice> audioDevices = QMediaDevices::audioInputs();
-    peripheralsField->setText(
-        !audioDevices.isEmpty()
-        ? "Microphone Detected --> [" + audioDevices.first().description() + "]"
-        : "No microphone detected."
-    );
-
-    peripheralsLayout->addWidget(peripheralsField);
-    mainLayout->addLayout(peripheralsLayout);
-
-    // ========== LLM API Key ==========
-    QHBoxLayout *llmLayout = new QHBoxLayout();
-    QLabel *llmLabel = new QLabel("Summarizer API Key:", settingsWindow);
-    QLineEdit *llmKeyField = new QLineEdit(settingsWindow);
-    llmKeyField->setText(settings->llmKey);
-    QDialogButtonBox *llmButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
-
-    llmLayout->addWidget(llmLabel);
-    llmLayout->addWidget(llmKeyField);
-    llmLayout->addWidget(llmButtonBox);
-    mainLayout->addLayout(llmLayout);
-
-    connect(llmButtonBox, &QDialogButtonBox::accepted, this, [=]() {
-        if (!llmKeyField->text().isEmpty()) {
-            settings->setLLMKey(llmKeyField->text());
-            handleSummarizeButtonClicked();
-        } else {
-            qWarning() << "LLM key field cannot be empty.";
-        }
-    });
-    connect(llmButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        llmKeyField->clear();
-    });
-
-    // ========== Google Audio API Key ==========
-    QHBoxLayout *audioLayout = new QHBoxLayout();
-    QLabel *audioLabel = new QLabel("Google Transcriber API Key:", settingsWindow);
-    QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
-    audioKeyField->setText(settings->audioKey);
-    QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
-
-    audioLayout->addWidget(audioLabel);
-    audioLayout->addWidget(audioKeyField);
-    audioLayout->addWidget(audioButtonBox);
-    mainLayout->addLayout(audioLayout);
-
-    connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
-        if (!audioKeyField->text().isEmpty()) {
-            settings->setAudioKey(audioKeyField->text());
-            handleSummarizeButtonClicked();
-        } else {
-            qWarning() << "Google Audio key field cannot be empty.";
-        }
-    });
-    connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        audioKeyField->clear();
-    });
-
-    // ========== OpenAI Audio API Key ==========
-    QHBoxLayout *openaiLayout = new QHBoxLayout();
-    QLabel *openaiLabel = new QLabel("OpenAI Whisper API Key:", settingsWindow);
-    QLineEdit *openaiKeyField = new QLineEdit(settingsWindow);
-    openaiKeyField->setText(settings->openAIAudioKey);
-    QDialogButtonBox *openaiButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
-
-    openaiLayout->addWidget(openaiLabel);
-    openaiLayout->addWidget(openaiKeyField);
-    openaiLayout->addWidget(openaiButtonBox);
-    mainLayout->addLayout(openaiLayout);
-
-    connect(openaiButtonBox, &QDialogButtonBox::accepted, this, [=]() {
-        if (!openaiKeyField->text().isEmpty()) {
-            settings->setOpenAIAudioKey(openaiKeyField->text());
-        } else {
-            qWarning() << "OpenAI Audio key field cannot be empty.";
-        }
-    });
-    connect(openaiButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        openaiKeyField->clear();
-    });
-
-    // ========== Save & Close ==========
-    QPushButton *saveCloseButton = new QPushButton("Close", settingsWindow);
-    mainLayout->addWidget(saveCloseButton);
-    connect(saveCloseButton, &QPushButton::clicked, settingsWindow, &QDialog::close);
-
-    // ========== Button Styling ==========
-    const QString blueStyle = R"(
-        QPushButton {
-            background-color: #5371ff;
-            color: white;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 0 4px;
-            font-size: 14px;
-        }
-        QPushButton:hover {
-            background-color: #425BD0;
-        }
-        QPushButton:pressed {
-            background-color: #006ae6;
-        }
-    )";
-
-    const QString cancelStyle = R"(
-        QPushButton {
-            background-color: #AAAAAA;
-            color: black;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 0 4px;
-            font-size: 14px;
-        }
-        QPushButton:hover {
-            background-color: #949494;
-        }
-        QPushButton:pressed {
-            background-color: #5F5F5F;
-        }
-    )";
-
-    // Apply styles to all OK and Cancel buttons
-    QList<QDialogButtonBox *> buttonBoxes = { llmButtonBox, audioButtonBox, openaiButtonBox };
-    for (QDialogButtonBox *box : buttonBoxes) {
-        QPushButton *ok = box->button(QDialogButtonBox::Ok);
-        QPushButton *cancel = box->button(QDialogButtonBox::Cancel);
-        ok->setDefault(false);
-        ok->setAutoDefault(false);
-        ok->setStyleSheet(blueStyle);
-        cancel->setStyleSheet(cancelStyle);
-    }
-
-    saveCloseButton->setStyleSheet(blueStyle);
-
-    settingsWindow->exec();
-    delete settingsWindow;
-}
-
 
 /**
  * @name on_addPatientButton_clicked
