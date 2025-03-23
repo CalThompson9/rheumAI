@@ -24,6 +24,8 @@ editpatientinfo::editpatientinfo(QWidget *parent)
     , ui(new Ui::editpatientinfo)
 {
     ui->setupUi(this);
+    QPixmap logo(":/logo.png"); // Resource path
+    ui->logoLabelEdit->setPixmap(logo.scaled(150, 150, Qt::KeepAspectRatio));
 }
 
 

@@ -22,6 +22,8 @@
 AddPatientDialog::AddPatientDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::AddPatientDialog) {
     ui->setupUi(this);
+    QPixmap logo(":/logo.png"); // Resource path
+    ui->logoLabel->setPixmap(logo.scaled(150, 150, Qt::KeepAspectRatio));
 }
 
 /**
