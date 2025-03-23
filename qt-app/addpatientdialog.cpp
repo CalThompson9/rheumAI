@@ -10,9 +10,9 @@
  * @date Mar. 16, 2025
  */
 
+#include <QMessageBox>
 #include "addpatientdialog.h"
 #include "ui_addpatientdialog.h"
-#include <QMessageBox>
 
 /**
  * @name AddPatientDialog (constructor)

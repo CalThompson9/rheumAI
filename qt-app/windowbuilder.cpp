@@ -14,13 +14,14 @@
  * @date Mar. 1, 2025
  */
 
-#include "windowbuilder.h"
+
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QScrollArea>
 #include <QPixmap>
+#include "windowbuilder.h"
 
 /**
  * @name setupUI

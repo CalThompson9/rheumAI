@@ -8,13 +8,13 @@
 #ifndef AUDIO_HANDLER_H
 #define AUDIO_HANDLER_H
 
-#include <QJsonArray>
 #include <string>
+#include <iostream>
+#include <QJsonArray>
 #include <QObject>
 #include <QFile>
 #include <QEventLoop>
 #include <QtNetwork/QNetworkAccessManager>
-#include <iostream>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonDocument>

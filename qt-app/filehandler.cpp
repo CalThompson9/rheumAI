@@ -11,11 +11,11 @@
  * @date Mar. 16, 2025
  */
 
-#include "filehandler.h"
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QFile>
 #include <QDebug>
+#include "filehandler.h"
 
 FileHandler *FileHandler::instance = nullptr;
 

@@ -13,6 +13,10 @@
  * @date Mar. 1, 2025
  */
 
+#include <QMessageBox>
+#include <QMediaDevices>
+#include <QAudioDevice>
+#include <QTimer>
 #include "mainwindow.h"
 #include "editpatientinfo.h"
 #include "llmclient.h"
@@ -24,10 +28,6 @@
 #include "transcript.h"
 #include "summarygenerator.h"
 #include "addpatientdialog.h"
-#include <QMessageBox>
-#include <QMediaDevices>
-#include <QAudioDevice>
-#include <QTimer>
 
 /**
  * @name MainWindow (constructor)
