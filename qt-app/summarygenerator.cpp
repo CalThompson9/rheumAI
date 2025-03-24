@@ -147,14 +147,20 @@ void SummaryGenerator::summarizePlan(const QString &response)
 QString SummaryGenerator::extractSectionFromResponse(const QString &response, const QString &sectionName)
 {
     QString searchPattern = "**" + sectionName + "**";
+    QString searchPatternAlt = "**" + sectionName + ":**";
     qDebug() << "🔍 Searching for section: " << searchPattern;
 
     int startIndex = response.indexOf(searchPattern);
     if (startIndex == -1)
     {
         qWarning() << "❌ Section not found in LLM response: " << sectionName;
-        qWarning() << "📜 Raw response:\n" << response;  // Print raw response when a section is missing
-        return "No " + sectionName.toLower() + " found.";
+        // Try alternative search pattern
+        startIndex = response.indexOf(searchPatternAlt);
+        if (startIndex == -1)
+        {
+            qWarning() << "❌ Section not found in LLM response: " << sectionName;
+            return "No " + sectionName.toLower() + " found.";
+        }
     }
 
     // Find the next section header (e.g., "**SOMETHING ELSE**")
