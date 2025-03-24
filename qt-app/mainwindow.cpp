@@ -646,7 +646,7 @@ void MainWindow::handleArchiveToggled()
         btnRecord->setEnabled(true);
         btnSummarize->setEnabled(true);
         btnAddPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
-        btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
+        btnEditPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
         btnRecord->setStyleSheet(WindowBuilder::blueButtonStyle);
         btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
         toggleSwitch->setStyleSheet(WindowBuilder::greyButtonStyle);
@@ -657,7 +657,7 @@ void MainWindow::handleArchiveToggled()
 
 /**
  * @brief MainWindow::checkDropdownEmpty
- * @details Checks if Archive,
+ * @details Checks if Archive or Patient directories no longer have patients to update UI accordingly.
  *
  */
 void MainWindow::checkDropdownEmpty() {
@@ -666,7 +666,7 @@ void MainWindow::checkDropdownEmpty() {
     if (archiveMode) empty = loadArchivedPatientsIntoDropdown();
     else             empty = loadPatientsIntoDropdown();
 
-    if (empty)
+    if (empty) // Folder now empty
     {
         lblPatientName->setText("Name: \nDOB: \nPhone: \nEmail: \nAddress: \nProvince: \nCountry: ");
         btnEditPatient->setEnabled(false);
@@ -676,27 +676,27 @@ void MainWindow::checkDropdownEmpty() {
         btnDeletePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
         btnArchivePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
 
-        if (!archiveMode) { // Prevent Record & Summarize when there are no patients
+        if (!archiveMode) { // Prevent Record & Summarize, when there are no patients
             btnRecord->setEnabled(false);
             btnSummarize->setEnabled(false);
             btnRecord->setStyleSheet(WindowBuilder::disabledButtonStyle);
             btnSummarize->setStyleSheet(WindowBuilder::disabledButtonStyle);
         }
     }
-    else
+    else // Folder NOT empty anymore
     {
-        btnEditPatient->setEnabled(true);
         btnDeletePatient->setEnabled(true);
         btnArchivePatient->setEnabled(true);
-        btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
         btnDeletePatient->setStyleSheet(WindowBuilder::redButtonStyle);
         btnArchivePatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
 
         if (!archiveMode) {
             btnRecord->setEnabled(true);
             btnSummarize->setEnabled(true);
+            btnEditPatient->setEnabled(true);
             btnRecord->setStyleSheet(WindowBuilder::blueButtonStyle);
             btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
+            btnEditPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
         }
     }
 }
