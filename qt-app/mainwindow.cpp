@@ -9,7 +9,7 @@
  * @author Callum Thompson (cthom226@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
  * @author Kalundi Serumaga (kserumag@uwo.ca)
- * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @author Thomas Llamzon (tllamzon@uwo.ca)
  * @date Mar. 1, 2025
  */
 
@@ -738,16 +738,14 @@ void MainWindow::on_patientSelected(int index)
         currentTranscriptText.clear();
     }
 
-    // Load the structured summary according to settings->getSummaryLayout()
+    // Load the structured summary according to default summary layout preference
     qDebug() << "Attempting to load summary for patient ID: " << patientID;
     QString savedSummaryText = FileHandler::getInstance()->loadSummaryText(patientID);
-
-    qDebug() << "============\n";
 
     QString defaultLayout = settings->getSummaryPreference();
     qDebug() << "Reverting to user summary layout preference:" << defaultLayout;
 
-    // Delete children of current summary layout.
+    // Clear existing summary layout
     QLayoutItem *child;
     while ((child = summarySection->takeAt(0)) != nullptr) {
         if (child->widget()) {
@@ -756,7 +754,7 @@ void MainWindow::on_patientSelected(int index)
         delete child;
     }
 
-    // Revert summary layout to user summary layout preference.
+    // Revert summary layout according to user summary layout preference.
     if (defaultLayout.contains("Detailed Layout")) {
         summaryFormatter = new DetailedSummaryFormatter;
         selectSummaryLayout->setText("Detailed Layout");
@@ -769,12 +767,11 @@ void MainWindow::on_patientSelected(int index)
         selectSummaryLayout->setText("Detailed Layout");
     }
 
+    // Refresh summary layout dropdown
     QString currentLayout = selectSummaryLayout->text();
     for (QAction *layoutAction : summaryLayoutOptions->actions()) {
         layoutAction->setEnabled(layoutAction->text() != currentLayout);
     }
-
-    qDebug() << "\n============";
 
     if (!savedSummaryText.isEmpty())
     {
