@@ -13,16 +13,16 @@
 #include <QDialog>
 
 namespace Ui {
-class editpatientinfo;
+class EditPatientInfo;
 }
 
-class editpatientinfo : public QDialog
+class EditPatientInfo : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit editpatientinfo(QWidget *parent = nullptr);
-    ~editpatientinfo();
+    explicit EditPatientInfo(QWidget *parent = nullptr);
+    ~EditPatientInfo();
 
     // Setters
     void setFirstName(const QString &firstName);
@@ -50,7 +50,7 @@ public:
 
 
 private:
-    Ui::editpatientinfo *ui;
+    Ui::EditPatientInfo *ui;
 };
 
 #endif // EDITPATIENTINFO_H

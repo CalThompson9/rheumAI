@@ -10,7 +10,7 @@
  * @date Mar. 21, 2025
  */
 
-#include "audiohandler.h"
+
 #include <QMediaDevices>
 #include <QAudioInput>
 #include <QAudioDevice>
@@ -22,6 +22,7 @@
 #if QT_CONFIG(permissions)
   #include <QPermission>
 #endif
+#include "audiohandler.h"
 
 AudioHandler *AudioHandler::instance = nullptr;
 

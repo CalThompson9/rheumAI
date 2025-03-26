@@ -14,33 +14,16 @@
  * @date Mar. 1, 2025
  */
 
-#include "windowbuilder.h"
+
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QScrollArea>
 #include <QPixmap>
+#include "windowbuilder.h"
 
-/**
- * @name setupUI
- * @brief Builds the application's main user interface
- * @details Includes initializing UI elements, layout, and styling
- * @param[in,out] centralWidget: Central widget displaying `mainLayout`
- *  @param[in,out] btnConnectDevice: "Connect Device" button
- *  @param[in,out] btnSettings: "Settings" button
- *  @param[in,out] lblTitle: Window title
- *  @param[in,out] lblPatientName: Patient's name
- *  @param[in,out] comboSelectPatient: Dropdown menu to select patient
- *  @param[in,out] btnRecord: "Record" button
- *  @param[in,out] btnSummarize: "Summarize" button
- *  @param[in,out] selectSummaryLayout: Dropdown menu to select summary layout format
- *  @param[in,out] summarySection: Displays the LLM-generated summary
- *  @param[in,out] mainLayout: Main layout which contains all UI elements
- *  @param[in,out] btnAddPatient: "Add Patient" button
- *  @param[in,out] btnArchivePatient: "Remove Patient" button
- *  @param[in,out] toggleSwitch: Toggle switch to show archived summaries
- */
+
 // ==================== Define button styles ====================
 const QString WindowBuilder::blueButtonStyle =
     "QPushButton {"
@@ -117,7 +100,27 @@ const QString WindowBuilder::disabledButtonStyle =
     "font-size: 12px;"
     "} ";
 
-// ==================== Window Constructor ====================
+
+/**
+ * @name setupUI
+ * @brief Builds the application's main user interface
+ * @details Includes initializing UI elements, layout, and styling
+ * @param[in,out] centralWidget: Central widget displaying `mainLayout`
+ *  @param[in,out] btnSettings: "Settings" button
+ *  @param[in,out] lblTitle: Window title
+ *  @param[in,out] lblPatientName: Patient's name
+ *  @param[in,out] comboSelectPatient: Dropdown menu to select patient
+ *  @param[in,out] btnRecord: "Record" button
+ *  @param[in,out] btnSummarize: "Summarize" button
+ *  @param[in,out] selectSummaryLayout: Dropdown menu to select summary layout format
+ *  @param[in,out] summarySection: Displays the LLM-generated summary
+ *  @param[in,out] mainLayout: Main layout which contains all UI elements
+ *  @param[in,out] btnAddPatient: "Add Patient" button
+ *  @param[in,out] btnEditPatient: "Edit Patient" button
+ *  @param[in,out] btnDeletePatient: "Delete Patient" button
+ *  @param[in,out] btnArchivePatient: "Archive Patient" button
+ *  @param[in,out] toggleSwitch: Toggle switch to show archived summaries
+ */
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnSettings,
                             QLabel *&lblTitle,
@@ -132,7 +135,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnEditPatient,
                             QPushButton *&btnDeletePatient,
                             QPushButton *&btnArchivePatient,
-                            QPushButton *&toggleSwitch) // Add toggleSwitch parameter
+                            QPushButton *&toggleSwitch)
 {
     // Create UI elements
     btnSettings = new QPushButton("Settings", centralWidget);

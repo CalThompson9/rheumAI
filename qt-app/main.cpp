@@ -1,10 +1,10 @@
-#include "mainwindow.h"
 #include <QApplication>
-#include "filehandler.h"
-#include "patientrecord.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QDebug>  // Include this for debugging
+#include "mainwindow.h"
+#include "filehandler.h"
+#include "patientrecord.h"
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);

@@ -13,6 +13,10 @@
  * @date Mar. 1, 2025
  */
 
+#include <QMessageBox>
+#include <QMediaDevices>
+#include <QAudioDevice>
+#include <QTimer>
 #include "mainwindow.h"
 #include "editpatientinfo.h"
 #include "llmclient.h"
@@ -24,10 +28,6 @@
 #include "transcript.h"
 #include "summarygenerator.h"
 #include "addpatientdialog.h"
-#include <QMessageBox>
-#include <QMediaDevices>
-#include <QAudioDevice>
-#include <QTimer>
 
 /**
  * @name MainWindow (constructor)
@@ -524,7 +524,7 @@ void MainWindow::on_editPatientButton_clicked()
 
     PatientRecord existing = FileHandler::getInstance()->loadPatientRecord(patientID);
 
-    editpatientinfo dialog(this);
+    EditPatientInfo dialog(this);
     dialog.setFirstName(existing.getFirstName());
     dialog.setLastName(existing.getLastName());
     dialog.setDateOfBirth(existing.getDateOfBirth());
