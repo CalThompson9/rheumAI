@@ -50,26 +50,9 @@ MainWindow::MainWindow(QWidget *parent)
                            mainLayout, btnAddPatient, btnEditPatient, btnDeletePatient, btnArchivePatient,
                            toggleSwitch); // Pass toggleSwitch to WindowBuilder
 
-    // Add summary layout options
-    summaryLayoutOptions = new QMenu(this);
-    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
-    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
-    QAction *optionPlainLayout = summaryLayoutOptions->addAction("Plain Text");
-
-    selectSummaryLayout->setMenu(summaryLayoutOptions);
-    selectSummaryLayout->setText("Detailed Layout");
-
     // Connect archive mode button
     qDebug() << "🗃️ ARCHIVE MODE:" << archiveMode;
     connect(toggleSwitch, &QPushButton::clicked, this, &MainWindow::handleArchiveToggled);
-
-    // Connect selection of each option to update summary layout format
-    connect(optionDetailedLayout, &QAction::triggered, this, [=]()
-            { handleSummaryLayoutChanged(new DetailedSummaryFormatter); });
-    connect(optionConciseLayout, &QAction::triggered, this, [=]()
-            { handleSummaryLayoutChanged(new ConciseSummaryFormatter); });
-    connect(optionPlainLayout, &QAction::triggered, this, [=]()
-            { handleSummaryLayoutChanged(nullptr); });
 
     // Initialize SummaryGenerator
     summaryGenerator = new SummaryGenerator(this);
@@ -85,7 +68,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(btnSettings, &QPushButton::clicked, settings, &Settings::showSettings);
     connect(settings, &Settings::okButtonClicked, this, &MainWindow::handleSummarizeButtonClicked);
 
-    // TODO: need to set the
+    // Add summary layout options
+    summaryLayoutOptions = new QMenu(this);
+    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
+    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
+    QAction *optionPlainLayout = summaryLayoutOptions->addAction("Plain Text");
+
+    selectSummaryLayout->setMenu(summaryLayoutOptions);
+
+    // Connect selection of each option to update summary layout format
+    connect(optionDetailedLayout, &QAction::triggered, this, [=]()
+            { handleSummaryLayoutChanged(new DetailedSummaryFormatter); });
+    connect(optionConciseLayout, &QAction::triggered, this, [=]()
+            { handleSummaryLayoutChanged(new ConciseSummaryFormatter); });
+    connect(optionPlainLayout, &QAction::triggered, this, [=]()
+            { handleSummaryLayoutChanged(nullptr); });
 
     // Initialize summary layout formatter from settings
     QString defaultSummaryLayout = settings->getSummaryPreference();
@@ -341,6 +338,7 @@ void MainWindow::handleSummaryReady()
 /**
  * @name loadPatientsIntoDropdown
  * @brief Handles adding a new patient record
+ * @return Returns false if the Patients directory is empty
  */
 bool MainWindow::loadPatientsIntoDropdown()
 {
@@ -366,12 +364,13 @@ bool MainWindow::loadPatientsIntoDropdown()
     }
 
     qDebug() << "Loaded patients into dropdown.";
-    return empty;
+    return !empty;
 }
 
 /**
  * @name loadArchivedPatientsIntoDropdown
  * @brief Handles loading archived patients into the dropdown
+ * @return Returns false if the archived patients directory is empty.
  */
 bool MainWindow::loadArchivedPatientsIntoDropdown()
 {
@@ -397,7 +396,7 @@ bool MainWindow::loadArchivedPatientsIntoDropdown()
     }
 
     qDebug() << "Loaded archived patients into dropdown.";
-    return empty;
+    return !empty;
 }
 
 /**
@@ -502,8 +501,7 @@ void MainWindow::on_addPatientButton_clicked()
         comboSelectPatient->addItem(displayName, patientID);
         qDebug() << "New patient added: " << patientID << " - " << displayName;
 
-        // Refresh dropdown
-        checkDropdownEmpty();
+        checkDropdownEmpty(); // Refresh UI
         viewPatient();
     }
 }
@@ -621,8 +619,9 @@ void MainWindow::handleArchiveToggled()
         toggleSwitch->setText("Show All Active Patients");
         btnArchivePatient->setText("Unarchive Patient");
 
-        viewPatient();
+        viewPatient(); // Update Patient Info Label
 
+        // Disable ADD, EDIT, RECORD, SUMMARIZE buttons
         btnAddPatient->setEnabled(false);
         btnEditPatient->setEnabled(false);
         btnRecord->setEnabled(false);
@@ -641,6 +640,7 @@ void MainWindow::handleArchiveToggled()
 
         viewPatient();
 
+        // Re-enable ADD, EDIT, RECORD, SUMMARIZE buttons
         btnAddPatient->setEnabled(true);
         btnEditPatient->setEnabled(true);
         btnRecord->setEnabled(true);
@@ -662,41 +662,49 @@ void MainWindow::handleArchiveToggled()
  */
 void MainWindow::checkDropdownEmpty() {
 
-    bool empty;
-    if (archiveMode) empty = loadArchivedPatientsIntoDropdown();
-    else             empty = loadPatientsIntoDropdown();
+    bool notEmpty;
+    if (archiveMode) notEmpty = loadArchivedPatientsIntoDropdown();
+    else             notEmpty = loadPatientsIntoDropdown();
 
-    if (empty) // Folder now empty
+    if (!notEmpty) // Dropdown has been emptied
     {
         lblPatientName->setText("Name: \nDOB: \nPhone: \nEmail: \nAddress: \nProvince: \nCountry: ");
-        btnEditPatient->setEnabled(false);
+
+        // Disable all patient actions except for ADD
         btnDeletePatient->setEnabled(false);
         btnArchivePatient->setEnabled(false);
-        btnEditPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+
         btnDeletePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
         btnArchivePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
 
-        if (!archiveMode) { // Prevent Record & Summarize, when there are no patients
+        // Only need to disable EDIT, RECORD, SUMMARIZE in active mode (avoiding redundancy)
+        if (!archiveMode) {
+            btnEditPatient->setEnabled(false);
             btnRecord->setEnabled(false);
             btnSummarize->setEnabled(false);
+
+            btnEditPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
             btnRecord->setStyleSheet(WindowBuilder::disabledButtonStyle);
             btnSummarize->setStyleSheet(WindowBuilder::disabledButtonStyle);
         }
     }
-    else // Folder NOT empty anymore
+    else // Dropdown no longer empty
     {
         btnDeletePatient->setEnabled(true);
         btnArchivePatient->setEnabled(true);
+
         btnDeletePatient->setStyleSheet(WindowBuilder::redButtonStyle);
         btnArchivePatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
 
+        // Only re-enable EDIT, RECORD, SUMMARIZE in active mode
         if (!archiveMode) {
+            btnEditPatient->setEnabled(true);
             btnRecord->setEnabled(true);
             btnSummarize->setEnabled(true);
-            btnEditPatient->setEnabled(true);
+
+            btnEditPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
             btnRecord->setStyleSheet(WindowBuilder::blueButtonStyle);
             btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
-            btnEditPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
         }
     }
 }
@@ -730,9 +738,43 @@ void MainWindow::on_patientSelected(int index)
         currentTranscriptText.clear();
     }
 
-    // Load the structured summary
+    // Load the structured summary according to settings->getSummaryLayout()
     qDebug() << "Attempting to load summary for patient ID: " << patientID;
     QString savedSummaryText = FileHandler::getInstance()->loadSummaryText(patientID);
+
+    qDebug() << "============\n";
+
+    QString defaultLayout = settings->getSummaryPreference();
+    qDebug() << "Reverting to user summary layout preference:" << defaultLayout;
+
+    // Delete children of current summary layout.
+    QLayoutItem *child;
+    while ((child = summarySection->takeAt(0)) != nullptr) {
+        if (child->widget()) {
+            child->widget()->deleteLater();
+        }
+        delete child;
+    }
+
+    // Revert summary layout to user summary layout preference.
+    if (defaultLayout.contains("Detailed Layout")) {
+        summaryFormatter = new DetailedSummaryFormatter;
+        selectSummaryLayout->setText("Detailed Layout");
+    } else if (defaultLayout.contains("Concise Layout")) {
+        summaryFormatter = new ConciseSummaryFormatter;
+        selectSummaryLayout->setText("Concise Layout");
+    } else {
+        qDebug() << "Unrecognized user summary layout. Defaulting to Detailed Layout.";
+        summaryFormatter = new DetailedSummaryFormatter;
+        selectSummaryLayout->setText("Detailed Layout");
+    }
+
+    QString currentLayout = selectSummaryLayout->text();
+    for (QAction *layoutAction : summaryLayoutOptions->actions()) {
+        layoutAction->setEnabled(layoutAction->text() != currentLayout);
+    }
+
+    qDebug() << "\n============";
 
     if (!savedSummaryText.isEmpty())
     {
