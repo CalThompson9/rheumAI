@@ -92,6 +92,77 @@ QString FileHandler::readTranscript()
     return content;
 }
 
+
+
+void FileHandler::saveOrAppendRawTranscript(int patientID, const Transcript &transcript) {
+    QString folderPath = "Patients/" + QString::number(patientID);
+    QDir().mkpath(folderPath);  // Ensure folder exists
+
+    QString currentDate = QDate::currentDate().toString("yyyyMMdd");
+    QString filePath = folderPath + "/raw_transcript_" + currentDate + ".txt";
+
+    // Read existing file if it exists
+    QString fileContents;
+    QFile file(filePath);
+    if (file.exists()) {
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            fileContents = in.readAll();
+            file.close();
+        }
+    }
+
+    // Append new content
+    fileContents += "\n---\n";
+    fileContents += "Timestamp: " + transcript.getTimestamp().toString("hh:mm:ss") + "\n\n";
+    fileContents += transcript.getContent();
+
+    // Write back the full updated content
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << fileContents;
+        file.close();
+        qDebug() << "Raw transcript appended to file: " << filePath;
+    } else {
+        qDebug() << "Failed to open file for writing: " << filePath;
+    }
+
+    // 🔁 Update transcript_raw.txt with full daily content for summary
+    QString latestTranscriptPath = folderPath + "/transcript_raw.txt";
+    QFile latestFile(latestTranscriptPath);
+    if (latestFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream latestOut(&latestFile);
+        latestOut << fileContents;
+        latestFile.close();
+        qDebug() << "Updated transcript_raw.txt for summarizer.";
+    } else {
+        qDebug() << "Failed to update transcript_raw.txt!";
+    }
+}
+
+
+
+// void FileHandler::saveOrAppendRawTranscript(int patientID, const Transcript &transcript) {
+//     QString folderPath = "Patients/" + QString::number(patientID);
+//     QDir().mkpath(folderPath); // Ensure folder exists
+
+//     QString dateStr = QDate::currentDate().toString("yyyyMMdd");
+//     QString filePath = folderPath + "/raw_transcript_" + dateStr + ".txt";
+
+//     QFile file(filePath);
+//     if (file.open(QIODevice::Append | QIODevice::Text)) {
+//         QTextStream out(&file);
+//         out << "Timestamp: " << transcript.getTimestamp().toString("hh:mm:ss") << "\n";
+//         out << transcript.getContent() << "\n\n";
+//         file.close();
+//         qDebug() << "Raw transcript appended to: " << filePath;
+//     } else {
+//         qDebug() << "Failed to open transcript file for appending: " << filePath;
+//     }
+// }
+
+
+
 /**
  * @brief FileHandler::loadSummaryText
  * @param patientID

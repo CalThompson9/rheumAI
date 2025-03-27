@@ -32,7 +32,8 @@ AudioHandler *AudioHandler::instance = nullptr;
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
-    apiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
+    ///apiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
+    apiKey = "AIzaSyBV63tBSl7HUCC149tEXKqfTW0j57hS_8g";
     openAIApiKey = getAPIKey("OPENAI_AUDIO_API_KEY:");
     qDebug() << "Google API Key:" << apiKey;
     qDebug() << "OpenAI API Key:" << openAIApiKey;

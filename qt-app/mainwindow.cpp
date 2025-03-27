@@ -107,30 +107,39 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     // Connect "Record" button to start and stop recording
-    connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
-            {
+    connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]() {
         static bool isRecording = false;
-        if (isRecording)
-        {
+        if (isRecording) {
             audioHandler->stopRecording();
-            QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
 
-            // Construct absolute path to output.wav
+            QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
             QString filePath = QDir(projectDir).filePath("output.wav");
 
-            // Getting trancription and saving it to file
+            QVariant patientData = comboSelectPatient->currentData();
+            if (!patientData.isValid()) {
+                QMessageBox::warning(this, "No Patient Selected", "Please select a patient before recording.");
+                return;
+            }
+            int selectedPatientID = patientData.toInt();
+            patientID = selectedPatientID;
+
             Transcript currentTranscription = audioHandler->transcribe(filePath);
             qDebug() << "Transcription: " << currentTranscription.getContent();
-            FileHandler::getInstance()->saveTranscript(patientID, currentTranscription.getContent());
+
+            // 🔹 Overwrite 'transcript_raw.txt' for summarizer
+            FileHandler::getInstance()->saveTranscript(selectedPatientID, currentTranscription.getContent());
+
+            // 🔹 Append to timestamped raw log
+            FileHandler::getInstance()->saveOrAppendRawTranscript(selectedPatientID, currentTranscription);
 
             btnRecord->setText("Start Recording");
-        }
-        else
-        {
+        } else {
             audioHandler->startRecording("output.wav");
             btnRecord->setText("Stop Recording");
         }
-        isRecording = !isRecording; });
+        isRecording = !isRecording;
+    });
+
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
@@ -595,7 +604,7 @@ void MainWindow::on_archivePatientButton_clicked()
 
     if (archiveMode)
     {                                                                                                  // ARCHIVE MODE --> Handle UNARCHIVING
-        FileHandler::getInstance()->unarchivePatientRecord(comboSelectPatient->currentData().toInt()); // Unarchive Patient 
+        FileHandler::getInstance()->unarchivePatientRecord(comboSelectPatient->currentData().toInt()); // Unarchive Patient
     }
     else
     {                                                                                                // ACTIVE MODE --> Handle ARCHIVING
