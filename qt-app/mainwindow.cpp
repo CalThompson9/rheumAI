@@ -124,11 +124,13 @@ MainWindow::MainWindow(QWidget *parent)
             FileHandler::getInstance()->saveTranscript(patientID, currentTranscription.getContent());
 
             btnRecord->setText("Start Recording");
+            comboSelectPatient->setEnabled(true);  // Enable switching between patients after transcription is finished
         }
         else
         {
             audioHandler->startRecording("output.wav");
             btnRecord->setText("Stop Recording");
+            comboSelectPatient->setEnabled(false);  // Disable switching between patients while recording/transcription is in progress
         }
         isRecording = !isRecording; });
 
