@@ -27,13 +27,9 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
     : QObject(p),
       mainWindow(p),
       llmClient(llm),
-      audioHandlerClient(audio),
-      llmKey(llm->apiKey),
-      audioKey(audio->apiKey),
-      openAIAudioKey(audio->openAIApiKey)
+      audioHandlerClient(audio)
 {
-    // Load summary format from configuration file keyFile.txt
-    summaryLayoutPreference = "";
+    // Load default settings from configuration file keyFile.txt
     QFile file("keyFile.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "keyFile.txt not found.";
@@ -42,7 +38,23 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
-        if (line.startsWith("SUMMARY_LAYOUT_PREFERENCE:")) {
+        // Gemini API key
+        if (line.startsWith("GEMINI_API_KEY:")) {
+            file.close();
+            llmKey = line.mid(QString("GEMINI_API_KEY:").length()).trimmed();
+        }
+        // Google audio API key
+        else if (line.startsWith("GOOGLE_AUDIO_API_KEY:")) {
+            file.close();
+            audioKey = line.mid(QString("GOOGLE_AUDIO_API_KEY:").length()).trimmed();
+        }
+        // OpenAi audio API key
+        else if (line.startsWith("OPENAI_AUDIO_API_KEY:")) {
+            file.close();
+            openAIAudioKey = line.mid(QString("OPENAI_AUDIO_API_KEY:").length()).trimmed();
+        }
+        // Summary layout preference
+        else if (line.startsWith("SUMMARY_LAYOUT_PREFERENCE:")) {
             summaryLayoutPreference = line.mid(QString("SUMMARY_LAYOUT_PREFERENCE:").length()).trimmed();
         }
     }
