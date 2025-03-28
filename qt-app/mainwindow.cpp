@@ -103,15 +103,29 @@ MainWindow::MainWindow(QWidget *parent)
 
             QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
             QString filePath = QDir(projectDir).filePath("output.wav");
+
+            QVariant patientData = comboSelectPatient->currentData();
+            if (!patientData.isValid()) {
+                QMessageBox::warning(this, "No Patient Selected", "Please select a patient before recording.");
+                return;
+            }
+            int selectedPatientID = patientData.toInt();
+            patientID = selectedPatientID;
+
             loadingDialog->show();
-            // Getting trancription and saving it to file
+
             Transcript currentTranscription = audioHandler->transcribe(filePath);
             qDebug() << "Transcription: " << currentTranscription.getContent();
-            
-            FileHandler::getInstance()->saveTranscript(patientID, currentTranscription.getContent());
-            loadingDialog->hide();
+
+            //  Overwrite 'transcript_raw.txt' for summarizer
+            FileHandler::getInstance()->saveTranscript(selectedPatientID, currentTranscription.getContent());
+
+            //  Append to timestamped raw log
+            FileHandler::getInstance()->saveOrAppendRawTranscript(selectedPatientID, currentTranscription);
 
             btnRecord->setText("Start Recording");
+
+            loadingDialog->hide();
         } else {
             audioHandler->startRecording("output.wav");
             btnRecord->setText("Stop Recording");
