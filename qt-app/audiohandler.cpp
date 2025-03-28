@@ -39,8 +39,6 @@ AudioHandler *AudioHandler::instance = nullptr;
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
-    googleSpeechApiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
-    openAIApiKey = getAPIKey("OPENAI_AUDIO_API_KEY:");
     qDebug() << "Google API Key:" << googleSpeechApiKey;
     qDebug() << "OpenAI API Key:" << openAIApiKey;
 
@@ -479,20 +477,11 @@ void AudioHandler::playRecording(const QString &filePath)
 }
 
 /**
- * @name getAPIKey
- * @brief Retrieves the API key from the key file
- * @details This function reads the key file and extracts the API key
- * based on the provided key prefix.
- * It searches for the line that starts with the key prefix and returns the key value.
- * @note The key file is expected to be in the format "KEY_NAME:KEY_VALUE".
- * @param[in] keyPrefix: Prefix of the key to search for
- * @return API key as a string
- * @author Callum Thompson
- * @author Andres Pedreros Castro
+ * TODO: Documentation
  */
 void AudioHandler::setGoogleApiKey(const QString& key)
 {
-    apiKey = key;
+    googleSpeechApiKey = key;
 }
 
 /**

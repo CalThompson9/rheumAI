@@ -54,16 +54,16 @@ Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
         }
     }
 
-    // Set API keys from keyFile
-    LLMClient::getInstance()->setApiKey(llmKey);
-    AudioHandler::getInstance()->setGoogleApiKey(audioKey);
-    AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
-
     qDebug() << "Loaded settings:";
     qDebug() << "  GEMINI_API_KEY: " << llmKey;
     qDebug() << "  GOOGLE_AUDIO_API_KEY:" << audioKey;
     qDebug() << "  OPENAI_AUDIO_API_KEY:" << openAIAudioKey;
     qDebug() << "  SUMMARY_LAYOUT_PREFERENCE:" << summaryLayoutPreference;
+
+    // Set API keys from keyFile
+    LLMClient::getInstance()->setApiKey(llmKey);
+    AudioHandler::getInstance()->setGoogleApiKey(audioKey);
+    AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
 }
 
 /**

@@ -60,7 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialize settings
     settings = Settings::getInstance(this);
     connect(btnSettings, &QPushButton::clicked, settings, &Settings::showSettings);
-    connect(settings, &Settings::okButtonClicked, this, &MainWindow::handleSummarizeButtonClicked);
+    //connect(settings, &Settings::okButtonClicked, this,
+    //&MainWindow::handleSummarizeButtonClicked);  // TODO: Remove
 
     // Add summary layout options
     summaryLayoutOptions = new QMenu(this);

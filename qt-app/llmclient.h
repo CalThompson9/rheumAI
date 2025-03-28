@@ -37,7 +37,6 @@ public:
     QString getAPIKey();
     static LLMClient *getInstance();
     void setApiKey(const QString& key);
-    static LLMClient *getInstance();
     friend class Settings;
 
 signals:
