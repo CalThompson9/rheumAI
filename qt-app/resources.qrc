@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>sample_transcript.txt</file>
         <file>llmprompt.txt</file>
         <file>logo.png</file>
+        <file>spinner.gif</file>
     </qresource>
 </RCC>

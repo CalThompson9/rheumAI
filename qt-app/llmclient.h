@@ -20,12 +20,22 @@
 #include <QDebug>
 #include <QFile>
 
+/**
+ * @class LLMClient
+ * @brief A class to handle communication with a large language model (LLM) API.
+ * @details This class is responsible for sending requests to the LLM API and receiving responses. 
+ * It uses the QNetworkAccessManager class to handle network operations and emits signals when responses are received.
+ * The class also manages the API key and user prompt for the requests.
+ * @author Callum Thompson
+ */
 class LLMClient : public QObject
 {
     Q_OBJECT
 
 public:
     void sendRequest(const QString &prompt);
+    QString getAPIKey();
+    static LLMClient *getInstance();
     void setApiKey(const QString& key);
     static LLMClient *getInstance();
     friend class Settings;
@@ -37,6 +47,7 @@ private slots:
     void handleNetworkReply(QNetworkReply *reply);
 
 private:
+    static LLMClient *instance; // Singleton instance
     explicit LLMClient();
     LLMClient(const LLMClient &) = delete;
     LLMClient &operator=(const LLMClient &) = delete;

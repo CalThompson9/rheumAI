@@ -29,6 +29,15 @@
 #include "audiohandler.h"
 #include "windowbuilder.h"
 
+/**
+ * @class Settings
+ * @brief The Settings class provides a dialog for configuring application settings.
+ * @details This class allows the user to set API keys for LLM and audio services,
+ *          as well as select a summary layout preference. It uses a singleton pattern
+ *          to ensure that only one instance of the settings dialog is created.
+ * @note The settings are stored in a configuration file for persistence across sessions.
+ * @author Thomas Llamazon
+ */
 class Settings : public QObject {
     Q_OBJECT
 

@@ -1,7 +1,11 @@
 /**
  * @file patientrecord.h
  * @brief Declaration of PatientRecord class
- * 
+ * @details This class represents a patient's record in the system. It includes
+ *          personal information such as name, date of birth, contact details,
+ *          and health card information. The class provides methods to access
+ *          and modify these details, as well as to convert the record to and
+ *          from JSON format for easy storage and retrieval.
  * @author Kalundi Serumaga (kserumag@uwo.ca)
  * @date Mar. 16, 2025
  */
@@ -12,6 +16,15 @@
 #include <QString>
 #include <QJsonObject>
 
+/**
+ * @class PatientRecord
+ * @brief Represents a patient's record in the system.
+ * @details This class contains personal information such as name, date of birth,
+ *         contact details, and health card information. It provides methods to
+ *        access and modify these details, as well as to convert the record to
+ *       and from JSON format for easy storage and retrieval.
+ * @author Kalundi Serumaga
+ */
 class PatientRecord {
 private:
     int patientID;

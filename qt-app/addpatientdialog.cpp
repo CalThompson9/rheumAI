@@ -1,15 +1,16 @@
 /**
  * @file addpatientdialog.cpp
- * @brief Definition of AddPatientDialog class
- * 
- * Dialog window that appears when the user adds a new patient. Prompts the user
- * to enter the patient's details, including their name and date of birth.
- * 
+ * @brief Dialog window for adding a new patient
+ * @details This file contains the implementation of the AddPatientDialog class, 
+ * which provides a user interface for entering patient information.
+ * The dialog includes fields for first name, last name, date of birth, health card, 
+ * email, phone number, address, postal code, province, and country.
  * @author Kalundi Serumaga (kserumag@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 16, 2025
  */
 
+// include "addpatientdialog.h"
 #include <QMessageBox>
 #include "addpatientdialog.h"
 #include "ui_addpatientdialog.h"
@@ -17,6 +18,9 @@
 /**
  * @name AddPatientDialog (constructor)
  * @brief Initializes a new dialog box to add a new patient
+ * @details Sets up the user interface and loads the logo image. 
+ * The logo is scaled to fit within the label.
+ * @author Kalundi Serumaga
  * @param[in] parent: Qt parent widget
  */
 AddPatientDialog::AddPatientDialog(QWidget *parent)
@@ -29,6 +33,9 @@ AddPatientDialog::AddPatientDialog(QWidget *parent)
 /**
  * @name ~AddPatientDialog (destructor)
  * @brief Cleans up dynamically allocated user interface
+ * @details Deletes the user interface object to free memory.
+ * @author Kalundi Serumaga
+ * @author Joelene Hales
  */
 AddPatientDialog::~AddPatientDialog() {
     delete ui;
@@ -37,6 +44,9 @@ AddPatientDialog::~AddPatientDialog() {
 /**
  * @name getFirstName
  * @brief Gets the string entered in the first name field of the dialog box
+ * @details Trims any leading or trailing spaces from the input. 
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered first name
  */
 QString AddPatientDialog::getFirstName() const {
@@ -46,6 +56,9 @@ QString AddPatientDialog::getFirstName() const {
 /**
  * @name getLastName
  * @brief Gets the string entered in the last name field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered last name
  */
 QString AddPatientDialog::getLastName() const {
@@ -55,6 +68,9 @@ QString AddPatientDialog::getLastName() const {
 /**
  * @name getDateOfBirth
  * @brief Gets the string entered in the date of birth field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered date of birth
  */
 QString AddPatientDialog::getDateOfBirth() const {
@@ -64,6 +80,9 @@ QString AddPatientDialog::getDateOfBirth() const {
 /**
  * @name getHealthCard
  * @brief Gets the string entered in the health card field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered health card number
  */
 QString AddPatientDialog::getHealthCard() const {
@@ -73,6 +92,9 @@ QString AddPatientDialog::getHealthCard() const {
 /**
  * @name getEmail
  * @brief Gets the string entered in the email field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered email
  */
 QString AddPatientDialog::getEmail() const {
@@ -82,6 +104,9 @@ QString AddPatientDialog::getEmail() const {
 /**
  * @name getPhoneNumber
  * @brief Gets the string entered in the phone number field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered phone number
  */
 QString AddPatientDialog::getPhoneNumber() const {
@@ -91,6 +116,9 @@ QString AddPatientDialog::getPhoneNumber() const {
 /**
  * @name getAddress
  * @brief Gets the string entered in the address field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered address
  */
 QString AddPatientDialog::getAddress() const {
@@ -100,6 +128,9 @@ QString AddPatientDialog::getAddress() const {
 /**
  * @name getPostalCode
  * @brief Gets the string entered in the postal code field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered postal code
  */
 QString AddPatientDialog::getPostalCode() const {
@@ -109,6 +140,9 @@ QString AddPatientDialog::getPostalCode() const {
 /**
  * @name getProvince
  * @brief Gets the string entered in the province field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered province
  */
 QString AddPatientDialog::getProvince() const {
@@ -118,6 +152,9 @@ QString AddPatientDialog::getProvince() const {
 /**
  * @name getCountry
  * @brief Gets the string entered in the country field of the dialog box
+ * @details Trims any leading or trailing spaces from the input.
+ * This is useful for ensuring that the input is clean and does not contain unnecessary spaces.
+ * @author Kalundi Serumaga
  * @return The entered country
  */
 QString AddPatientDialog::getCountry() const {
@@ -127,6 +164,12 @@ QString AddPatientDialog::getCountry() const {
 /**
  * @name accept
  * @brief Validate entered data, submit, and close the dialog window
+ * @details This function is called when the user clicks the "OK" button.
+ * It checks if all fields are filled in and shows a warning message if any field is empty.
+ * If all fields are filled, it accepts the dialog and closes it.
+ * @author Kalundi Serumaga
+ * @author Joelene Hales
+ * @return void
  */
 void AddPatientDialog::accept() {
     // Validate inputs

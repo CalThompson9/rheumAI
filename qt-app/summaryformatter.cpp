@@ -1,26 +1,27 @@
 /**
  * @file summaryformatter.cpp
  * @brief Definition of SummaryFormatter class
- * 
+ *
  * Provides an interface for all summary layout formats.
- * 
+ *
  * @author Joelene Hales (jhales5@uwo.ca)
  * @author Callum Thompson (cthom226@uwo.ca)
  * @date Mar. 7, 2025
  */
 
-#include <QWidget>
-#include <QLabel>
 #include "summaryformatter.h"
 
 /**
  * @name clearLayout
  * @brief Clears all layout elements
+ * @details Deletes all widgets and items in the provided layout.
  * @param[in, out] layout: Layout to be cleared
+ * @author Joelene Hales
  */
-void SummaryFormatter::clearLayout(QVBoxLayout* layout) const
+void SummaryFormatter::clearLayout(QVBoxLayout *layout) const
 {
-    if (!layout) {  // Ensure layout exists before accessing it
+    if (!layout)
+    { // Ensure layout exists before accessing it
         return;
     }
 
@@ -28,19 +29,21 @@ void SummaryFormatter::clearLayout(QVBoxLayout* layout) const
     {
         if (QWidget *widget = item->widget())
         {
-            widget->deleteLater();  // Mark for deletion when safe
+            widget->deleteLater(); // Mark for deletion when safe
         }
-        delete item;  // Destroy item and free memory
+        delete item; // Destroy item and free memory
     }
 }
 
 /**
  * @name formatBoldText
  * @brief Formats bold text in the summary
+ * @details Replaces **bold text** with <b>bold text</b> and preserves new lines.
  * @param[in] text: Text to format
  * @return Formatted text with bold tags
+ * @author Callum Thompson
  */
-QString SummaryFormatter::formatBoldText(const QString& text) const
+QString SummaryFormatter::formatBoldText(const QString &text) const
 {
     QString formattedText = text;
 
@@ -59,12 +62,14 @@ QString SummaryFormatter::formatBoldText(const QString& text) const
  * @brief Adds a section to the summary layout
  * @param[in] section: Section content
  * @param[in, out] summaryLayout: Layout to add section to
+ * @details Creates a label and text browser for the section, sets styling, and adds them to the layout.
+ * @author Callum Thompson
  */
-void SummaryFormatter::addSection(const Section& section, QVBoxLayout* summaryLayout) const
+void SummaryFormatter::addSection(const Section &section, QVBoxLayout *summaryLayout) const
 {
     // Create layout elements
-    QLabel* sectionLabel = new QLabel(section.title);
-    QTextBrowser* sectionText = new QTextBrowser();
+    QLabel *sectionLabel = new QLabel(section.title);
+    QTextBrowser *sectionText = new QTextBrowser();
 
     // Set styling
     sectionText->setHtml(formatBoldText(section.content)); // Use HTML formatting. Format any bold elements.
@@ -75,4 +80,3 @@ void SummaryFormatter::addSection(const Section& section, QVBoxLayout* summaryLa
     summaryLayout->addWidget(sectionLabel);
     summaryLayout->addWidget(sectionText);
 }
-

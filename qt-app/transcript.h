@@ -12,6 +12,16 @@
 #include <QTime>
 #include <QString>
 
+/**
+ * @class Transcript
+ * @brief Class to represent a transcript of a patient-doctor interaction
+ * @details This class stores the timestamp and content of a transcript.
+ * It provides methods to access the timestamp and content.
+ * The class is designed to be used in a Qt application and inherits from QObject.
+ * It is used to manage the transcript data and provide a structured representation
+ * of the transcript.
+ * @author Joelene Hales
+ */
 class Transcript
 {
 

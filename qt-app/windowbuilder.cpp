@@ -14,15 +14,7 @@
  * @date Mar. 1, 2025
  */
 
-
-#include <QDialog>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QScrollArea>
-#include <QPixmap>
 #include "windowbuilder.h"
-
 
 // ==================== Define button styles ====================
 const QString WindowBuilder::blueButtonStyle =
@@ -100,7 +92,6 @@ const QString WindowBuilder::disabledButtonStyle =
     "font-size: 12px;"
     "} ";
 
-
 /**
  * @name setupUI
  * @brief Builds the application's main user interface
@@ -120,6 +111,11 @@ const QString WindowBuilder::disabledButtonStyle =
  *  @param[in,out] btnDeletePatient: "Delete Patient" button
  *  @param[in,out] btnArchivePatient: "Archive Patient" button
  *  @param[in,out] toggleSwitch: Toggle switch to show archived summaries
+ * @author Callum Thompson
+ * @author Andres Pedreros Castro
+ * @author Joelene Hales
+ * @author Kalundi Serumaga
+ * @author Thomas Llamzon
  */
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnSettings,
@@ -164,13 +160,12 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     lblTitle->setPixmap(logoPixmap.scaled(300, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
     lblPatientName->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    lblPatientName->setContentsMargins(15, 0, 0, 0);  // Optional: padding from the left
+    lblPatientName->setContentsMargins(15, 0, 0, 0); // Optional: padding from the left
     lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
-    lblPatientName->setFixedWidth(250);  // or use setMaximumWidth if you want flexibility
+    lblPatientName->setFixedWidth(250); // or use setMaximumWidth if you want flexibility
     lblPatientName->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    lblPatientName->setTextInteractionFlags(Qt::TextSelectableByMouse);  // Optional, allows copying
-    lblPatientName->setToolTip(lblPatientName->text());  // Show full info on hover
-
+    lblPatientName->setTextInteractionFlags(Qt::TextSelectableByMouse); // Optional, allows copying
+    lblPatientName->setToolTip(lblPatientName->text());                 // Show full info on hover
 
     btnSettings->setStyleSheet(greyButtonStyle);
     btnSettings->setFixedWidth(150);
@@ -179,7 +174,6 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnDeletePatient->setStyleSheet(redButtonStyle);
     btnArchivePatient->setStyleSheet(orangeButtonStyle);
     btnEditPatient->setStyleSheet(blueButtonStyle);
-
 
     btnRecord->setStyleSheet(blueButtonStyle);
     QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord]()
@@ -199,11 +193,11 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
 
     // Top bar layout
     topBarLayout->addWidget(lblPatientName, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    topBarLayout->addWidget(lblTitle, 0, 1, Qt::AlignHCenter);  // Center column
+    topBarLayout->addWidget(lblTitle, 0, 1, Qt::AlignHCenter); // Center column
     topBarLayout->addWidget(btnSettings, 0, 2, Qt::AlignRight | Qt::AlignVCenter);
     topBarLayout->setColumnStretch(0, 1);
     topBarLayout->setColumnStretch(1, 0);
-    topBarLayout->setColumnStretch(2, 1);    
+    topBarLayout->setColumnStretch(2, 1);
     // Padding on left
     topBarLayout->setContentsMargins(0, 0, 0, 0);
 

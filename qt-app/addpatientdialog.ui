@@ -330,4 +330,17 @@
    </hints>
   </connection>
  </connections>
+ <tabstops>
+ <tabstop>firstNameInput</tabstop>
+ <tabstop>lastNameInput</tabstop>
+ <tabstop>emailInput</tabstop>
+ <tabstop>phoneNumberInput</tabstop>
+ <tabstop>healthCardInput</tabstop>
+ <tabstop>addressInput</tabstop>
+ <tabstop>postalCodeInput</tabstop>
+ <tabstop>provinceInput</tabstop>
+ <tabstop>countryInput</tabstop>
+ <tabstop>dobInput</tabstop>
+</tabstops>
+
 </ui>

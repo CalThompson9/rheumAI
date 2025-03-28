@@ -9,7 +9,6 @@
  * @date Mar. 12, 2025
  */
 
-#include <QDebug>
 #include "summarygenerator.h"
 
 /**
@@ -18,6 +17,7 @@
  * @details Sends the transcript to the LLM and stores the structured response.
  * @param[in] transcript: Transcript to summarize
  * @param[in] parent: Parent object in Qt application
+ * @author Joelene Hales
  */
 SummaryGenerator::SummaryGenerator(QObject *parent)
     : QObject(parent)
@@ -35,6 +35,7 @@ SummaryGenerator::SummaryGenerator(QObject *parent)
  * @param[in] prompt: Prompt to send to the LLMClient
  * @details Sends a request to the LLMClient with the given prompt
  * and stores the response in the summary object
+ * @author Callum Thompson
  */
 void SummaryGenerator::sendRequest(Transcript &prompt)
 {
@@ -44,7 +45,11 @@ void SummaryGenerator::sendRequest(Transcript &prompt)
 /**
  * @name handleLLMResponse
  * @brief Handles the LLM response and updates Summary object
+ * @details This function is called when the LLMClient emits a responseReceived signal.
+ * It extracts the relevant sections from the LLM response and updates the summary object.
+ * The sections are extracted based on the expected format of the LLM response.
  * @param[in] response: Full LLM-generated summary
+ * @author Callum Thompson
  */
 void SummaryGenerator::handleLLMResponse(const QString &response)
 {
@@ -60,10 +65,15 @@ void SummaryGenerator::handleLLMResponse(const QString &response)
 /**
  * @name setSummary
  * @brief Sets the summary object with the given text
+ * @details Sets the summary object with the given text
+ * The summary object is cleared before setting the new text.
  * @param[in] newSummary: New summary object to set
+ * @author Callum Thompson
+ * @author Joelene Hales
  */
-void SummaryGenerator::setSummary(const Summary& newSummary) {
-    summary.clear();  // Clear the current summary
+void SummaryGenerator::setSummary(const Summary &newSummary)
+{
+    summary.clear(); // Clear the current summary
     summary.setIntervalHistory(newSummary.getIntervalHistory());
     summary.setPhysicalExamination(newSummary.getPhysicalExamination());
     summary.setCurrentStatus(newSummary.getCurrentStatus());
@@ -74,16 +84,21 @@ void SummaryGenerator::setSummary(const Summary& newSummary) {
 /**
  * @name setSummaryText
  * @brief Sets the summary object with the given text
+ * @details Sets the summary object with the given text
+ * The summary object is cleared before setting the new text.
  * @param[in] summaryText: New summary text to set
- * @details Extracts and stores the interval history, physical examination,
+ * @author Callum Thompson
+ * @author Joelene Hales
  */
-void SummaryGenerator::setSummaryText(const QString& summaryText) {
-    if (summaryText.isEmpty()) {
+void SummaryGenerator::setSummaryText(const QString &summaryText)
+{
+    if (summaryText.isEmpty())
+    {
         qDebug() << "Summary text is empty, skipping parsing.";
         return;
     }
 
-    summary.clear();  // Reset the current summary
+    summary.clear(); // Reset the current summary
 
     // Ensure LLM response follows expected structure
     summarizeIntervalHistory(summaryText);
@@ -95,12 +110,15 @@ void SummaryGenerator::setSummaryText(const QString& summaryText) {
     emit summaryReady();
 }
 
-
-
 /**
  * @name summarizeIntervalHistory
  * @brief Extracts and stores the interval history section of the summary
+ * @details This function extracts the interval history section from the LLM response
+ * and stores it in the summary object. It uses a specific search pattern to find the
+ * section header and extracts the text until the next section header.
  * @param[in] response: Full LLM-generated summary
+ * @author Callum Thompson
+ * @author Joelene Hales
  */
 void SummaryGenerator::summarizeIntervalHistory(const QString &response)
 {
@@ -110,7 +128,12 @@ void SummaryGenerator::summarizeIntervalHistory(const QString &response)
 /**
  * @name summarizePhysicalExamination
  * @brief Extracts and stores the physical examination section of the summary
+ * @details This function extracts the physical examination section from the LLM response
+ * and stores it in the summary object. It uses a specific search pattern to find the
+ * section header and extracts the text until the next section header.
  * @param[in] response: Full LLM-generated summary
+ * @author Callum Thompson
+ * @author Joelene Hales
  */
 void SummaryGenerator::summarizePhysicalExamination(const QString &response)
 {
@@ -120,7 +143,12 @@ void SummaryGenerator::summarizePhysicalExamination(const QString &response)
 /**
  * @name summarizeCurrentStatus
  * @brief Extracts and stores the current status section of the summary
+ * @details This function extracts the current status section from the LLM response
+ * and stores it in the summary object. It uses a specific search pattern to find the
+ * section header and extracts the text until the next section header.
  * @param[in] response: Full LLM-generated summary
+ * @author Callum Thompson
+ * @author Joelene Hales
  */
 void SummaryGenerator::summarizeCurrentStatus(const QString &response)
 {
@@ -130,7 +158,12 @@ void SummaryGenerator::summarizeCurrentStatus(const QString &response)
 /**
  * @name summarizePlan
  * @brief Extracts and stores the plan section of the summary
+ * @details This function extracts the plan section from the LLM response
+ * and stores it in the summary object. It uses a specific search pattern to find the
+ * section header and extracts the text until the next section header.
  * @param[in] response: Full LLM-generated summary
+ * @author Callum Thompson
+ * @author Joelene Hales
  */
 void SummaryGenerator::summarizePlan(const QString &response)
 {
@@ -140,9 +173,14 @@ void SummaryGenerator::summarizePlan(const QString &response)
 /**
  * @name extractSectionFromResponse
  * @brief Extracts a specific section from the LLM response
+ * @details This function extracts a specific section from the LLM response
+ * based on the section name provided. It uses a specific search pattern to find the
+ * section header and extracts the text until the next section header.
  * @param[in] response: Full text response from LLM
  * @param[in] sectionName: Section name to extract
  * @return Extracted text of the section
+ * @author Callum Thompson
+ * @author Joelene Hales
  */
 QString SummaryGenerator::extractSectionFromResponse(const QString &response, const QString &sectionName)
 {
@@ -170,16 +208,18 @@ QString SummaryGenerator::extractSectionFromResponse(const QString &response, co
     int endIndex = match.hasMatch() ? match.capturedStart() : response.length(); // If no match, take entire string
 
     QString extractedSection = response.mid(startIndex + searchPattern.length(), endIndex - (startIndex + searchPattern.length())).trimmed();
-    
-    qDebug() << "✅ Extracted section for " << sectionName << ":\n" << extractedSection;
+
+    qDebug() << "✅ Extracted section for " << sectionName << ":\n"
+             << extractedSection;
     return extractedSection;
 }
 
-
 /**
- * @brief getSummary
- * @brief Get the summary generated
+ * @name getSummary
+ * @brief Returns the generated summary
+ * @details This function returns the generated summary object.
  * @return Generated summary
+ * @author Joelene Hales
  */
 Summary SummaryGenerator::getSummary()
 {

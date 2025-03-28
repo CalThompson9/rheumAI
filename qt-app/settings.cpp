@@ -1,9 +1,7 @@
 /**
  * @file settings.cpp
  * @brief Definition of Settings class
- * 
- * The settings class handles user app configurations and settings menu construction.
- * 
+ * @details The settings class handles user app configurations and settings menu construction.
  * @author Thomas Llamzon (tllamazon@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 16, 2025
@@ -20,6 +18,9 @@ Settings* Settings::instance = nullptr;
  * @name Settings (constructor)
  * @brief Constructor for Settings class
  * @param parent - MainWindow
+ * @details This constructor initializes the settings object and loads the summary layout preference from a configuration file.
+ * @author Joelene Hales
+ * @author Thomas Llamzon
  */
 Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
 {
@@ -66,9 +67,14 @@ Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
 }
 
 /**
+ * @name Settings::getInstance
  * @brief Returns single static instance.
+ * @details This function creates a singleton instance of the Settings class if it doesn't already exist.
+ * @details It initializes the instance with the provided parameters and returns the instance.
  * @param parent - Main Window
  * @return Returns singleton settings object.
+ * @author Joelene Hales
+ * @author Thomas Llamzon
  */
 Settings* Settings::getInstance(QObject *parent) {
     if (!instance) {
@@ -80,6 +86,8 @@ Settings* Settings::getInstance(QObject *parent) {
 /**
  * @name Settings::showSettings
  * @brief Handles constructing the settings pop-up menu.
+ * @details This function creates a dialog window for the settings menu, allowing users to modify their preferences.
+ * @author Thomas Llamzon
  */
 void Settings::showSettings()
 {
@@ -281,7 +289,9 @@ QString Settings::readKey(const QString& keyPrefix)
 /**
  * @name setLLMKey
  * @brief Sets LLM API key and modifies key storage file for continual use.
+ * @details This function updates the LLM API key in the LLM client and stores it in a configuration file for future use.
  * @param[in] newKey: API key
+ * @author Thomas Llamzon
  */
 void Settings::setLLMKey(QString newKey) {
     LLMClient::getInstance()->setApiKey(newKey);
@@ -291,7 +301,10 @@ void Settings::setLLMKey(QString newKey) {
 /**
  * @name setAudioKey
  * @brief Sets Google audio transcriber API key and modifies key storage file for continual use.
+ * @details This function updates the audio API key in the AudioHandler client and stores it in a configuration file for future use.
+ * @details This function is used to set the API key for Google audio transcriber.
  * @param[in] newKey: API key
+ * @author Thomas Llamzon
  */
 void Settings::setAudioKey(QString newKey) {
     AudioHandler::getInstance()->setGoogleApiKey(newKey);
@@ -301,7 +314,9 @@ void Settings::setAudioKey(QString newKey) {
 /**
  * @name setOpenAIAudioKey
  * @brief Sets OpenAI Whisper audio API key and stores it persistently.
+ * @details This function updates the OpenAI audio API key in the AudioHandler client and stores it in a configuration file for future use.
  * @param[in] newKey: API key
+ * @author Thomas Llamzon
  */
 void Settings::setOpenAIAudioKey(QString newKey) {
     AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
@@ -309,8 +324,11 @@ void Settings::setOpenAIAudioKey(QString newKey) {
 }
 
 /**
+ * @name okButtonClicked
  * @brief Settings::setSummaryPreference
+ * @details This function is called when the OK button is clicked in the settings dialog.
  * @param[in] pref - Summary Layout Preference (Detailed/Concise)
+ * @author Thomas Llamzon
  */
 void Settings::setSummaryPreference(QString pref) {
     summaryLayoutPreference = pref;
@@ -347,7 +365,9 @@ QString Settings::getOpenAIAudioKey() const {
 /**
  * @name getSummaryPreference
  * @brief Get the summary layout preference
+ * @details This function retrieves the summary layout preference from the settings.
  * @return Summary layout preference (Detailed/Concise)
+ * @author Thomas Llamzon
  */
 QString Settings::getSummaryPreference() const
 {
@@ -357,8 +377,10 @@ QString Settings::getSummaryPreference() const
 /**
  * @name storeConfig
  * @brief Writes to hidden file storing user settings configurations.
+ * @details This function stores user settings configurations in a hidden file for future use.
  * @param[in] config - target setting to store
  * @param[in] value - value of user configuration
+ * @author Thomas Llamzon
  */
 void Settings::storeConfig(const QString &config, const QString &value)
 {
