@@ -9,7 +9,6 @@
  * @date Mar. 12, 2025
  */
 
-#include <QDebug>
 #include "summarygenerator.h"
 
 /**
@@ -62,8 +61,9 @@ void SummaryGenerator::handleLLMResponse(const QString &response)
  * @brief Sets the summary object with the given text
  * @param[in] newSummary: New summary object to set
  */
-void SummaryGenerator::setSummary(const Summary& newSummary) {
-    summary.clear();  // Clear the current summary
+void SummaryGenerator::setSummary(const Summary &newSummary)
+{
+    summary.clear(); // Clear the current summary
     summary.setIntervalHistory(newSummary.getIntervalHistory());
     summary.setPhysicalExamination(newSummary.getPhysicalExamination());
     summary.setCurrentStatus(newSummary.getCurrentStatus());
@@ -77,13 +77,15 @@ void SummaryGenerator::setSummary(const Summary& newSummary) {
  * @param[in] summaryText: New summary text to set
  * @details Extracts and stores the interval history, physical examination,
  */
-void SummaryGenerator::setSummaryText(const QString& summaryText) {
-    if (summaryText.isEmpty()) {
+void SummaryGenerator::setSummaryText(const QString &summaryText)
+{
+    if (summaryText.isEmpty())
+    {
         qDebug() << "Summary text is empty, skipping parsing.";
         return;
     }
 
-    summary.clear();  // Reset the current summary
+    summary.clear(); // Reset the current summary
 
     // Ensure LLM response follows expected structure
     summarizeIntervalHistory(summaryText);
@@ -94,8 +96,6 @@ void SummaryGenerator::setSummaryText(const QString& summaryText) {
     qDebug() << "Summary successfully loaded from saved text.";
     emit summaryReady();
 }
-
-
 
 /**
  * @name summarizeIntervalHistory
@@ -170,11 +170,11 @@ QString SummaryGenerator::extractSectionFromResponse(const QString &response, co
     int endIndex = match.hasMatch() ? match.capturedStart() : response.length(); // If no match, take entire string
 
     QString extractedSection = response.mid(startIndex + searchPattern.length(), endIndex - (startIndex + searchPattern.length())).trimmed();
-    
-    qDebug() << "✅ Extracted section for " << sectionName << ":\n" << extractedSection;
+
+    qDebug() << "✅ Extracted section for " << sectionName << ":\n"
+             << extractedSection;
     return extractedSection;
 }
-
 
 /**
  * @brief getSummary

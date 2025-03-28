@@ -13,21 +13,7 @@
  * @date Mar. 1, 2025
  */
 
-#include <QMessageBox>
-#include <QMediaDevices>
-#include <QAudioDevice>
-#include <QTimer>
 #include "mainwindow.h"
-#include "editpatientinfo.h"
-#include "llmclient.h"
-#include "audiohandler.h"
-#include "detailedsummaryformatter.h"
-#include "concisesummaryformatter.h"
-#include "filehandler.h"
-#include "patientrecord.h"
-#include "transcript.h"
-#include "summarygenerator.h"
-#include "addpatientdialog.h"
 
 /**
  * @name MainWindow (constructor)
@@ -106,11 +92,9 @@ MainWindow::MainWindow(QWidget *parent)
         optionDetailedLayout->setEnabled(false);
     }
 
-
-
-
     // Connect "Record" button to start and stop recording
-    connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]() {
+    connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
+            {
         static bool isRecording = false;
         if (isRecording) {
             audioHandler->stopRecording();
@@ -126,6 +110,8 @@ MainWindow::MainWindow(QWidget *parent)
             int selectedPatientID = patientData.toInt();
             patientID = selectedPatientID;
 
+            loadingDialog->show();
+
             Transcript currentTranscription = audioHandler->transcribe(filePath);
             qDebug() << "Transcription: " << currentTranscription.getContent();
 
@@ -136,13 +122,13 @@ MainWindow::MainWindow(QWidget *parent)
             FileHandler::getInstance()->saveOrAppendRawTranscript(selectedPatientID, currentTranscription);
 
             btnRecord->setText("Start Recording");
+
+            loadingDialog->hide();
         } else {
             audioHandler->startRecording("output.wav");
             btnRecord->setText("Stop Recording");
         }
-        isRecording = !isRecording;
-    });
-
+        isRecording = !isRecording; });
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
@@ -154,7 +140,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(btnArchivePatient, &QPushButton::clicked, this, &MainWindow::on_archivePatientButton_clicked);
     connect(comboSelectPatient, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_patientSelected);
 
-    // Connect "Record" button to LLM API request
+    loadingDialog = new QDialog(this);
+    loadingDialog->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowTitleHint);
+    loadingDialog->setModal(true);
+
+    QVBoxLayout *layout = new QVBoxLayout(loadingDialog);
+
+    QLabel *spinner = new QLabel(loadingDialog);
+    QMovie *movie = new QMovie(":/spinner.gif");
+    spinner->setMovie(movie);
+    movie->start();
+
+    loadingLabel = new QLabel("Loading, please wait...", loadingDialog);
+    loadingLabel->setAlignment(Qt::AlignCenter);
+
+    layout->addWidget(spinner);
+    layout->addWidget(loadingLabel);
+
+    loadingDialog->setLayout(layout);
+    loadingDialog->resize(200, 150);
 
     // NEW: Load existing patients on startup**
     loadPatientsIntoDropdown();
@@ -303,6 +307,7 @@ void MainWindow::handleSummarizeButtonClicked()
     // Create a transcript object
     Transcript *transcript = new Transcript(QTime::currentTime(), currentTranscriptText);
 
+    loadingDialog->show();
     // Send transcript to the LLM
     summaryGenerator->sendRequest(*transcript);
 }
@@ -313,6 +318,8 @@ void MainWindow::handleSummarizeButtonClicked()
  */
 void MainWindow::handleSummaryReady()
 {
+    loadingDialog->hide();
+
     // Retrieve structured summary from SummaryGenerator
     Summary summary = summaryGenerator->getSummary();
 
@@ -518,7 +525,6 @@ void MainWindow::on_addPatientButton_clicked()
     }
 }
 
-
 /**
  * @name on_editPatientButton_clicked
  * @brief Handler function called when the "Edit Patient" button is pressed
@@ -584,14 +590,20 @@ void MainWindow::on_removePatientButton_clicked()
     QString patientDirPath = baseDir + QString::number(selectedID);
 
     QDir dir(patientDirPath);
-    if (dir.exists()) {
-        if (dir.removeRecursively()) {
+    if (dir.exists())
+    {
+        if (dir.removeRecursively())
+        {
             qDebug() << "Patient folder deleted successfully:" << patientDirPath;
-        } else {
+        }
+        else
+        {
             QMessageBox::warning(this, "Delete Failed", "Could not delete patient folder.");
             return;
         }
-    } else {
+    }
+    else
+    {
         QMessageBox::warning(this, "Delete Failed", "Patient folder does not exist.");
         return;
     }
@@ -599,7 +611,6 @@ void MainWindow::on_removePatientButton_clicked()
     comboSelectPatient->removeItem(index);
     checkDropdownEmpty();
 }
-
 
 /**
  * @brief MainWindow::on_archivePatientButton_clicked
@@ -651,7 +662,6 @@ void MainWindow::handleArchiveToggled()
         btnRecord->setStyleSheet(WindowBuilder::disabledButtonStyle);
         btnSummarize->setStyleSheet(WindowBuilder::disabledButtonStyle);
         toggleSwitch->setStyleSheet(WindowBuilder::blueButtonStyle);
-
     }
     else // IN ACTIVE MODE
     {
@@ -680,11 +690,14 @@ void MainWindow::handleArchiveToggled()
  * @details Checks if Archive or Patient directories no longer have patients to update UI accordingly.
  *
  */
-void MainWindow::checkDropdownEmpty() {
+void MainWindow::checkDropdownEmpty()
+{
 
     bool notEmpty;
-    if (archiveMode) notEmpty = loadArchivedPatientsIntoDropdown();
-    else             notEmpty = loadPatientsIntoDropdown();
+    if (archiveMode)
+        notEmpty = loadArchivedPatientsIntoDropdown();
+    else
+        notEmpty = loadPatientsIntoDropdown();
 
     if (!notEmpty) // Dropdown has been emptied
     {
@@ -698,7 +711,8 @@ void MainWindow::checkDropdownEmpty() {
         btnArchivePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
 
         // Only need to disable EDIT, RECORD, SUMMARIZE in active mode (avoiding redundancy)
-        if (!archiveMode) {
+        if (!archiveMode)
+        {
             btnEditPatient->setEnabled(false);
             btnRecord->setEnabled(false);
             btnSummarize->setEnabled(false);
@@ -717,7 +731,8 @@ void MainWindow::checkDropdownEmpty() {
         btnArchivePatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
 
         // Only re-enable EDIT, RECORD, SUMMARIZE in active mode
-        if (!archiveMode) {
+        if (!archiveMode)
+        {
             btnEditPatient->setEnabled(true);
             btnRecord->setEnabled(true);
             btnSummarize->setEnabled(true);
@@ -767,21 +782,28 @@ void MainWindow::on_patientSelected(int index)
 
     // Clear existing summary layout
     QLayoutItem *child;
-    while ((child = summarySection->takeAt(0)) != nullptr) {
-        if (child->widget()) {
+    while ((child = summarySection->takeAt(0)) != nullptr)
+    {
+        if (child->widget())
+        {
             child->widget()->deleteLater();
         }
         delete child;
     }
 
     // Revert summary layout according to user summary layout preference.
-    if (defaultLayout.contains("Detailed Layout")) {
+    if (defaultLayout.contains("Detailed Layout"))
+    {
         summaryFormatter = new DetailedSummaryFormatter;
         selectSummaryLayout->setText("Detailed Layout");
-    } else if (defaultLayout.contains("Concise Layout")) {
+    }
+    else if (defaultLayout.contains("Concise Layout"))
+    {
         summaryFormatter = new ConciseSummaryFormatter;
         selectSummaryLayout->setText("Concise Layout");
-    } else {
+    }
+    else
+    {
         qDebug() << "Unrecognized user summary layout. Defaulting to Detailed Layout.";
         summaryFormatter = new DetailedSummaryFormatter;
         selectSummaryLayout->setText("Detailed Layout");
@@ -789,7 +811,8 @@ void MainWindow::on_patientSelected(int index)
 
     // Refresh summary layout dropdown
     QString currentLayout = selectSummaryLayout->text();
-    for (QAction *layoutAction : summaryLayoutOptions->actions()) {
+    for (QAction *layoutAction : summaryLayoutOptions->actions())
+    {
         layoutAction->setEnabled(layoutAction->text() != currentLayout);
     }
 
@@ -837,7 +860,8 @@ void MainWindow::viewPatient()
     QVariant patientData = comboSelectPatient->currentData();
     QString info;
 
-    if (!patientData.isValid()) {
+    if (!patientData.isValid())
+    {
         qWarning() << "No patient selected, cannot view patient!";
         return;
     }
