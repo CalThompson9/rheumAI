@@ -20,6 +20,7 @@
 #include <QDir>
 #include "patientrecord.h"
 #include "summary.h"
+#include "transcript.h"
 
 class FileHandler
 {
@@ -41,6 +42,8 @@ public:
     void loadPatientJson(); // Read and display JSON
     void saveTranscript(int patientID, const QString &transcript);
     void saveTranscriptToJson(); // Convert transcript to JSON
+    void saveOrAppendRawTranscript(int patientID, const Transcript &transcript);
+
 
     PatientRecord loadPatientRecord(int patientID);
     PatientRecord archivePatientRecord(int patientID);
