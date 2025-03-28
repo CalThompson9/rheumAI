@@ -60,7 +60,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialize settings
     settings = Settings::getInstance(this, summaryGenerator->llmClient, audioHandler);
     connect(btnSettings, &QPushButton::clicked, settings, &Settings::showSettings);
-    connect(settings, &Settings::okButtonClicked, this, &MainWindow::handleSummarizeButtonClicked);
 
     // Add summary layout options
     summaryLayoutOptions = new QMenu(this);
