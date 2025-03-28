@@ -15,10 +15,10 @@
 /**
  * @name LLMClient (constructor)
  * @brief Initializes the LLM client, including the network access manager
- * @param[in] parent: Parent widget
+ * @param[in] QNetworkManager: Network access manager for handling network requests
  */
-LLMClient::LLMClient(QObject *parent)
-    : QObject(parent), networkManager(new QNetworkAccessManager(this))
+LLMClient::LLMClient()
+    : QObject(nullptr), networkManager(new QNetworkAccessManager(this))
 {
     apiKey = getAPIKey();
     qDebug() << "LLM API Key: " << apiKey;
@@ -29,6 +29,19 @@ LLMClient::LLMClient(QObject *parent)
 
     connect(networkManager, &QNetworkAccessManager::finished, this, &LLMClient::handleNetworkReply);
 }
+
+/**
+ * @name getInstance
+ * @brief Returns the singleton instance of LLMClient
+ * @param[in] parent: Parent widget
+ * @return Singleton instance of LLMClient
+ */
+LLMClient *LLMClient::getInstance()
+{
+    static LLMClient instance;
+    return &instance;
+}
+
 
 /**
  * @name sendRequest

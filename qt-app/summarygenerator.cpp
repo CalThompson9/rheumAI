@@ -22,10 +22,10 @@ SummaryGenerator::SummaryGenerator(QObject *parent)
     : QObject(parent)
 {
     // Create an LLMClient object
-    llmClient = new LLMClient(this);
+    llmClient = LLMClient::getInstance();
 
     // Connect the LLMClient signal to the handler
-    connect(llmClient, &LLMClient::responseReceived, this, &SummaryGenerator::handleLLMResponse);
+    connect(llmClient, &LLMClient::responseReceived, this, &SummaryGenerator::handleLLMResponse, Qt::UniqueConnection);
 }
 
 /**
