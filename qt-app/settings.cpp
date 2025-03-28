@@ -58,6 +58,17 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
             summaryLayoutPreference = line.mid(QString("SUMMARY_LAYOUT_PREFERENCE:").length()).trimmed();
         }
     }
+
+    // Set API keys from keyFile
+    llmClient->setApiKey(llmKey);
+    audioHandlerClient->setGoogleApiKey(audioKey);
+    audioHandlerClient->setOpenAIApiKey(openAIAudioKey);
+
+    qDebug() << "Loaded settings:";
+    qDebug() << "  GEMINI_API_KEY: " << llmKey;
+    qDebug() << "  GOOGLE_AUDIO_API_KEY:" << audioKey;
+    qDebug() << "  OPENAI_AUDIO_API_KEY:" << openAIAudioKey;
+    qDebug() << "  SUMMARY_LAYOUT_PREFERENCE:" << summaryLayoutPreference;
 }
 
 /**
@@ -251,12 +262,37 @@ void Settings::showSettings()
 }
 
 /**
+ * @author Thomas Llamzon
+ * @name readKey
+ * @brief Retrieves a key from the keyfile
+ * @returns Key value, or "" if key could not be found
+ */
+QString Settings::readKey(const QString& keyPrefix)
+{
+    QFile file("keyFile.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "keyFile.txt not found.";
+        return "";
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (line.startsWith(keyPrefix)) {
+            return line.mid(keyPrefix.length()).trimmed();
+        }
+    }
+
+    return "";
+}
+
+/**
  * @name setLLMKey
  * @brief Sets LLM API key and modifies key storage file for continual use.
  * @param[in] newKey: API key
  */
 void Settings::setLLMKey(QString newKey) {
-    llmClient->apiKey = newKey;
+    llmClient->setApiKey(newKey);
     storeConfig("LLM", newKey);
 }
 
@@ -266,7 +302,7 @@ void Settings::setLLMKey(QString newKey) {
  * @param[in] newKey: API key
  */
 void Settings::setAudioKey(QString newKey) {
-    audioHandlerClient->apiKey = newKey;
+    audioHandlerClient->setGoogleApiKey(newKey);
     storeConfig("AUDIO", newKey);
 }
 
@@ -276,7 +312,7 @@ void Settings::setAudioKey(QString newKey) {
  * @param[in] newKey: API key
  */
 void Settings::setOpenAIAudioKey(QString newKey) {
-    audioHandlerClient->openAIApiKey = newKey;
+    audioHandlerClient->setOpenAIApiKey(openAIAudioKey);
     storeConfig("OPENAI_AUDIO", newKey);
 }
 
@@ -289,6 +325,32 @@ void Settings::setSummaryPreference(QString pref) {
     storeConfig("SUMM", pref);
 }
 
+/**
+ * @name getLLMKey
+ * @brief Get Gemini API key
+ * @return Gemini API key
+ */
+QString Settings::getLLMKey() const {
+    return llmKey;
+}
+
+/**
+ * @name getAudioKey
+ * @brief Get Google Speech-to-Text API key
+ * @return Google Sppech-to-Text API key
+ */
+QString Settings::getAudioKey() const {
+    return audioKey;
+}
+
+/**
+ * @name getOpenAIAudioKey
+ * @brief Get Open AI Whisper API key
+ * @return Open AI Whisper API key
+ */
+QString Settings::getOpenAIAudioKey() const {
+    return openAIAudioKey;
+}
 
 /**
  * @name getSummaryPreference

@@ -32,8 +32,6 @@ AudioHandler *AudioHandler::instance = nullptr;
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
-    apiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
-    openAIApiKey = getAPIKey("OPENAI_AUDIO_API_KEY:");
     qDebug() << "Google API Key:" << apiKey;
     qDebug() << "OpenAI API Key:" << openAIApiKey;
 
@@ -408,26 +406,13 @@ void AudioHandler::playRecording(const QString &filePath)
 }
 
 /**
- * @name getAPIKey
- * @brief Retrieves the API key from the key file
+ * @name setGoogleApiKey
+ * @brief Sets the Google Speech-to-Text API key
+ * @param[in] key: Googl Speech-to-Text API key
  */
-QString AudioHandler::getAPIKey(const QString& keyPrefix)
+void AudioHandler::setGoogleApiKey(const QString& key)
 {
-    QFile file("keyFile.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "keyFile.txt not found.";
-        return "";
-    }
-
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        if (line.startsWith(keyPrefix)) {
-            return line.mid(keyPrefix.length()).trimmed();
-        }
-    }
-
-    return "";
+    apiKey = key;
 }
 
 /**

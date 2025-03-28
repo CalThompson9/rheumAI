@@ -11,6 +11,7 @@
  */
 
 #include "llmclient.h"
+#include "settings.h"
 
 /**
  * @name LLMClient (constructor)
@@ -20,12 +21,7 @@
 LLMClient::LLMClient(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this))
 {
-    apiKey = getAPIKey();
     qDebug() << "LLM API Key: " << apiKey;
-
-    if (apiKey.isEmpty()) {
-        qWarning() << "API Key is empty! Request aborted.";
-    }
 
     connect(networkManager, &QNetworkAccessManager::finished, this, &LLMClient::handleNetworkReply);
 }
@@ -69,6 +65,16 @@ void LLMClient::sendRequest(const QString &prompt)
     userPrompt = fullPrompt; // Store user prompt including initial prompt
 
     sendLLMRequest(fullPrompt);
+}
+
+/**
+ * @name setApiKey
+ * @brief Sets the API key
+ * @param[in] key: API key
+ */
+void LLMClient::setApiKey(const QString& key)
+{
+    apiKey = key;
 }
 
 /**
@@ -178,27 +184,3 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     emit responseReceived(responseText);
 }
 
-/**
- * @author Thomas Llamzon
- * @brief Reads keyFile upon class construction to set apiKey.
- * @return Returns LLM API Key.
- */
-QString LLMClient::getAPIKey() {
-
-    QFile file("keyFile.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "keyFile does not exist yet.";
-        return "";
-    }
-
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        if (line.startsWith("GEMINI_API_KEY:")) {
-            file.close();
-            return line.mid(QString("GEMINI_API_KEY:").length()).trimmed();
-        }
-    }
-
-    return "";
-}

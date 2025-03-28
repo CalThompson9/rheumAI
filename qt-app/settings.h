@@ -44,6 +44,10 @@ public:
     void setAudioKey(const QString newKey);
     void setOpenAIAudioKey(QString newKey);
     void setSummaryPreference(const QString pref);
+
+    QString getLLMKey() const;
+    QString getAudioKey() const;
+    QString getOpenAIAudioKey() const;
     QString getSummaryPreference() const;
 
 signals:
@@ -52,6 +56,7 @@ signals:
 private:
     Settings(QObject *parent, LLMClient *llm, AudioHandler *audio);
 
+    static QString readKey(const QString& keyPrefix);
     void storeConfig(const QString &config, const QString &value);
 
     QObject *mainWindow;

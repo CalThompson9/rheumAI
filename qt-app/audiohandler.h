@@ -49,7 +49,7 @@ public:
     void handlePermissionResponse();
     void playRecording(const QString &filePath);
 
-    QString getAPIKey(const QString& prefix);
+    void setGoogleApiKey(const QString& key);
     void setOpenAIApiKey(const QString& key);
     double getAudioDuration(const QString& path) const;
 

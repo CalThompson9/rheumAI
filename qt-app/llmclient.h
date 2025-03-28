@@ -27,7 +27,7 @@ class LLMClient : public QObject
 public:
     explicit LLMClient(QObject *parent = nullptr);
     void sendRequest(const QString &prompt);
-    QString getAPIKey();
+    void setApiKey(const QString& key);
 
     friend class Settings;
 
