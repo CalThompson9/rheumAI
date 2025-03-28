@@ -122,8 +122,7 @@ void FileHandler::saveOrAppendRawTranscript(int patientID, const Transcript &tra
     }
 
     // Append new content
-    fileContents += "\n---\n";
-    fileContents += "Timestamp: " + transcript.getTimestamp().toString("hh:mm:ss") + "\n\n";
+    fileContents += "\n\nTimestamp: " + transcript.getTimestamp().toString("hh:mm:ss") + "\n\n";
     fileContents += transcript.getContent();
 
     // Write back the full updated content

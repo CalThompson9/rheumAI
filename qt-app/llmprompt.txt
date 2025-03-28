@@ -106,6 +106,8 @@ Other instructions:
 
 * Do not skip any medical findings or observations from the physician.
 
+* Use ALL information from the prompt, including information from different time stamps.
+
 * Always include all medication and prescriptions that were mentioned in the transcript and include full context, dosage, and relevant information regarding the prescription.
 
 * Use professional and appropriate medical terminology.
