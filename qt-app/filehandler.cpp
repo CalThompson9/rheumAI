@@ -92,6 +92,67 @@ QString FileHandler::readTranscript()
     return content;
 }
 
+
+
+
+/**
+ * @name saveOrAppendRawTranscript
+ * @brief Appends a timestamped transcript to the patient's daily raw file
+ * @details Also updates `transcript_raw.txt` with full daily content for summarization
+ * @param patientID The ID of the patient
+ * @param transcript The transcript object to save
+ */
+
+void FileHandler::saveOrAppendRawTranscript(int patientID, const Transcript &transcript) {
+    QString folderPath = "Patients/" + QString::number(patientID);
+    QDir().mkpath(folderPath);  // Ensure folder exists
+
+    QString currentDate = QDate::currentDate().toString("yyyyMMdd");
+    QString filePath = folderPath + "/raw_transcript_" + currentDate + ".txt";
+
+    // Read existing file if it exists
+    QString fileContents;
+    QFile file(filePath);
+    if (file.exists()) {
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            fileContents = in.readAll();
+            file.close();
+        }
+    }
+
+    // Append new content
+    fileContents += "\n\nTimestamp: " + transcript.getTimestamp().toString("hh:mm:ss") + "\n\n";
+    fileContents += transcript.getContent();
+
+    // Write back the full updated content
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << fileContents;
+        file.close();
+        qDebug() << "Raw transcript appended to file: " << filePath;
+    } else {
+        qDebug() << "Failed to open file for writing: " << filePath;
+    }
+
+    // 🔁 Update transcript_raw.txt with full daily content for summary
+    QString latestTranscriptPath = folderPath + "/transcript_raw.txt";
+    QFile latestFile(latestTranscriptPath);
+    if (latestFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream latestOut(&latestFile);
+        latestOut << fileContents;
+        latestFile.close();
+        qDebug() << "Updated transcript_raw.txt for summarizer.";
+    } else {
+        qDebug() << "Failed to update transcript_raw.txt!";
+    }
+}
+
+
+
+
+
+
 /**
  * @brief FileHandler::loadSummaryText
  * @param patientID
@@ -104,7 +165,7 @@ QString FileHandler::loadSummaryText(int patientID)
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << "❌ No summary found for patient:" << patientID;
+        qDebug() << " No summary found for patient:" << patientID;
         return "";
     }
 
@@ -112,11 +173,20 @@ QString FileHandler::loadSummaryText(int patientID)
     QString summaryContent = in.readAll();
     file.close();
 
-    qDebug() << "✅ Loaded summary from file (before returning):\n"
+    qDebug() << " Loaded summary from file (before returning):\n"
              << summaryContent;
     return summaryContent;
 }
 
+
+
+/**
+ * @name loadTranscript
+ * @brief Loads the most recent transcript for a patient
+ * @details Reads from `transcript_raw.txt` in the patient's folder
+ * @param patientID The ID of the patient
+ * @return The full transcript content, or an empty string if not found
+ */
 QString FileHandler::loadTranscript(int patientID)
 {
     QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
@@ -161,6 +231,15 @@ void FileHandler::savePatientRecord(const PatientRecord &record)
     qDebug() << "Patient record saved to:" << file.fileName();
 }
 
+
+
+
+/**
+ * @name saveTranscript
+ * @brief Save the given transcript text to transcript_raw.txt for a specific patient
+ * @param patientID ID of the patient whose transcript is being saved
+ * @param transcript The full text of the transcript to write
+ */
 void FileHandler::saveTranscript(int patientID, const QString &transcript)
 {
     QString transcriptPath = patientDatabasePath + "/" + QString::number(patientID) + "/transcript_raw.txt";
