@@ -1,9 +1,11 @@
 /**
  * @file filehandler.cpp
  * @brief Definition of FileHandler class
- *
- * Handles reading and writing patient files.
- *
+ * @details This class handles file operations for the application, including reading
+ * and writing patient records, transcripts, and summaries. It uses the singleton design
+ * pattern to ensure that only one instance of the class exists throughout the application.
+ * The class provides methods to save and load patient records, transcripts, and summaries
+ * from JSON files. It also manages the archiving and unarchiving of patient records.
  * @author Kalundi Serumaga (kserumag@uwo.ca)
  * @author Andres Pedreros (apedrero@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
@@ -17,11 +19,16 @@
 #include <QDebug>
 #include "filehandler.h"
 
+// Create an instance of the FileHandler class since it is a singleton
+// This instance will be used to access the methods of the class
 FileHandler *FileHandler::instance = nullptr;
 
 /**
  * @name FileHandler (constructor)
  * @brief Initializes the FileHandler instance
+ * @details Sets up the paths for the patient database and archived database.
+ * Creates the directories if they do not exist.
+ * @author Kalundi Segumaga
  */
 FileHandler::FileHandler() : patientDatabasePath("Patients"),
                              archivedDatabasePath("Archived")
@@ -33,7 +40,11 @@ FileHandler::FileHandler() : patientDatabasePath("Patients"),
 /**
  * @name getInstance
  * @brief Returns the singleton instance of FileHandler
+ * @details If the instance does not exist, it creates a new one.
+ * This ensures that only one instance of FileHandler is created and used
+ * throughout the application.
  * @return Singleton instance of FileHandler
+ * @author Joelene Hales
  */
 FileHandler *FileHandler::getInstance()
 {
@@ -45,7 +56,10 @@ FileHandler *FileHandler::getInstance()
 /**
  * @name setTranscriptFilename
  * @brief Sets the filepath to the transcript file
+ * @details This method is used to specify the file where the transcript data will be saved.
+ * It is important to set this filepath before attempting to read or write transcript data.
  * @param[in] filepath: Filepath to transcript file
+ * @author Kalundi Serumaga
  */
 void FileHandler::setTranscriptFilename(const QString &filepath)
 {
@@ -55,7 +69,11 @@ void FileHandler::setTranscriptFilename(const QString &filepath)
 /**
  * @name setJsonFilename
  * @brief Sets the filepath to the patient information JSON file
+ * @details This method is used to specify the file where the patient information
+ * will be saved. It is important to set this filepath before attempting to read or
+ * write patient information.
  * @param[in] filepath: Filepath to the patient information JSON file
+ * @author Kalundi Serumaga
  */
 void FileHandler::setJsonFilename(const QString &filepath)
 {
@@ -67,6 +85,7 @@ void FileHandler::setJsonFilename(const QString &filepath)
  * @name Read transcript from file
  * @details Transcript filepath must first be set using `setTranscriptFilename`
  * @return Transcript data, or an empty string if the file could not be read
+ * @author Kalundi Serumaga
  */
 QString FileHandler::readTranscript()
 {
@@ -92,15 +111,13 @@ QString FileHandler::readTranscript()
     return content;
 }
 
-
-
-
 /**
  * @name saveOrAppendRawTranscript
  * @brief Appends a timestamped transcript to the patient's daily raw file
  * @details Also updates `transcript_raw.txt` with full daily content for summarization
  * @param patientID The ID of the patient
  * @param transcript The transcript object to save
+ * @author Kalundi Serumaga
  */
 
 void FileHandler::saveOrAppendRawTranscript(int patientID, const Transcript &transcript) {
@@ -148,15 +165,13 @@ void FileHandler::saveOrAppendRawTranscript(int patientID, const Transcript &tra
     }
 }
 
-
-
-
-
-
 /**
+ * @name loadSummaryText
  * @brief FileHandler::loadSummaryText
- * @param patientID
- * @return
+ * @param patientID The ID of the patient
+ * @details The summary is stored in a file named `summary.txt` in the patient's folder.
+ * @return The summary text for the patient
+ * @author Kalundi Serumaga
  */
 QString FileHandler::loadSummaryText(int patientID)
 {
@@ -178,14 +193,13 @@ QString FileHandler::loadSummaryText(int patientID)
     return summaryContent;
 }
 
-
-
 /**
  * @name loadTranscript
  * @brief Loads the most recent transcript for a patient
  * @details Reads from `transcript_raw.txt` in the patient's folder
  * @param patientID The ID of the patient
  * @return The full transcript content, or an empty string if not found
+ * @author Kalundi Serumaga
  */
 QString FileHandler::loadTranscript(int patientID)
 {
@@ -212,6 +226,8 @@ QString FileHandler::loadTranscript(int patientID)
  * record, and located in the directory configured in the constructor.
  * @warning If the file already exists, it will be overwritten
  * @param[in] record: Patient record to save
+ * @author Callum Thompson
+ * @author Kalundi Serumaga
  */
 void FileHandler::savePatientRecord(const PatientRecord &record)
 {
@@ -231,14 +247,16 @@ void FileHandler::savePatientRecord(const PatientRecord &record)
     qDebug() << "Patient record saved to:" << file.fileName();
 }
 
-
-
-
 /**
  * @name saveTranscript
  * @brief Save the given transcript text to transcript_raw.txt for a specific patient
+ * @details This method will overwrite the existing transcript file.
+ * The file will be located in the patient's folder, which is determined by the patient ID.
+ * @warning If the file already exists, it will be overwritten.
  * @param patientID ID of the patient whose transcript is being saved
  * @param transcript The full text of the transcript to write
+ * @author Kalundi Serumaga
+ * @author Callum Thompson
  */
 void FileHandler::saveTranscript(int patientID, const QString &transcript)
 {
@@ -261,8 +279,12 @@ void FileHandler::saveTranscript(int patientID, const QString &transcript)
 /**
  * @name loadPatientRecord
  * @brief Reads a patient record from file
+ * @details File will be named according to the patient ID stored in the patient
+ * record, and located in the directory configured in the constructor.
  * @param[in] patientID: Patient ID of record to read
  * @return Read patient record, or an empty record if the file could not be read
+ * @author Callum Thompson
+ * @author Kalundi Serumaga
  */
 PatientRecord FileHandler::loadPatientRecord(int patientID)
 {
@@ -293,8 +315,12 @@ PatientRecord FileHandler::loadPatientRecord(int patientID)
 /**
  * @name archivePatientRecord
  * @brief Moves a patient record to the archive folder
+ * @details The patient record is moved from the 'Patients' folder to the 'Archived' folder.
+ * The original patient folder is deleted after the move.
  * @param[in] patientID: Patient ID of record to archive
  * @return Patient record that was archived
+ * @author Andres Pedreros
+ * @author Kalundi Serumaga
  */
 PatientRecord FileHandler::archivePatientRecord(int patientID)
 {
@@ -336,8 +362,12 @@ PatientRecord FileHandler::archivePatientRecord(int patientID)
 /**
  * @name unarchivePatientRecord
  * @brief Moves a patient record to the 'Patients' folder
+ * @details The patient record is moved from the 'Archived' folder to the 'Patients' folder.
+ * The original archive folder is deleted after the move.
  * @param[in] patientID: Patient ID of record to unarchive
  * @return Patient record that was unarchived
+ * @author Andres Pedreros
+ * @author Kalundi Serumaga
  */
 PatientRecord FileHandler::unarchivePatientRecord(int patientID)
 {
@@ -379,7 +409,10 @@ PatientRecord FileHandler::unarchivePatientRecord(int patientID)
 /**
  * @name saveTranscriptToJson
  * @brief Convert the currently stored transcript text into JSON format and save it
- * @details Transcript filepath must first be set using `setTranscriptFilename`.
+ * @details Transcript filepath must first be set using `setTranscriptFilename`. 
+ * The JSON file will be saved in the same directory as the transcript file.
+ * @author Kalundi Serumaga
+ * @author Callum Thompson
  */
 void FileHandler::saveTranscriptToJson()
 {
@@ -387,13 +420,12 @@ void FileHandler::saveTranscriptToJson()
     if (transcriptText.isEmpty())
         return;
 
-    // Convert to JSON format
-    QJsonObject jsonObj;
-    jsonObj["patientID"] = 12345;   // Mock Patient ID
-    jsonObj["date"] = "2024-03-07"; // Mock Date
-    jsonObj["transcript"] = transcriptText;
-
-    QJsonDocument jsonDoc(jsonObj);
+        QJsonObject jsonObj;
+        jsonObj["patientID"] = 12345;   // Mock Patient ID to be replaced with actual ID
+        jsonObj["date"] = "2024-03-07"; // Mock Date to be replaced with actual date
+        jsonObj["transcript"] = transcriptText;
+    
+        QJsonDocument jsonDoc(jsonObj);
 
     QFile jsonFile(jsonFilename);
     if (!jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -410,7 +442,10 @@ void FileHandler::saveTranscriptToJson()
 /**
  * @name getTranscriptFilename
  * @brief Get the filepath to the transcript file
+ * @details This method returns the filepath to the transcript file
+ * that was previously set using `setTranscriptFilename`.
  * @return Filepath to the transcript file
+ * @author Kalundi Serumaga
  */
 QString FileHandler::getTranscriptFilename() const
 {
@@ -420,7 +455,10 @@ QString FileHandler::getTranscriptFilename() const
 /**
  * @name getJsonFilename
  * @brief Gets the filepath to the patient information JSON file
+ * @details This method returns the filepath to the patient information
+ * JSON file that was previously set using `setJsonFilename`.
  * @return Filepath to the patient information JSON file
+ * @author Kalundi Serumaga
  */
 QString FileHandler::getJsonFilename() const
 {
@@ -431,7 +469,11 @@ QString FileHandler::getJsonFilename() const
  * @name loadPatientJson
  * @brief Read the raw text stored in the patient information JSON file and
  * print it
+ * @details This method reads the JSON file and prints the contents to the console.
+ * It is useful for debugging purposes to ensure that the JSON data is being
+ * correctly loaded and parsed.
  * @details Patient information filepath must first be set using `setJsonFilename`
+ * @author Kalundi Serumaga
  */
 void FileHandler::loadPatientJson()
 {

@@ -20,6 +20,14 @@
 #include <QDebug>
 #include <QFile>
 
+/**
+ * @class LLMClient
+ * @brief A class to handle communication with a large language model (LLM) API.
+ * @details This class is responsible for sending requests to the LLM API and receiving responses. 
+ * It uses the QNetworkAccessManager class to handle network operations and emits signals when responses are received.
+ * The class also manages the API key and user prompt for the requests.
+ * @author Callum Thompson
+ */
 class LLMClient : public QObject
 {
     Q_OBJECT

@@ -12,6 +12,15 @@
 
 #include <QString>
 
+/**
+ * @class Summary
+ * @brief Represents a summary with various sections
+ * @details This class provides methods to manage the interval history,
+ * physical examination, current status, and plan sections of a summary.
+ * It includes methods to get and set these sections, as well as a method to clear all sections.
+ * @author Joelene Hales
+ * @author Callum Thompson
+ */
 class Summary
 {
 public:

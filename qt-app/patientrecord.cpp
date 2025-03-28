@@ -15,6 +15,7 @@
 /**
  * @name PatientRecord (constructor)
  * @brief Initializes a patient record
+ * @details Sets the patient ID and all other fields to the provided values.
  * @param[in] id: Patient ID
  * @param[in] healthCard: Patient's health card number (ex OHIP)
  * @param[in] firstName: Patient's first name
@@ -26,6 +27,7 @@
  * @param[in] postalCode: Patient's postal code
  * @param[in] province: Patient's province
  * @param[in] country: Patient's country
+ * @author Kalundi Serumaga
  */
 PatientRecord::PatientRecord(
     int id,
@@ -58,6 +60,7 @@ PatientRecord::PatientRecord(
  * @name PatientRecord (default constructor)
  * @brief Default constructor creates an empty patient record
  * @details Initializes ID to -1 and all strings to empty
+ * @author Kalundi Serumaga
  */
 PatientRecord::PatientRecord()
     : patientID(-1),
@@ -78,7 +81,9 @@ PatientRecord::PatientRecord()
 /**
  * @name getId
  * @brief Get the patient's ID number
+ * @details The ID is a unique identifier for the patient
  * @return Patient ID
+ * @author Kalundi Serumaga
  */
 int PatientRecord::getID() const
 {
@@ -88,7 +93,9 @@ int PatientRecord::getID() const
 /**
  * @name getHealthCard
  * @brief Get the patient's health card number
+ * @details The health card number is used to identify the patient
  * @return Patient's health card number
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getHealthCard() const
 {
@@ -98,7 +105,9 @@ QString PatientRecord::getHealthCard() const
 /**
  * @name getFirstName
  * @brief Get the patient's first name
+ * @details The first name is used to identify the patient
  * @return Patient's first name
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getFirstName() const
 {
@@ -108,7 +117,9 @@ QString PatientRecord::getFirstName() const
 /**
  * @name getLastName
  * @brief Get the patient's last name
+ * @details The last name is used to identify the patient
  * @return Patient's last name
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getLastName() const
 {
@@ -118,7 +129,9 @@ QString PatientRecord::getLastName() const
 /**
  * @name getDateOfBirth
  * @brief Gets the patient's date of birth
+ * @details The date of birth is used to identify the patient
  * @return Patient's date of birth
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getDateOfBirth() const
 {
@@ -128,7 +141,9 @@ QString PatientRecord::getDateOfBirth() const
 /**
  * @name getEmail
  * @brief Gets the patient's email
+ * @details The email is used to identify the patient 
  * @return Patient's email
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getEmail() const
 {
@@ -138,7 +153,9 @@ QString PatientRecord::getEmail() const
 /**
  * @name getPhoneNumber
  * @brief Gets the patient's phone number
+ * @details The phone number is used to identify the patient
  * @return Patient's phone number
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getPhoneNumber() const
 {
@@ -148,7 +165,9 @@ QString PatientRecord::getPhoneNumber() const
 /**
  * @name getHomeAddress
  * @brief Gets the patient's home address
+ * @details The home address is used to identify the patient
  * @return Patient's home address
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getAddress() const
 {
@@ -158,7 +177,9 @@ QString PatientRecord::getAddress() const
 /**
  * @name getPostalCode
  * @brief Gets the patient's postal code
+ * @details The postal code is used to identify the patient
  * @return Patient's postal code
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getPostalCode() const
 {
@@ -168,7 +189,9 @@ QString PatientRecord::getPostalCode() const
 /**
  * @name getProvince
  * @brief Gets the patient's province
+ * @details The province is used to identify the patient
  * @return Patient's province
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getProvince() const
 {
@@ -178,7 +201,9 @@ QString PatientRecord::getProvince() const
 /**
  * @name getCountry
  * @brief Gets the patient's country
+ * @details The country is used to identify the patient
  * @return Patient's country
+ * @author Kalundi Serumaga
  */
 QString PatientRecord::getCountry() const
 {
@@ -188,7 +213,11 @@ QString PatientRecord::getCountry() const
 /**
  * @name toJson
  * @brief Converts the patient record to a JSON object
+ * @details This function creates a JSON object that contains all the
+ * patient's information. The JSON object can be used to save the
+ * patient record to a file or send it over the network.
  * @return JSON object storing the patient record
+ * @author Kalundi Serumaga
  */
 QJsonObject PatientRecord::toJson() const
 {
@@ -210,6 +239,11 @@ QJsonObject PatientRecord::toJson() const
 /**
  * @name fromJson
  * @brief Creates a patient record from a JSON object
+ * @details This function takes a JSON object that contains
+ * all the patient's information and creates a new patient record
+ * from it. The JSON object can be used to load the patient record
+ * from a file or receive it over the network.
+ * @author Kalundi Serumaga
  * @param[in] json: JSON object containing patient record data
  * @return Patient record
  */
@@ -231,43 +265,113 @@ PatientRecord PatientRecord::fromJson(const QJsonObject &json)
 }
 
 
-
+/**
+ * @name PatientRecord::setFirstName
+ * @brief Sets the patient's first name
+ * @details Assigns the provided value to the patient's first name field
+ * @param[in] value The patient's first name
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setFirstName(const QString &value) {
     firstName = value;
 }
 
+/**
+ * @name PatientRecord::setLastName
+ * @brief Sets the patient's last name
+ * @details Assigns the provided value to the patient's last name field
+ * @param[in] value The patient's last name
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setLastName(const QString &value) {
     lastName = value;
 }
 
+/**
+ * @name PatientRecord::setDateOfBirth
+ * @brief Sets the patient's date of birth
+ * @details Assigns the provided value to the patient's date of birth field
+ * @param[in] value The patient's date of birth
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setDateOfBirth(const QString &value) {
     dateOfBirth = value;
 }
 
+/**
+ * @name PatientRecord::setHealthCard
+ * @brief Sets the patient's health card number
+ * @details Assigns the provided value to the patient's health card field
+ * @param[in] value The patient's health card number
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setHealthCard(const QString &value) {
     healthCard = value;
 }
 
+/**
+ * @name PatientRecord::setEmail
+ * @brief Sets the patient's email address
+ * @details Assigns the provided value to the patient's email field
+ * @param[in] value The patient's email address
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setEmail(const QString &value) {
     email = value;
 }
 
+/**
+ * @name PatientRecord::setPhoneNumber
+ * @brief Sets the patient's phone number
+ * @details Assigns the provided value to the patient's phone number field
+ * @param[in] value The patient's phone number
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setPhoneNumber(const QString &value) {
     phoneNumber = value;
 }
 
+/**
+ * @name PatientRecord::setAddress
+ * @brief Sets the patient's address
+ * @details Assigns the provided value to the patient's address field
+ * @param[in] value The patient's address
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setAddress(const QString &value) {
     address = value;
 }
 
+/**
+ * @name PatientRecord::setPostalCode
+ * @brief Sets the patient's postal code
+ * @details Assigns the provided value to the patient's postal code field
+ * @param[in] value The patient's postal code
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setPostalCode(const QString &value) {
     postalCode = value;
 }
 
+/**
+ * @name PatientRecord::setProvince
+ * @brief Sets the patient's province
+ * @details Assigns the provided value to the patient's province field
+ * @param[in] value The patient's province
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setProvince(const QString &value) {
     province = value;
 }
 
+/**
+ * @name PatientRecord::setCountry
+ * @brief Sets the patient's country
+ * @details Assigns the provided value to the patient's country field
+ * @param[in] value The patient's country
+ * @author Kalundi Serumaga
+ */
 void PatientRecord::setCountry(const QString &value) {
     country = value;
 }
+

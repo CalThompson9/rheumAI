@@ -4,6 +4,8 @@
  *
  * @author Andres Pedreros (apedrero@uwo.ca)
  * @date Mar. 6, 2025
+ * @author Callum Thompson (cthom226@uwo.ca)
+ * @date Mar. 20, 2025
  */
 #ifndef AUDIO_HANDLER_H
 #define AUDIO_HANDLER_H
@@ -30,7 +32,15 @@
 #include <QDebug>
 #include "transcript.h"
 
-// AudioHandler class handles audio recording and transcription
+/**
+ * @class AudioHandler
+ * @brief Singleton class for handling audio recording and transcription.
+ * @details This class provides methods to record audio, transcribe it using Google Speech API,
+ *          and manage microphone permissions. It uses QMediaRecorder for recording and QNetworkAccessManager
+ *          for sending audio data to the API. The class is designed as a singleton to ensure
+ *          that only one instance exists throughout the application.
+ * @note The class is not thread-safe and should be used in a single-threaded context.
+ */
 class AudioHandler : public QObject
 {
     Q_OBJECT
@@ -63,7 +73,7 @@ signals:
 private:
     QString apiKey;
     QString openAIApiKey;
-    QNetworkAccessManager *networkManager;                                                               // Network manager for API requests
+    QNetworkAccessManager *networkManager;
 
     QString sendToWhisperAPI(const QString &audioPath); // Send audio to Google Speech API
     QString sendToGoogleSpeechAPI(const QString &audioPath);

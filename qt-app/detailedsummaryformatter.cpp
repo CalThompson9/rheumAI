@@ -9,15 +9,18 @@
  * @date Mar. 7, 2025
  */
 
+// Libraries
 #include <QLabel>
 #include "detailedsummaryformatter.h"
 
 /**
  * @name generateLayout
  * @brief Creates a detailed layout of the summary
- * @details Includes interval history, physical examination, current status, and plan
+ * @details Includes interval history, physical examination, current status, and plan sections.
+ * This is the standard detailed summary format.
  * @param[in] summary: Summary to create layout for
  * @param[in,out] summaryLayout: Layout to display summary in. Existing layout elements will be cleared.
+ * @author Joelene Hales
  */
 void DetailedSummaryFormatter::generateLayout(const Summary& summary, QVBoxLayout* summaryLayout) const
 {

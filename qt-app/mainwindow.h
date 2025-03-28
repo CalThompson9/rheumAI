@@ -38,6 +38,23 @@
 #include "summarygenerator.h"
 #include "settings.h"
 
+/**
+ * @class MainWindow
+ * @brief Main application window for the program
+ * @details This class manages the main window of the application, including
+ * the UI elements, patient management, and summary generation.
+ * It handles user interactions, such as adding, editing, and deleting patients,
+ * as well as generating and displaying summaries based on the patient's transcript.
+ * The class also manages the layout of the summary display and provides
+ * functionality to switch between different summary formats.
+ * It connects to the LLMClient for generating summaries and handles the
+ * responses from the LLM.
+ * @author Andres Pedreros Castro
+ * @author Callum Thompson
+ * @author Joelene Hales
+ * @author Kalundi Serumaga
+ * @author Thomas Llamzon
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -65,7 +82,6 @@ private:
     QPushButton *btnDeletePatient;
     QPushButton *btnArchivePatient;
     QPushButton *toggleSwitch;
-    QTextEdit *textTranscription;
     QPushButton *selectSummaryLayout;
     QMenu *summaryLayoutOptions;
     QVBoxLayout *summarySection;
