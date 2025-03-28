@@ -92,11 +92,9 @@ MainWindow::MainWindow(QWidget *parent)
         optionDetailedLayout->setEnabled(false);
     }
 
-
-
-
     // Connect "Record" button to start and stop recording
-    connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]() {
+    connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
+            {
         static bool isRecording = false;
         if (isRecording) {
             audioHandler->stopRecording();
@@ -130,9 +128,7 @@ MainWindow::MainWindow(QWidget *parent)
             audioHandler->startRecording("output.wav");
             btnRecord->setText("Stop Recording");
         }
-        isRecording = !isRecording;
-    });
-
+        isRecording = !isRecording; });
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
@@ -285,7 +281,6 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
  */
 void MainWindow::handleSummarizeButtonClicked()
 {
-    loadingDialog->show();
     // Get selected patient ID
     QVariant patientData = comboSelectPatient->currentData();
     if (!patientData.isValid())
@@ -312,9 +307,9 @@ void MainWindow::handleSummarizeButtonClicked()
     // Create a transcript object
     Transcript *transcript = new Transcript(QTime::currentTime(), currentTranscriptText);
 
+    loadingDialog->show();
     // Send transcript to the LLM
     summaryGenerator->sendRequest(*transcript);
-    loadingDialog->hide();
 }
 
 /**
@@ -323,6 +318,8 @@ void MainWindow::handleSummarizeButtonClicked()
  */
 void MainWindow::handleSummaryReady()
 {
+    loadingDialog->hide();
+
     // Retrieve structured summary from SummaryGenerator
     Summary summary = summaryGenerator->getSummary();
 
@@ -593,14 +590,20 @@ void MainWindow::on_removePatientButton_clicked()
     QString patientDirPath = baseDir + QString::number(selectedID);
 
     QDir dir(patientDirPath);
-    if (dir.exists()) {
-        if (dir.removeRecursively()) {
+    if (dir.exists())
+    {
+        if (dir.removeRecursively())
+        {
             qDebug() << "Patient folder deleted successfully:" << patientDirPath;
-        } else {
+        }
+        else
+        {
             QMessageBox::warning(this, "Delete Failed", "Could not delete patient folder.");
             return;
         }
-    } else {
+    }
+    else
+    {
         QMessageBox::warning(this, "Delete Failed", "Patient folder does not exist.");
         return;
     }
@@ -608,7 +611,6 @@ void MainWindow::on_removePatientButton_clicked()
     comboSelectPatient->removeItem(index);
     checkDropdownEmpty();
 }
-
 
 /**
  * @brief MainWindow::on_archivePatientButton_clicked
