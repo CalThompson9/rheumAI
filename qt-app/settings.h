@@ -35,7 +35,7 @@ class Settings : public QObject {
     friend class MainWindow;
 
 public:
-    static Settings* getInstance(QObject *parent, LLMClient *llm);
+    static Settings* getInstance(QObject *parent);
     ~Settings() = default;
 
     void showSettings();
@@ -54,13 +54,12 @@ signals:
     void okButtonClicked();
 
 private:
-    Settings(QObject *parent, LLMClient *llm);
+    Settings(QObject *parent);
 
     static QString readKey(const QString& keyPrefix);
     void storeConfig(const QString &config, const QString &value);
 
     QObject *mainWindow;
-    LLMClient *llmClient;
     QString llmKey;
     QString audioKey;
     QString openAIAudioKey;

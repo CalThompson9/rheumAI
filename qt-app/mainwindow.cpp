@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent)
     AudioHandler *audioHandler = AudioHandler::getInstance();
 
     // Initialize settings
-    settings = Settings::getInstance(this, summaryGenerator->llmClient);
+    settings = Settings::getInstance(this);
     connect(btnSettings, &QPushButton::clicked, settings, &Settings::showSettings);
     connect(settings, &Settings::okButtonClicked, this, &MainWindow::handleSummarizeButtonClicked);
 

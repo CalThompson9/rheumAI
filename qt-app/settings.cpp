@@ -20,12 +20,8 @@ Settings* Settings::instance = nullptr;
  * @name Settings (constructor)
  * @brief Constructor for Settings class
  * @param parent - MainWindow
- * @param llm - LLM Client object
  */
-Settings::Settings(QObject *p, LLMClient *llm)
-    : QObject(p),
-      mainWindow(p),
-      llmClient(llm)
+Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
 {
     // Load default settings from configuration file keyFile.txt
     QFile file("keyFile.txt");
@@ -58,7 +54,7 @@ Settings::Settings(QObject *p, LLMClient *llm)
     }
 
     // Set API keys from keyFile
-    llmClient->setApiKey(llmKey);
+    LLMClient::getInstance()->setApiKey(llmKey);
     AudioHandler::getInstance()->setGoogleApiKey(audioKey);
     AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
 
@@ -72,12 +68,11 @@ Settings::Settings(QObject *p, LLMClient *llm)
 /**
  * @brief Returns single static instance.
  * @param parent - Main Window
- * @param llm - LLM Client object
  * @return Returns singleton settings object.
  */
-Settings* Settings::getInstance(QObject *parent, LLMClient *llm) {
+Settings* Settings::getInstance(QObject *parent) {
     if (!instance) {
-        instance = new Settings(parent, llm);
+        instance = new Settings(parent);
     }
     return instance;
 }
@@ -289,7 +284,7 @@ QString Settings::readKey(const QString& keyPrefix)
  * @param[in] newKey: API key
  */
 void Settings::setLLMKey(QString newKey) {
-    llmClient->setApiKey(newKey);
+    LLMClient::getInstance()->setApiKey(newKey);
     storeConfig("LLM", newKey);
 }
 
