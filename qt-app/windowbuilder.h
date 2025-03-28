@@ -21,36 +21,37 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDialog>
-#include <QLabel>
 #include <QLineEdit>
 #include <QDialogButtonBox>
 #include <QCheckBox>
+#include <QScrollArea>
+#include <QPixmap>
 
 class WindowBuilder
 {
-    public:
-        static void setupUI(QWidget *centralWidget,
-                            QPushButton *&btnSettings,
-                            QLabel *&lblTitle,
-                            QLabel *&lblPatientName,
-                            QComboBox *&comboSelectPatient,
-                            QPushButton *&btnRecord,
-                            QPushButton *&btnSummarize,
-                            QPushButton *&selectSummaryLayout,
-                            QVBoxLayout *&summarySection,
-                            QVBoxLayout *&mainLayout,
-                            QPushButton *&btnAddPatient,
-                            QPushButton *&btnEditPatient,
-                            QPushButton *&btnDeletePatient,
-                            QPushButton *&btnArchivePatient,
-                            QPushButton *&toggleSwitch);
+public:
+    static void setupUI(QWidget *centralWidget,
+                        QPushButton *&btnSettings,
+                        QLabel *&lblTitle,
+                        QLabel *&lblPatientName,
+                        QComboBox *&comboSelectPatient,
+                        QPushButton *&btnRecord,
+                        QPushButton *&btnSummarize,
+                        QPushButton *&selectSummaryLayout,
+                        QVBoxLayout *&summarySection,
+                        QVBoxLayout *&mainLayout,
+                        QPushButton *&btnAddPatient,
+                        QPushButton *&btnEditPatient,
+                        QPushButton *&btnDeletePatient,
+                        QPushButton *&btnArchivePatient,
+                        QPushButton *&toggleSwitch);
 
-        static const QString blueButtonStyle;
-        static const QString orangeButtonStyle;
-        static const QString redButtonStyle;
-        static const QString greyButtonStyle;
-        static const QString settingsBlueButtonStyle;
-        static const QString disabledButtonStyle;
+    static const QString blueButtonStyle;
+    static const QString orangeButtonStyle;
+    static const QString redButtonStyle;
+    static const QString greyButtonStyle;
+    static const QString settingsBlueButtonStyle;
+    static const QString disabledButtonStyle;
 };
 
 #endif // WINDOWBUILDER_H

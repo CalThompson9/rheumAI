@@ -13,8 +13,24 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QDialog>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QMovie>
 #include <QMainWindow>
 #include <QMenu>
+#include <QMessageBox>
+#include <QMediaDevices>
+#include <QAudioDevice>
+#include <QTimer>
+#include "editpatientinfo.h"
+#include "audiohandler.h"
+#include "detailedsummaryformatter.h"
+#include "concisesummaryformatter.h"
+#include "filehandler.h"
+#include "patientrecord.h"
+#include "transcript.h"
+#include "addpatientdialog.h"
 #include "windowbuilder.h"
 #include "llmclient.h"
 #include "summary.h"
@@ -53,6 +69,8 @@ private:
     QPushButton *selectSummaryLayout;
     QMenu *summaryLayoutOptions;
     QVBoxLayout *summarySection;
+    QDialog *loadingDialog;
+    QLabel *loadingLabel;
     LLMClient *llmClient;
 
     // Layout

@@ -2,7 +2,7 @@
  * @file summaryformatter.h
  * @brief Declaration of SummaryFormatter class
  * @details Implements the Strategy pattern
- * 
+ *
  * @author Joelene Hales (jhales5@uwo.ca)
  * @author Callum Thompson (cthom226@uwo.ca)
  * @date Mar. 6, 2025
@@ -14,25 +14,26 @@
 #include <QVBoxLayout>
 #include <QRegularExpression>
 #include <QTextBrowser>
+#include <QWidget>
+#include <QLabel>
 #include "summary.h"
 
-
-class SummaryFormatter 
+class SummaryFormatter
 {
-    public:
+public:
+    struct Section
+    {
+        QString title;   // Section title
+        QString content; // Body text
+    };
 
-        struct Section {
-            QString title;    // Section title
-            QString content;  // Body text
-        };
+    virtual void generateLayout(const Summary &summary, QVBoxLayout *summaryLayout) const = 0;
+    virtual ~SummaryFormatter() = default; // Qt automatically manages memory of QObjects, no need for manual deletion
 
-        virtual void generateLayout(const Summary& summary, QVBoxLayout* summaryLayout) const = 0;
-        virtual ~SummaryFormatter() = default;  // Qt automatically manages memory of QObjects, no need for manual deletion
-        
-    protected:
-        QString formatBoldText(const QString& text) const;
-        void clearLayout(QVBoxLayout* layout) const;
-        void addSection(const Section& section, QVBoxLayout* summaryLayout) const;
+protected:
+    QString formatBoldText(const QString &text) const;
+    void clearLayout(QVBoxLayout *layout) const;
+    void addSection(const Section &section, QVBoxLayout *summaryLayout) const;
 };
 
 #endif
