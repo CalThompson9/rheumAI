@@ -13,8 +13,11 @@
 /**
  * @name Transcript (constructor)
  * @brief Initializes a new Transcript instance
+ * @details This constructor initializes a new Transcript instance with the given timestamp and content.
+ * It sets the timestamp and content attributes of the Transcript object.
  * @param[in] timestamp: Transcript start timestamp
  * @param[in] content: Transcript content
+ * @author Joelene Hales
  */
 Transcript::Transcript(const QTime &timestamp, const QString &content) : timestamp(timestamp), content(content)
 {
@@ -24,7 +27,10 @@ Transcript::Transcript(const QTime &timestamp, const QString &content) : timesta
 /**
  * @name getTimestamp
  * @brief Get a read-only version of the transcript timestamp
+ * @details This function returns a read-only version of the transcript timestamp.
+ * It allows access to the timestamp without modifying it.
  * @return Transcript timestamp
+ * @author Joelene Hales
  */
 const QTime &Transcript::getTimestamp() const
 {
@@ -34,7 +40,10 @@ const QTime &Transcript::getTimestamp() const
 /**
  * @name getContent
  * @brief Get a read-only version of the transcript content
+ * @details This function returns a read-only version of the transcript content.
+ * It allows access to the content without modifying it.
  * @return Transcript content
+ * @author Joelene Hales
  */
 const QString &Transcript::getContent() const
 {

@@ -9,9 +9,17 @@
 #ifndef DETAILEDSUMMARYFORMATTER_H
 #define DETAILEDSUMMARYFORMATTER_H
 
+// Libraries
 #include "summaryformatter.h"
 
-
+/**
+ * @class DetailedSummaryFormatter
+ * @brief Class to format detailed summaries
+ * @details This class is responsible for generating a detailed layout of the summary.
+ * It includes sections for interval history, physical examination, current status, and plan.
+ * This is the standard detailed summary format.
+ * @author Joelene Hales
+ */
 class DetailedSummaryFormatter : public SummaryFormatter
 {
     public:

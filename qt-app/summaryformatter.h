@@ -18,6 +18,18 @@
 #include <QLabel>
 #include "summary.h"
 
+/**
+ * @class SummaryFormatter
+ * @brief Abstract base class for formatting summary layouts
+ * @details This class provides an interface for all summary layout formats.
+ * It defines a method to generate the layout and a method to format bold text.
+ * The class also provides a method to clear the layout and a method to add sections.
+ * The formatting of the summary is done using HTML tags.
+ * The class is designed to be inherited by specific formatters that implement the generateLayout method.
+ * The class uses the Strategy pattern to allow for different formatting strategies.
+ * @author Joelene Hales
+ * @author Callum Thompson
+ */
 class SummaryFormatter
 {
 public:

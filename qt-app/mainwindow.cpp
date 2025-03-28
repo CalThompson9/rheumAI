@@ -2,7 +2,7 @@
  * @file mainwindow.cpp
  * @brief Definition of MainWindow class
  *
- * Main window owns and manages the lifetime UI elements, processes button
+ * @details Main window owns and manages the lifetime UI elements, processes button
  * press signals, and manages summary generation.
  *
  * @author Andres Pedreros Castro (apedrero@uwo.ca)
@@ -18,7 +18,15 @@
 /**
  * @name MainWindow (constructor)
  * @brief Initializes a MainWindow instance
+ * @details Sets up the UI elements and connects signals to slots. 
+ * Initializes the SummaryGenerator and AudioHandler instances.
+ * Sets up the layout and connects buttons to their respective handlers.
  * @param[in] parent: Parent widget
+ * @author Callum Thompson
+ * @author Andres Pedreros Castro
+ * @author Joelene Hales
+ * @author Thomas Llamzon
+ * @author Kalundi Serumaga
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), archiveMode(false)
@@ -132,7 +140,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
-    llmClient = new LLMClient(this);
+    llmClient = LLMClient::getInstance();
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
     connect(btnEditPatient, &::QPushButton::clicked, this, &MainWindow::on_editPatientButton_clicked);
@@ -178,13 +186,13 @@ MainWindow::MainWindow(QWidget *parent)
 /**
  * @name handleLLMResponse
  * @brief Handler function called when the LLM returns a response
- * @details Sets the plan text transcription displayed in the main window
+ * @details Sets the plan text transcription displayed in the main window and
+ * saves the transcript to a file.
  * @param[in] response: Response returned by the LLM
+ * @author Callum Thompson
  */
 void MainWindow::handleLLMResponse(const QString &response)
 {
-    textTranscription->setPlainText(response);
-
     // Get selected patient ID
     QVariant patientData = comboSelectPatient->currentData();
     if (!patientData.isValid())
@@ -225,6 +233,8 @@ void MainWindow::handleLLMResponse(const QString &response)
  * the currently selected option.
  * @param[in] summaryFormatter: Summary formatter corresponding to the selected
  * layout style
+ * @author Joelene Hales
+ * @author Callum Thompson
  */
 void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
 {
@@ -277,7 +287,8 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
 /**
  * @name handleSummarizeButtonClicked
  * @brief Handler function called when summarize button is clicked
- * @details Starts a new summary generation process via the LLM
+ * @details Starts a new summary generation process via the LLM client.
+ * @author Callum Thompson
  */
 void MainWindow::handleSummarizeButtonClicked()
 {
@@ -315,6 +326,10 @@ void MainWindow::handleSummarizeButtonClicked()
 /**
  * @name handleSummaryReady
  * @brief Processes and displays the structured summary after LLM response
+ * @details Hides the loading dialog, retrieves the summary from the
+ * SummaryGenerator, and saves it to a file.
+ * @author Callum Thompson
+ * @author Kalundi Serumaga
  */
 void MainWindow::handleSummaryReady()
 {
@@ -357,7 +372,9 @@ void MainWindow::handleSummaryReady()
 /**
  * @name loadPatientsIntoDropdown
  * @brief Handles adding a new patient record
+ * @details Loads all patients from the Patients directory into the dropdown
  * @return Returns false if the Patients directory is empty
+ * @author Kalundi Serumaga
  */
 bool MainWindow::loadPatientsIntoDropdown()
 {
@@ -389,7 +406,13 @@ bool MainWindow::loadPatientsIntoDropdown()
 /**
  * @name loadArchivedPatientsIntoDropdown
  * @brief Handles loading archived patients into the dropdown
+ * @details Loads all archived patients from the Archived directory into the dropdown. 
+ * If the directory does not exist, it returns true.
  * @return Returns false if the archived patients directory is empty.
+ * @author Andres Pedreros Castro
+ * @author Kalundi Serumaga
+ * @author Thomas Llamzon
+ * @returns boolean - true if the directory does not exist, false otherwise.
  */
 bool MainWindow::loadArchivedPatientsIntoDropdown()
 {
@@ -421,7 +444,10 @@ bool MainWindow::loadArchivedPatientsIntoDropdown()
 /**
  * @name setSummaryFormatter
  * @brief Set the formatter used to create the summary
+ * @details Deletes the old formatter and sets the new one
  * @param[in] summaryFormatter: Summary layout formatter
+ * @author Callum Thompson
+ * @author Joelene Hales
  */
 void MainWindow::setSummaryFormatter(SummaryFormatter *newSummaryFormatter)
 {
@@ -432,7 +458,10 @@ void MainWindow::setSummaryFormatter(SummaryFormatter *newSummaryFormatter)
 /**
  * @name displaySummary
  * @brief Display summary using the configured layout
+ * @details Uses the summaryFormatter to generate the layout for the summary. 
  * @param[in] summary: Summary to display
+ * @author Joelene Hales
+ * @author Callum Thompson
  */
 void MainWindow::displaySummary(const Summary &summary)
 {
@@ -451,6 +480,9 @@ void MainWindow::displaySummary(const Summary &summary)
  * @details Displays a dialog window that prompts the user to enter the
  * patient's details. Once the user submits the form, a new record file is created
  * with the input data, and the user interface is updated.
+ * @author Kalundi Serumaga
+ * @author Andres Pedreros Castro
+ * @author Thomas Llamzon
  */
 void MainWindow::on_addPatientButton_clicked()
 {
@@ -531,6 +563,9 @@ void MainWindow::on_addPatientButton_clicked()
  * @details Displays a dialog window that prompts the user to edit the
  * patient's details. Once the user submits the form, the file of the existing selected
  * patient is updated with the changed fields.
+ * @author Kalundi Serumaga
+ * @author Andres Pedreros Castro
+ * @author Thomas Llamzon
  */
 void MainWindow::on_editPatientButton_clicked()
 {
@@ -578,6 +613,9 @@ void MainWindow::on_editPatientButton_clicked()
  * @brief Handle deletion of the selected patient from the system
  * @details Deletes the selected patient's folder and all associated files from either
  *          the active or archived directory. Updates the dropdown and UI accordingly.
+ * @author Kalundi Serumaga
+ * @author Andres Pedreros Castro
+ * @author Thomas Llamzon
  */
 void MainWindow::on_removePatientButton_clicked()
 {
@@ -616,6 +654,9 @@ void MainWindow::on_removePatientButton_clicked()
  * @brief MainWindow::on_archivePatientButton_clicked
  * @brief Handler function called when the "Archive Patient" button is pressed
  * @details Returns patient to active patients directory.
+ * @author Kalundi Serumaga
+ * @author Andres Pedreros Castro
+ * @author Thomas Llamzon
  */
 void MainWindow::on_archivePatientButton_clicked()
 {
@@ -638,7 +679,11 @@ void MainWindow::on_archivePatientButton_clicked()
 }
 
 /**
- * @brief handleArchiveToggled
+ * @name handleArchiveToggled
+ * @brief Handler function called when the "Archive" toggle button is pressed
+ * @details Toggles between archive and active mode. Updates the UI accordingly.
+ * @author Kalundi Serumaga
+ * @author Andres Pedreros Castro
  */
 void MainWindow::handleArchiveToggled()
 {
@@ -686,9 +731,11 @@ void MainWindow::handleArchiveToggled()
 }
 
 /**
- * @brief MainWindow::checkDropdownEmpty
+ * @name checkDropdownEmpty
+ * @brief Check if the dropdown is empty
  * @details Checks if Archive or Patient directories no longer have patients to update UI accordingly.
- *
+ * @author Kalundi Serumaga
+ * @author Andres Pedreros Castro
  */
 void MainWindow::checkDropdownEmpty()
 {
@@ -749,6 +796,8 @@ void MainWindow::checkDropdownEmpty()
  * @brief Handles the signal that a new patient has been selected
  * @details Updates the UI to display the select patient's ID
  * @param[in] index: Index of option selected in the dropdown
+ * @author Kalundi Serumaga
+ * @author Andres Pedreros Castro
  */
 void MainWindow::on_patientSelected(int index)
 {
@@ -845,6 +894,12 @@ void MainWindow::on_patientSelected(int index)
     }
 }
 
+/**
+ * @name ~MainWindow
+ * @brief Deconstructor for MainWindow
+ * @details Does nothing
+ * @author Callum Thompson
+ */
 MainWindow::~MainWindow()
 {
     // Qt automatically manages memory, no need for manual deletion
@@ -854,6 +909,8 @@ MainWindow::~MainWindow()
  * @name viewPatient
  * @brief When switched to a patient, display their information in the top corner
  * @details This function is called when a patient is selected from the dropdown
+ * @author Kalundi Serumaga
+ * @author Andres Pedreros Castro
  */
 void MainWindow::viewPatient()
 {

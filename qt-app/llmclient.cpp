@@ -2,7 +2,7 @@
  * @file llmclient.cpp
  * @brief Definition of LLMClient class
  * 
- * Responsible for managing the connection to the Google Gemini API, including 
+ * @details Responsible for managing the connection to the Google Gemini API, including 
  * sending requests, and handling responses.
  * 
  * @author Callum Thompson (cthom226@uwo.ca)
@@ -12,13 +12,17 @@
 
 #include "llmclient.h"
 
+LLMClient *LLMClient::instance = nullptr;
+
 /**
  * @name LLMClient (constructor)
  * @brief Initializes the LLM client, including the network access manager
- * @param[in] parent: Parent widget
+ * @details Reads the API key from a file and sets up the network access manager.
+ * @param[in] QNetworkManager: Network access manager for handling network requests
+ * @author Callum Thompson
  */
-LLMClient::LLMClient(QObject *parent)
-    : QObject(parent), networkManager(new QNetworkAccessManager(this))
+LLMClient::LLMClient()
+    : QObject(nullptr), networkManager(new QNetworkAccessManager(this))
 {
     apiKey = getAPIKey();
     qDebug() << "LLM API Key: " << apiKey;
@@ -31,11 +35,30 @@ LLMClient::LLMClient(QObject *parent)
 }
 
 /**
+ * @name getInstance
+ * @brief Returns the singleton instance of LLMClient
+ * @details This function ensures that only one instance of LLMClient exists at a
+ * time. It is a singleton pattern implementation.
+ * @param[in] parent: Parent widget
+ * @return Singleton instance of LLMClient
+ * @author Callum Thompson
+ */
+LLMClient *LLMClient::getInstance()
+{
+    if (!instance)
+    {
+        instance = new LLMClient();
+    }
+    return instance;
+}
+
+/**
  * @name sendRequest
  * @brief Combines the initial prompt with an additional prompt and sends as a
  * request to the LLM.
- * @details Initial prompt is read from file, `llmprompt.txt`
+ * @details Initial prompt is read from file, `llmprompt.txt`. 
  * @param[in] prompt: Additional prompt
+ * @author Callum Thompson
  */
 void LLMClient::sendRequest(const QString &prompt)
 {
@@ -75,7 +98,10 @@ void LLMClient::sendRequest(const QString &prompt)
  * @name sendLLMRequest
  * @brief Parses the input prompt, sets generation configuration, and sends as a
  * request and sends to the LLM.
+ * @details This function constructs the JSON request body, sets the necessary headers, 
+ * and sends the request to the google gemini API, the version is gemini-1.5-flash-8b.
  * @param[in] inputPrompt: Input prompt
+ * @author Callum Thompson
  */
 void LLMClient::sendLLMRequest(const QString &inputPrompt)
 {
@@ -112,7 +138,11 @@ void LLMClient::sendLLMRequest(const QString &inputPrompt)
  * @name handleNetworkReply
  * @brief Handle network reply by parsing the response data, converting it to a
  * JSON format, and emit a signal that a response has been recieved.
+ * @details This function checks for errors in the network reply, parses the JSON response,
+ * and extracts the relevant information. If the response is valid, it emits a signal with
+ * the response text.
  * @param[in] reply: Network reply
+ * @author Callum Thompson
  */
 void LLMClient::handleNetworkReply(QNetworkReply *reply)
 {
@@ -179,9 +209,13 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
 }
 
 /**
- * @author Thomas Llamzon
+ * @name getAPIKey
  * @brief Reads keyFile upon class construction to set apiKey.
+ * @details This function reads the keyFile.txt file to extract the API key.
+ * It searches for the line starting with "GEMINI_API_KEY:" and returns the key.
+ * If the file does not exist or the key is not found, it returns an empty string.
  * @return Returns LLM API Key.
+ * @author Thomas Llamazon
  */
 QString LLMClient::getAPIKey() {
 
