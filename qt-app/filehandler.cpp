@@ -44,7 +44,7 @@ FileHandler::FileHandler() : patientDatabasePath("Patients"),
  * This ensures that only one instance of FileHandler is created and used
  * throughout the application.
  * @return Singleton instance of FileHandler
- * @author Joelene Hales
+ * @author Kalundi Serumaga
  */
 FileHandler *FileHandler::getInstance()
 {

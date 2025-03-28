@@ -71,7 +71,7 @@ signals:
     void microphonePermissionGranted();
 
 private:
-    QString apiKey;
+    QString googleSpeechApiKey;
     QString openAIApiKey;
     QNetworkAccessManager *networkManager;
 

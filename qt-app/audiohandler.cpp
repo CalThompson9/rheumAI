@@ -39,9 +39,9 @@ AudioHandler *AudioHandler::instance = nullptr;
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
-    apiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
+    googleSpeechApiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
     openAIApiKey = getAPIKey("OPENAI_AUDIO_API_KEY:");
-    qDebug() << "Google API Key:" << apiKey;
+    qDebug() << "Google API Key:" << googleSpeechApiKey;
     qDebug() << "OpenAI API Key:" << openAIApiKey;
 
     networkManager = new QNetworkAccessManager(this);
@@ -239,7 +239,7 @@ QString AudioHandler::sendToWhisperAPI(const QString& audioPath)
  */
 QString AudioHandler::sendToGoogleSpeechAPI(const QString& audioPath)
 {
-    QUrl url("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKey);
+    QUrl url("https://speech.googleapis.com/v1/speech:recognize?key=" + googleSpeechApiKey);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 

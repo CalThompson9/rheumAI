@@ -12,6 +12,8 @@
 
 #include "llmclient.h"
 
+LLMClient *LLMClient::instance = nullptr;
+
 /**
  * @name LLMClient (constructor)
  * @brief Initializes the LLM client, including the network access manager
@@ -43,8 +45,11 @@ LLMClient::LLMClient()
  */
 LLMClient *LLMClient::getInstance()
 {
-    static LLMClient instance;
-    return &instance;
+    if (!instance)
+    {
+        instance = new LLMClient();
+    }
+    return instance;
 }
 
 /**
@@ -94,7 +99,7 @@ void LLMClient::sendRequest(const QString &prompt)
  * @brief Parses the input prompt, sets generation configuration, and sends as a
  * request and sends to the LLM.
  * @details This function constructs the JSON request body, sets the necessary headers, 
- * and sends the request to the LLM API.
+ * and sends the request to the google gemini API, the version is gemini-1.5-flash-8b.
  * @param[in] inputPrompt: Input prompt
  * @author Callum Thompson
  */

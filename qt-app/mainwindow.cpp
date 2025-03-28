@@ -22,7 +22,6 @@
  * Initializes the SummaryGenerator and AudioHandler instances.
  * Sets up the layout and connects buttons to their respective handlers.
  * @param[in] parent: Parent widget
- * @return None
  * @author Callum Thompson
  * @author Andres Pedreros Castro
  * @author Joelene Hales
@@ -190,7 +189,6 @@ MainWindow::MainWindow(QWidget *parent)
  * @details Sets the plan text transcription displayed in the main window and
  * saves the transcript to a file.
  * @param[in] response: Response returned by the LLM
- * @return None
  * @author Callum Thompson
  */
 void MainWindow::handleLLMResponse(const QString &response)
@@ -290,7 +288,6 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
  * @name handleSummarizeButtonClicked
  * @brief Handler function called when summarize button is clicked
  * @details Starts a new summary generation process via the LLM client.
- * @return None
  * @author Callum Thompson
  */
 void MainWindow::handleSummarizeButtonClicked()
@@ -331,7 +328,6 @@ void MainWindow::handleSummarizeButtonClicked()
  * @brief Processes and displays the structured summary after LLM response
  * @details Hides the loading dialog, retrieves the summary from the
  * SummaryGenerator, and saves it to a file.
- * @return None
  * @author Callum Thompson
  * @author Kalundi Serumaga
  */
@@ -416,8 +412,7 @@ bool MainWindow::loadPatientsIntoDropdown()
  * @author Andres Pedreros Castro
  * @author Kalundi Serumaga
  * @author Thomas Llamzon
- * @returns true if the directory does not exist.
- * @returns false if the directory is empty.
+ * @returns boolean - true if the directory does not exist, false otherwise.
  */
 bool MainWindow::loadArchivedPatientsIntoDropdown()
 {

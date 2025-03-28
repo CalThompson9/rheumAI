@@ -30,7 +30,7 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
       llmClient(llm),
       audioHandlerClient(audio),
       llmKey(llm->apiKey),
-      audioKey(audio->apiKey),
+      audioKey(audio->googleSpeechApiKey),
       openAIAudioKey(audio->openAIApiKey)
 {
     // Load summary format from configuration file keyFile.txt
@@ -267,7 +267,7 @@ void Settings::setLLMKey(QString newKey) {
  * @author Thomas Llamzon
  */
 void Settings::setAudioKey(QString newKey) {
-    audioHandlerClient->apiKey = newKey;
+    audioHandlerClient->googleSpeechApiKey = newKey;
     storeConfig("AUDIO", newKey);
 }
 

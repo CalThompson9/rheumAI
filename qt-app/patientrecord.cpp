@@ -105,7 +105,7 @@ QString PatientRecord::getHealthCard() const
 /**
  * @name getFirstName
  * @brief Get the patient's first name
- * @details The first name is used to identify the patient
+ * @details First name field stored in the patients file
  * @return Patient's first name
  * @author Kalundi Serumaga
  */
@@ -117,7 +117,7 @@ QString PatientRecord::getFirstName() const
 /**
  * @name getLastName
  * @brief Get the patient's last name
- * @details The last name is used to identify the patient
+ * @details Last name field stored in the patients file
  * @return Patient's last name
  * @author Kalundi Serumaga
  */
@@ -129,7 +129,7 @@ QString PatientRecord::getLastName() const
 /**
  * @name getDateOfBirth
  * @brief Gets the patient's date of birth
- * @details The date of birth is used to identify the patient
+ * @details The date of birth stored in the patients file
  * @return Patient's date of birth
  * @author Kalundi Serumaga
  */
@@ -141,7 +141,7 @@ QString PatientRecord::getDateOfBirth() const
 /**
  * @name getEmail
  * @brief Gets the patient's email
- * @details The email is used to identify the patient 
+ * @details The email stored in the patients file
  * @return Patient's email
  * @author Kalundi Serumaga
  */
@@ -153,7 +153,7 @@ QString PatientRecord::getEmail() const
 /**
  * @name getPhoneNumber
  * @brief Gets the patient's phone number
- * @details The phone number is used to identify the patient
+ * @details The phone number stored in the patients file
  * @return Patient's phone number
  * @author Kalundi Serumaga
  */
@@ -165,7 +165,7 @@ QString PatientRecord::getPhoneNumber() const
 /**
  * @name getHomeAddress
  * @brief Gets the patient's home address
- * @details The home address is used to identify the patient
+ * @details The home address stored in the patients file
  * @return Patient's home address
  * @author Kalundi Serumaga
  */
@@ -177,7 +177,7 @@ QString PatientRecord::getAddress() const
 /**
  * @name getPostalCode
  * @brief Gets the patient's postal code
- * @details The postal code is used to identify the patient
+ * @details The postal code stored in the patients file
  * @return Patient's postal code
  * @author Kalundi Serumaga
  */
@@ -189,7 +189,7 @@ QString PatientRecord::getPostalCode() const
 /**
  * @name getProvince
  * @brief Gets the patient's province
- * @details The province is used to identify the patient
+ * @details The province stored in the patients file
  * @return Patient's province
  * @author Kalundi Serumaga
  */
@@ -201,7 +201,7 @@ QString PatientRecord::getProvince() const
 /**
  * @name getCountry
  * @brief Gets the patient's country
- * @details The country is used to identify the patient
+ * @details The country stored in the patients file
  * @return Patient's country
  * @author Kalundi Serumaga
  */

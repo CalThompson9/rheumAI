@@ -45,6 +45,7 @@ private slots:
     void handleNetworkReply(QNetworkReply *reply);
 
 private:
+    static LLMClient *instance; // Singleton instance
     explicit LLMClient();
     LLMClient(const LLMClient &) = delete;
     LLMClient &operator=(const LLMClient &) = delete;
