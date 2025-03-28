@@ -21,13 +21,11 @@ Settings* Settings::instance = nullptr;
  * @brief Constructor for Settings class
  * @param parent - MainWindow
  * @param llm - LLM Client object
- * @param audio - Audio Handler object
  */
-Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
+Settings::Settings(QObject *p, LLMClient *llm)
     : QObject(p),
       mainWindow(p),
-      llmClient(llm),
-      audioHandlerClient(audio)
+      llmClient(llm)
 {
     // Load default settings from configuration file keyFile.txt
     QFile file("keyFile.txt");
@@ -61,8 +59,8 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
 
     // Set API keys from keyFile
     llmClient->setApiKey(llmKey);
-    audioHandlerClient->setGoogleApiKey(audioKey);
-    audioHandlerClient->setOpenAIApiKey(openAIAudioKey);
+    AudioHandler::getInstance()->setGoogleApiKey(audioKey);
+    AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
 
     qDebug() << "Loaded settings:";
     qDebug() << "  GEMINI_API_KEY: " << llmKey;
@@ -75,12 +73,11 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
  * @brief Returns single static instance.
  * @param parent - Main Window
  * @param llm - LLM Client object
- * @param audio - Audio Handler object
  * @return Returns singleton settings object.
  */
-Settings* Settings::getInstance(QObject *parent, LLMClient *llm, AudioHandler *audio) {
+Settings* Settings::getInstance(QObject *parent, LLMClient *llm) {
     if (!instance) {
-        instance = new Settings(parent, llm, audio);
+        instance = new Settings(parent, llm);
     }
     return instance;
 }
@@ -302,7 +299,7 @@ void Settings::setLLMKey(QString newKey) {
  * @param[in] newKey: API key
  */
 void Settings::setAudioKey(QString newKey) {
-    audioHandlerClient->setGoogleApiKey(newKey);
+    AudioHandler::getInstance()->setGoogleApiKey(newKey);
     storeConfig("AUDIO", newKey);
 }
 
@@ -312,7 +309,7 @@ void Settings::setAudioKey(QString newKey) {
  * @param[in] newKey: API key
  */
 void Settings::setOpenAIAudioKey(QString newKey) {
-    audioHandlerClient->setOpenAIApiKey(openAIAudioKey);
+    AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
     storeConfig("OPENAI_AUDIO", newKey);
 }
 
