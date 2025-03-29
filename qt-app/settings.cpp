@@ -284,8 +284,8 @@ void Settings::setOpenAIAudioKey(QString newKey) {
 }
 
 /**
- * @name okButtonClicked
- * @brief Settings::setSummaryPreference
+ * @name setSummaryPreference
+ * @brief Stores summary preference code in the keyFile
  * @details This function is called when the OK button is clicked in the settings dialog.
  * @param[in] pref - Summary Layout Preference (Detailed/Concise)
  * @author Thomas Llamzon

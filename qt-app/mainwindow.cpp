@@ -318,6 +318,18 @@ void MainWindow::handleSummarizeButtonClicked()
     Transcript *transcript = new Transcript(QTime::currentTime(), currentTranscriptText);
 
     loadingDialog->show();
+
+    // Connect invalidAPIKey() signal to response action in case of bad LLMClient request
+    connect(llmClient, &LLMClient::invalidAPIKey, this, [=](QNetworkReply *reply) {
+        QByteArray responseData = reply->readAll();
+        QString responseText = QString::fromUtf8(responseData);
+        qDebug() << "🛜 BAD API KEY: " << responseText;
+        loadingDialog->hide();
+
+        // Let user know that the API key failed
+
+    });
+
     // Send transcript to the LLM
     summaryGenerator->sendRequest(*transcript);
 }
