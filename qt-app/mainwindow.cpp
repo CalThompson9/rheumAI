@@ -54,8 +54,11 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect the signal to process the generated summary when ready
     connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
 
-    // Initialize AudioHandler and connect transcription signal to LLMClient
+    // Configure API handlers
     AudioHandler *audioHandler = AudioHandler::getInstance();
+    llmClient = LLMClient::getInstance();
+    connect(audioHandler, &AudioHandler::badRequest, this, &MainWindow::endLoading);
+    connect(llmClient, &LLMClient::invalidAPIKey, this, &MainWindow::endLoading);
 
     // Initialize settings
     settings = Settings::getInstance(this, summaryGenerator->llmClient, audioHandler);
@@ -119,14 +122,6 @@ MainWindow::MainWindow(QWidget *parent)
 
             loadingDialog->show();
 
-            // Set bad API contact contingency
-            connect(audioHandler, &AudioHandler::badRequest, this, [=](QNetworkReply *reply){
-                QByteArray responseData = reply->readAll();
-                QString responseText = QString::fromUtf8(responseData);
-                loadingDialog->hide();
-            });
-
-
             Transcript currentTranscription = audioHandler->transcribe(filePath);
             qDebug() << "Transcription: " << currentTranscription.getContent();
 
@@ -147,7 +142,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
-    llmClient = LLMClient::getInstance();
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
     connect(btnEditPatient, &::QPushButton::clicked, this, &MainWindow::on_editPatientButton_clicked);
@@ -188,6 +182,28 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect "Summarize" button to summarize transcripts and update window
     connect(btnSummarize, &QPushButton::clicked, this, &MainWindow::handleSummarizeButtonClicked);
+}
+
+/**
+ * @name endLoading
+ * @brief Handler function for when any of the the user's API keys are invalid.
+ * @param[in] Cause of error thrown by client; used to produce a descriptive error message.
+ * @author Thomas Llamzon
+ */
+void MainWindow::endLoading(QNetworkReply *reply) {
+    loadingDialog->hide();
+
+    QString errorMessage = reply->errorString();
+
+    if (errorMessage.contains("openai")) {
+        errorMessage = "Transcriber Error!\n\nPlease ensure your transcriber API Key is properly configured in Settings.";
+    } else if (errorMessage.contains("googleapis")) {
+        errorMessage = "Summarizer Error!\n\nPlease ensure your sumarizer API Key is properly configured in Settings.";
+    } else {
+        errorMessage = "Please ensure your API keys are properly configured in Settings.";
+    }
+
+    QMessageBox::warning(this, "BAD API KEY", errorMessage);
 }
 
 /**
@@ -326,13 +342,6 @@ void MainWindow::handleSummarizeButtonClicked()
     Transcript *transcript = new Transcript(QTime::currentTime(), currentTranscriptText);
 
     loadingDialog->show();
-
-    // Connect invalidAPIKey() signal to response action in case of bad LLMClient request
-    connect(llmClient, &LLMClient::invalidAPIKey, this, [=](QNetworkReply *reply) {
-        QByteArray responseData = reply->readAll();
-        QString responseText = QString::fromUtf8(responseData);
-        loadingDialog->hide();
-    });
 
     // Send transcript to the LLM
     summaryGenerator->sendRequest(*transcript);

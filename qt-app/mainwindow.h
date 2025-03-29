@@ -111,6 +111,7 @@ private slots:
     void on_editPatientButton_clicked();
     void handleArchiveToggled();
     void checkDropdownEmpty();
+    void endLoading(QNetworkReply *reply);
 
 public slots:
     void on_patientSelected(int index);
