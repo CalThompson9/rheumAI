@@ -63,8 +63,6 @@ public:
     void setOpenAIApiKey(const QString& key);
     double getAudioDuration(const QString& path) const;
 
-    friend class Settings;
-
 signals:
     void transcriptionCompleted(const QString &transcribedText); // Signal for transcription completion
     void microphonePermissionDenied();

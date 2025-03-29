@@ -74,6 +74,7 @@ private:
     QString openAIAudioKey;
     QString summaryLayoutPreference;
 
+    static QString keyFilename;
     static Settings *instance;
 };
 

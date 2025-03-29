@@ -15,11 +15,17 @@
 Settings* Settings::instance = nullptr;
 
 /**
+ * @brief Set key file filename.
+ */
+QString Settings::keyFilename = "keyFile.txt";
+
+/**
  * @name Settings (constructor)
  * @brief Constructor for Settings class
- * @details This constructor reads the keyFile.txt file to extract API keys and
- * summary layout preference. If a field is not found, it is set to an empty
- * string. The expected keys are the following:
+ * @details This constructor initializes the application's settings by reading
+ * the key file to extract API keys and summary layout preference, and
+ * setting API keys in their corresponding object. If a field is not found, it
+ * is set to an empty string. The expected keys are the following:
  *      GEMINI_API_KEY: Google Gemini API key
  *      GOOGLE_AUDIO_API_KEY: Google Speech-to-Text API key
  *      OPENAI_AUDIO_API_KEY: OpenAI Whisper API key
@@ -32,10 +38,10 @@ Settings* Settings::instance = nullptr;
  */
 Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
 {
-    // Load default settings from configuration file keyFile.txt
-    QFile file("keyFile.txt");
+    // Load default settings from key file
+    QFile file(keyFilename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "keyFile.txt not found.";
+        qWarning() << "Settings key file" << keyFilename << " not found.";
     }
 
     QTextStream in(&file);
@@ -277,9 +283,9 @@ void Settings::showSettings()
  */
 QString Settings::readKey(const QString& keyPrefix)
 {
-    QFile file("keyFile.txt");
+    QFile file(keyFilename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "keyFile.txt not found.";
+        qWarning() << "Settings key file" << keyFilename << " not found.";
         return "";
     }
 

@@ -36,7 +36,6 @@ public:
     void sendRequest(const QString &prompt);
     static LLMClient *getInstance();
     void setApiKey(const QString& key);
-    friend class Settings;
 
 signals:
     void responseReceived(const QString &response);
