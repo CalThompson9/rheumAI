@@ -119,6 +119,14 @@ MainWindow::MainWindow(QWidget *parent)
 
             loadingDialog->show();
 
+            // Set bad API contact contingency
+            connect(audioHandler, &AudioHandler::badRequest, this, [=](QNetworkReply *reply){
+                QByteArray responseData = reply->readAll();
+                QString responseText = QString::fromUtf8(responseData);
+                loadingDialog->hide();
+            });
+
+
             Transcript currentTranscription = audioHandler->transcribe(filePath);
             qDebug() << "Transcription: " << currentTranscription.getContent();
 
@@ -323,11 +331,7 @@ void MainWindow::handleSummarizeButtonClicked()
     connect(llmClient, &LLMClient::invalidAPIKey, this, [=](QNetworkReply *reply) {
         QByteArray responseData = reply->readAll();
         QString responseText = QString::fromUtf8(responseData);
-        qDebug() << "🛜 BAD API KEY: " << responseText;
         loadingDialog->hide();
-
-        // Let user know that the API key failed
-
     });
 
     // Send transcript to the LLM
