@@ -30,11 +30,9 @@ AudioHandler *AudioHandler::instance = nullptr;
 /**
  * @name AudioHandler (Constructor)
  * @brief Initializes the AudioHandler instance
- * @details Sets up the network manager and retrieves API keys.
- * The API keys are being stored in a private text file, which 
- * uses `getAPIKey` to read the keys.
- * @note The API keys are expected to be in the format "KEY_NAME:KEY_VALUE".
- * @see getAPIKey
+ * @details Sets up the network manager. The API keys are initialized by
+ * Settings.
+ * @see Settings
  * @author Andres Pedreros Castro
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
@@ -477,11 +475,17 @@ void AudioHandler::playRecording(const QString &filePath)
 }
 
 /**
- * TODO: Documentation
+ * @name setGoogleAIApiKey
+ * @brief Sets the Google Text-to-Speech API key
+ * @details This function sets the Google Text-to-Speech API key for the
+ * AudioHandler instance.  It can be used to update the API key if needed.
+ * @param[in] key: Google Text-to-Speech API key
+ * @author Joelene Hales
  */
 void AudioHandler::setGoogleApiKey(const QString& key)
 {
     googleSpeechApiKey = key;
+    qDebug() << "Google Text-to-Speech API key set to: " << googleSpeechApiKey;
 }
 
 /**
@@ -490,12 +494,12 @@ void AudioHandler::setGoogleApiKey(const QString& key)
  * @details This function sets the OpenAI API key for the AudioHandler instance.
  * It can be used to update the API key if needed.
  * @param[in] key: OpenAI API key
- * @return void
  * @author Andres Pedreros Castro
  */
 void AudioHandler::setOpenAIApiKey(const QString& key)
 {
     openAIApiKey = key;
+    qDebug() << "OpenAI Whisper API key set to: " << openAIApiKey;
 }
 
 /**

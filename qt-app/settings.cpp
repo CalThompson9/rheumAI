@@ -17,10 +17,18 @@ Settings* Settings::instance = nullptr;
 /**
  * @name Settings (constructor)
  * @brief Constructor for Settings class
+ * @details This constructor reads the keyFile.txt file to extract API keys and
+ * summary layout preference. If a field is not found, it is set to an empty
+ * string. The expected keys are the following:
+ *      GEMINI_API_KEY: Google Gemini API key
+ *      GOOGLE_AUDIO_API_KEY: Google Speech-to-Text API key
+ *      OPENAI_AUDIO_API_KEY: OpenAI Whisper API key
+ *      SUMMARY_LAYOUT_PREFERENCE: Summary layout preference. One of 
+ *                                  {"Detailed Format", "Concise Format"}
+ * @note The API keys are expected to be in the format "KEY_NAME:KEY_VALUE".
  * @param parent - MainWindow
- * @details This constructor initializes the settings object and loads the summary layout preference from a configuration file.
- * @author Joelene Hales
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
 Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
 {

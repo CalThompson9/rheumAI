@@ -25,7 +25,7 @@ LLMClient *LLMClient::instance = nullptr;
 LLMClient::LLMClient()
     : QObject(nullptr), networkManager(new QNetworkAccessManager(this))
 {
-    qDebug() << "LLM API Key: " << apiKey;
+    qDebug() << "LLM API key initialized to: " << apiKey;
 
     connect(networkManager, &QNetworkAccessManager::finished, this, &LLMClient::handleNetworkReply);
 }
@@ -98,6 +98,7 @@ void LLMClient::sendRequest(const QString &prompt)
 void LLMClient::setApiKey(const QString& key)
 {
     apiKey = key;
+    qDebug() << "LLM API key set to: " << apiKey;
 }
 
 /**
@@ -214,31 +215,3 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     emit responseReceived(responseText);
 }
 
-/**
- * @name getAPIKey
- * @brief Reads keyFile upon class construction to set apiKey.
- * @details This function reads the keyFile.txt file to extract the API key.
- * It searches for the line starting with "GEMINI_API_KEY:" and returns the key.
- * If the file does not exist or the key is not found, it returns an empty string.
- * @return Returns LLM API Key.
- * @author Thomas Llamazon
- */
-QString LLMClient::getAPIKey() {
-
-    QFile file("keyFile.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "keyFile does not exist yet.";
-        return "";
-    }
-
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        if (line.startsWith("GEMINI_API_KEY:")) {
-            file.close();
-            return line.mid(QString("GEMINI_API_KEY:").length()).trimmed();
-        }
-    }
-
-    return "";
-}
