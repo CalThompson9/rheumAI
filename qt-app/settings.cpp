@@ -133,19 +133,19 @@ void Settings::showSettings()
     QMenu *summaryLayoutOptions = new QMenu();
     summaryLayout->addWidget(selectLayoutButton);
 
-    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
-    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
+    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Summary");
+    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Summary");
 
     selectLayoutButton->setMenu(summaryLayoutOptions);
     selectLayoutButton->setText(summaryLayoutPreference);
     mainLayout->addLayout(summaryLayout);
 
     connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
-        setSummaryPreference("Detailed Layout");
+        setSummaryPreference("Detailed Summary");
         selectLayoutButton->setText(summaryLayoutPreference);
     });
     connect(optionConciseLayout, &QAction::triggered, this, [=]() {
-        setSummaryPreference("Concise Layout");
+        setSummaryPreference("Concise Summary");
         selectLayoutButton->setText(summaryLayoutPreference);
     });
 
@@ -184,7 +184,6 @@ void Settings::showSettings()
     connect(llmButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!llmKeyField->text().isEmpty()) {
             setLLMKey(llmKeyField->text());
-            okButtonClicked();
         } else {
             qWarning() << "This field cannot be empty.";
         }
@@ -208,7 +207,6 @@ void Settings::showSettings()
     connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!googleAudioKeyField->text().isEmpty()) {
             setGoogleSpeechApiKey(googleAudioKeyField->text());
-            okButtonClicked();
         } else {
             qWarning() << "Google Audio key field cannot be empty.";
         }
@@ -232,7 +230,6 @@ void Settings::showSettings()
     connect(openaiButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!openaiKeyField->text().isEmpty()) {
             setOpenAIAudioKey(openaiKeyField->text());
-            okButtonClicked();
         } else {
             qWarning() << "OpenAI Audio key field cannot be empty.";
         }
@@ -276,10 +273,13 @@ void Settings::showSettings()
 }
 
 /**
- * @author Thomas Llamzon
  * @name readKey
- * @brief Retrieves a key from the keyfile
+ * @brief Retrieves a key value from the keyfile
+ * @details This function reads the keyfile value for the provided key prefix.
+ * It searches for the line that starts with the key prefix and returns the key value.
+ * @note The key file is expected to be in the format "KEY_NAME:KEY_VALUE".
  * @returns Key value, or "" if key could not be found
+ * @author Thomas Llamzon
  */
 QString Settings::readKey(const QString& keyPrefix)
 {
@@ -303,11 +303,14 @@ QString Settings::readKey(const QString& keyPrefix)
 /**
  * @name setLLMKey
  * @brief Sets LLM API key and modifies key storage file for continual use.
- * @details This function updates the LLM API key in the LLM client and stores it in a configuration file for future use.
+ * @details This function updates the LLM API key in the LLM client and stores
+ * it in a configuration file for future use.
  * @param[in] newKey: API key
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
 void Settings::setLLMKey(QString newKey) {
+    llmKey = newKey;
     LLMClient::getInstance()->setApiKey(newKey);
     storeConfig("LLM", newKey);
 }
@@ -315,13 +318,14 @@ void Settings::setLLMKey(QString newKey) {
 /**
  * @name setGoogleSpeechApiKey
  * @brief Sets Google audio transcriber API key and modifies key storage file for continual use.
- * @details This function updates the audio API key in the AudioHandler client and stores it in a configuration file for future use.
- * @details This function is used to set the API key for Google audio transcriber.
+ * @details This function updates the Google Speech-to-Text API key in the
+ * AudioHandler client and stores it in a configuration file for future use.
  * @param[in] newKey: API key
  * @author Thomas Llamzon
  * @author Joelene Hales
  */
 void Settings::setGoogleSpeechApiKey(QString newKey) {
+    googleSpeechApiKey = newKey;
     AudioHandler::getInstance()->setGoogleApiKey(newKey);
     storeConfig("AUDIO", newKey);
 }
@@ -329,21 +333,22 @@ void Settings::setGoogleSpeechApiKey(QString newKey) {
 /**
  * @name setOpenAIAudioKey
  * @brief Sets OpenAI Whisper audio API key and stores it persistently.
- * @details This function updates the OpenAI audio API key in the AudioHandler client and stores it in a configuration file for future use.
+ * @details This function updates the OpenAI API key in the AudioHandler client
+ * used and stores it in a configuration file for future use.
  * @param[in] newKey: API key
  * @author Thomas Llamzon
  * @author Joelene Hales
  */
 void Settings::setOpenAIAudioKey(QString newKey) {
+    openAIAudioKey = newKey;
     AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
     storeConfig("OPENAI_AUDIO", newKey);
 }
 
 /**
- * @name okButtonClicked
- * @brief Settings::setSummaryPreference
- * @details This function is called when the OK button is clicked in the settings dialog.
- * @param[in] pref - Summary Layout Preference (Detailed/Concise)
+ * @name setSummaryPreference
+ * @brief Stores summary preference code in the keyFile
+ * @param[in] pref: Summary Layout Preference (Detailed/Concise)
  * @author Thomas Llamzon
  * @author Joelene Hales
  */
@@ -354,8 +359,10 @@ void Settings::setSummaryPreference(QString pref) {
 
 /**
  * @name getLLMKey
- * @brief Get Gemini API key
- * @return Gemini API key
+ * @brief Get Google Gemini API key
+ * @details This API key is used by LLMClient to summarize transcripts using the
+ * Google Gemini API
+ * @return Google Gemini API key
  * @author Joelene Hales
  */
 QString Settings::getLLMKey() const {
@@ -365,6 +372,8 @@ QString Settings::getLLMKey() const {
 /**
  * @name getGoogleSpeechApiKey
  * @brief Get Google Speech-to-Text API key
+ * @details This API key is used by AudioHandler to transcribe speech using the
+ * Google Speech-to-Text API
  * @return Google Speech-to-Text API key
  * @author Joelene Hales
  */
@@ -375,6 +384,8 @@ QString Settings::getGoogleSpeechApiKey() const {
 /**
  * @name getOpenAIAudioKey
  * @brief Get Open AI Whisper API key
+ * @details This API key is used by AudioHandler to transcribe speech using the
+ * OpenAI Whisper API
  * @return Open AI Whisper API key
  * @author Joelene Hales
  */
@@ -397,9 +408,10 @@ QString Settings::getSummaryPreference() const
 /**
  * @name storeConfig
  * @brief Writes to hidden file storing user settings configurations.
- * @details This function stores user settings configurations in a hidden file for future use.
- * @param[in] config - target setting to store
- * @param[in] value - value of user configuration
+ * @details This function stores user settings configurations in a hidden file
+ * for future use.
+ * @param[in] config: Target setting to store
+ * @param[in] value: Value of user configuration
  * @author Thomas Llamzon
  */
 void Settings::storeConfig(const QString &config, const QString &value)

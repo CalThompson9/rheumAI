@@ -224,6 +224,7 @@ QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
     }
     else
     {
+        emit badRequest(reply);
         qWarning() << "❌ Whisper request failed:" << reply->errorString();
         qDebug() << "Reply HTTP status code:" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         qDebug() << "Raw reply:" << reply->readAll();
@@ -290,6 +291,7 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
     }
     else
     {
+        emit badRequest(reply);
         qWarning() << "Google request failed:" << reply->errorString();
     }
 

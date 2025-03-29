@@ -159,6 +159,7 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     if (reply->error() != QNetworkReply::NoError)
     {
         qWarning() << "Network error:" << reply->errorString();
+        emit invalidAPIKey(reply);
         return;
     }
 

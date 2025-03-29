@@ -59,9 +59,6 @@ public:
     QString getOpenAIAudioKey() const;
     QString getSummaryPreference() const;
 
-signals:
-    void okButtonClicked();
-
 private:
     Settings(QObject *parent);
 

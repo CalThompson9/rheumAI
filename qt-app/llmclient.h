@@ -39,6 +39,7 @@ public:
 
 signals:
     void responseReceived(const QString &response);
+    void invalidAPIKey(QNetworkReply *reply);
 
 private slots:
     void handleNetworkReply(QNetworkReply *reply);
