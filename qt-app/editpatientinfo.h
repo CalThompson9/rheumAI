@@ -16,6 +16,17 @@ namespace Ui {
 class EditPatientInfo;
 }
 
+/**
+ * @class EditPatientInfo
+ * @brief A dialog for editing patient information.
+ * @details This class provides a user interface for editing various patient details
+ * including first name, last name, date of birth, health card number, email,
+ * phone number, address, postal code, province, and country. The dialog is
+ * initialized with a logo and provides methods to set and get the values
+ * entered in the fields.
+ * @author Kalundi Serumaga
+ * @author Joelene Hales
+ */
 class EditPatientInfo : public QDialog
 {
     Q_OBJECT

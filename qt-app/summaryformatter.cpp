@@ -14,7 +14,9 @@
 /**
  * @name clearLayout
  * @brief Clears all layout elements
+ * @details Deletes all widgets and items in the provided layout.
  * @param[in, out] layout: Layout to be cleared
+ * @author Joelene Hales
  */
 void SummaryFormatter::clearLayout(QVBoxLayout *layout) const
 {
@@ -36,8 +38,10 @@ void SummaryFormatter::clearLayout(QVBoxLayout *layout) const
 /**
  * @name formatBoldText
  * @brief Formats bold text in the summary
+ * @details Replaces **bold text** with <b>bold text</b> and preserves new lines.
  * @param[in] text: Text to format
  * @return Formatted text with bold tags
+ * @author Callum Thompson
  */
 QString SummaryFormatter::formatBoldText(const QString &text) const
 {
@@ -58,6 +62,8 @@ QString SummaryFormatter::formatBoldText(const QString &text) const
  * @brief Adds a section to the summary layout
  * @param[in] section: Section content
  * @param[in, out] summaryLayout: Layout to add section to
+ * @details Creates a label and text browser for the section, sets styling, and adds them to the layout.
+ * @author Callum Thompson
  */
 void SummaryFormatter::addSection(const Section &section, QVBoxLayout *summaryLayout) const
 {

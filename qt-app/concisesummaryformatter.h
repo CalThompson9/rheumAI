@@ -11,6 +11,13 @@
 
 #include "summaryformatter.h"
 
+/**
+ * @class ConciseSummaryFormatter
+ * @brief A class that formats the summary in a concise manner.
+ * @details This class inherits from SummaryFormatter and implements the generateLayout method
+ * to create a concise layout for the summary.
+ * @author Joelene Hales
+ */
 class ConciseSummaryFormatter : public SummaryFormatter
 {
     public:

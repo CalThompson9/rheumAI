@@ -27,6 +27,26 @@
 #include <QScrollArea>
 #include <QPixmap>
 
+/**
+ * @class WindowBuilder
+ * @brief WindowBuilder class
+ * @details This class is responsible for building the main user interface of the application.
+ * It includes methods to set up the UI elements, layout, and styling.
+ * The UI includes buttons, labels, combo boxes, and layouts for organizing the interface.
+ * The class also provides styles for different buttons used in the application.
+ * The setupUI method initializes the UI elements and arranges them in a layout.
+ * The class is designed to be used in conjunction with the main application window.
+ * The UI elements include buttons for settings, recording, summarizing, and managing patients.
+ * It also includes labels for displaying the title and patient name, as well as a combo box
+ * for selecting patients. The class provides a consistent look and feel for the application.
+ * The button styles are defined as static constants, allowing for easy customization and reuse.
+ * The setupUI method takes pointers to the UI elements and arranges them in a layout.
+ * @author Andres Pedreros Castro
+ * @author Callum Thompson
+ * @author Joelene Hales
+ * @author Kalundi Serumaga
+ * @author Thomas Llamzon
+ */
 class WindowBuilder
 {
 public:

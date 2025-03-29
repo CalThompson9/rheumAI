@@ -111,6 +111,11 @@ const QString WindowBuilder::disabledButtonStyle =
  *  @param[in,out] btnDeletePatient: "Delete Patient" button
  *  @param[in,out] btnArchivePatient: "Archive Patient" button
  *  @param[in,out] toggleSwitch: Toggle switch to show archived summaries
+ * @author Callum Thompson
+ * @author Andres Pedreros Castro
+ * @author Joelene Hales
+ * @author Kalundi Serumaga
+ * @author Thomas Llamzon
  */
 void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnSettings,

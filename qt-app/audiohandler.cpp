@@ -6,11 +6,11 @@
  *
  * @author Andres Pedreros Castro (apedrero@uwo.ca)
  * @date Mar. 6, 2025
- * @author Callum Thompson
+ * @author Callum Thompson (cthom226@uwo.ca)
  * @date Mar. 21, 2025
  */
 
-
+// Libraries
 #include <QMediaDevices>
 #include <QAudioInput>
 #include <QAudioDevice>
@@ -24,17 +24,24 @@
 #endif
 #include "audiohandler.h"
 
+// Since this is a singleton, we need to declare the static instance
 AudioHandler *AudioHandler::instance = nullptr;
 
 /**
  * @name AudioHandler (Constructor)
  * @brief Initializes the AudioHandler instance
+ * @details Sets up the network manager and retrieves API keys.
+ * The API keys are being stored in a private text file, which 
+ * uses `getAPIKey` to read the keys.
+ * @note The API keys are expected to be in the format "KEY_NAME:KEY_VALUE".
+ * @see getAPIKey
+ * @author Andres Pedreros Castro
  */
 AudioHandler::AudioHandler() : QObject(nullptr)
 {
-    apiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
+    googleSpeechApiKey = getAPIKey("GOOGLE_AUDIO_API_KEY:");
     openAIApiKey = getAPIKey("OPENAI_AUDIO_API_KEY:");
-    qDebug() << "Google API Key:" << apiKey;
+    qDebug() << "Google API Key:" << googleSpeechApiKey;
     qDebug() << "OpenAI API Key:" << openAIApiKey;
 
     networkManager = new QNetworkAccessManager(this);
@@ -44,6 +51,10 @@ AudioHandler::AudioHandler() : QObject(nullptr)
 /**
  * @name getInstance
  * @brief Returns the singleton instance of AudioHandler
+ * @details If the instance does not exist, it creates a new one.
+ * This ensures that only one instance of AudioHandler exists throughout the application.
+ * @note This is a singleton pattern implementation.
+ * @author Joelene Hales
  * @return Singleton instance of AudioHandler
  */
 AudioHandler *AudioHandler::getInstance()
@@ -58,8 +69,16 @@ AudioHandler *AudioHandler::getInstance()
 /**
  * @name transcribe
  * @brief Transcribes the audio file using Google Speech-to-Text API
+ * @details This function checks the duration and channel count of the audio file.
+ * If the duration is longer than 60 seconds or if the audio is not stereo (2 channels),
+ * it uses the Whisper API for transcription. Otherwise, it uses Google Speech-to-Text API.
+ * It returns a Transcript object containing the transcribed text.
+ * @note The function emits a signal when the transcription is completed.
+ * @see getAudioDuration
  * @param[in] filename: Path to the audio file
  * @return Transcript object containing the transcribed text
+ * @author Andres Pedreros Castro
+ * @author Callum Thompson
  */
 Transcript AudioHandler::transcribe(const QString& filename)
 {
@@ -111,8 +130,13 @@ Transcript AudioHandler::transcribe(const QString& filename)
 /**
  * @name getAudioChannelCount
  * @brief Retrieves the number of audio channels in a WAV file
+ * @details This function reads the WAV file header to determine the number of channels.
+ * It assumes the file is in WAV format and uses a specific byte offset to read the channel count.
+ * @note This function is specific to WAV files and may not work for other audio formats.
+ * @see getAudioDuration
  * @param[in] audioPath: Path to the audio file
  * @return Number of audio channels
+ * @author Andres Pedreros Castro
  */
 int AudioHandler::getAudioChannelCount(const QString& audioPath) const
 {
@@ -129,12 +153,16 @@ int AudioHandler::getAudioChannelCount(const QString& audioPath) const
     return channels;
 }
 
-
 /**
  * @name sendToWhisperAPI
  * @brief Sends the audio file to Google Speech-to-Text API for transcription
+ * @details This function prepares the audio file and sends it to the Whisper API for transcription.
+ * It sets the necessary headers and handles the response.
+ * It uses QNetworkAccessManager to send the request and receive the response.
+ * @note The function emits a signal when the transcription is completed.
  * @param[in] audioPath: Path to the audio file
  * @return Response from the API as a string
+ * @author Callum Thompson
  */
 QString AudioHandler::sendToWhisperAPI(const QString& audioPath)
 {
@@ -200,12 +228,18 @@ QString AudioHandler::sendToWhisperAPI(const QString& audioPath)
 /**
  * @name sendToGoogleSpeechAPI
  * @brief Sends the audio file to Google Speech-to-Text API for transcription
+ * @details This function prepares the audio file and sends it to the Google Speech-to-Text API for transcription.
+ * It sets the necessary headers and handles the response.
+ * It uses QNetworkAccessManager to send the request and receive the response.
+ * @note The function emits a signal when the transcription is completed.
  * @param[in] audioPath: Path to the audio file
  * @return Response from the API as a string
+ * @author Callum Thompson
+ * @author Andres Pedreros Castro
  */
 QString AudioHandler::sendToGoogleSpeechAPI(const QString& audioPath)
 {
-    QUrl url("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKey);
+    QUrl url("https://speech.googleapis.com/v1/speech:recognize?key=" + googleSpeechApiKey);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -252,11 +286,18 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString& audioPath)
     return response;
 }
 
-
 /**
  * @name startRecording
  * @brief Starts audio recording
+ * @details This function initializes the audio input and recorder,
+ * sets the output file, and starts recording.
+ * It also requests microphone permission if not already granted.
+ * @note The function emits a signal when the recording starts.
+ * @see requestMicrophonePermission
+ * @see QAudioInput
  * @param[in] outputFile: Path to the output file
+ * @return void
+ * @author Andres Pedreros Castro
  */
 void AudioHandler::startRecording(const QString &outputFile)
 {
@@ -303,11 +344,13 @@ void AudioHandler::startRecording(const QString &outputFile)
     recorder.record();
 }
 
-
-
 /**
  * @name pauseRecording
  * @brief Pauses audio recording
+ * @details This function pauses the audio recording.
+ * It can be resumed later using the resumeRecording() function.
+ * @author Andres Pedreros Castro
+ * @return void
  */
 void AudioHandler::pauseRecording()
 {
@@ -317,6 +360,10 @@ void AudioHandler::pauseRecording()
 /**
  * @name resumeRecording
  * @brief Resumes audio recording
+ * @details This function resumes the audio recording after it has been paused.
+ * It continues recording from the point where it was paused.
+ * @author Andres Pedreros Castro
+ * @return void
  */
 void AudioHandler::resumeRecording()
 {
@@ -326,6 +373,10 @@ void AudioHandler::resumeRecording()
 /**
  * @name stopRecording
  * @brief Stops audio recording
+ * @details This function stops the audio recording and finalizes the output file.
+ * It can be called after recording is complete or if the user wants to stop recording.
+ * @author Andres Pedreros Castro
+ * @return void
  */
 void AudioHandler::stopRecording()
 {
@@ -335,7 +386,12 @@ void AudioHandler::stopRecording()
 /**
  * @name getCurrentTime
  * @brief Retrieves the current time
+ * @details This function returns the current time using QTime.
+ * It can be used to timestamp the recorded audio or for other purposes.
+ * @note This function does not require any parameters.
+ * @see QTime
  * @return Current time
+ * @author Andres Pedreros Castro
  */
 QTime AudioHandler::getCurrentTime() const
 {
@@ -345,7 +401,12 @@ QTime AudioHandler::getCurrentTime() const
 /**
  * @name requestMicrophonePermission
  * @brief Requests permission to use the microphone
+ * @details This function checks if the microphone permission is granted.
+ * If the permission is not granted, it requests permission from the user.
+ * It emits a signal when the permission is granted or denied.
  * @details Uses the Qt Permissions API to request microphone access
+ * @author Callum Thompson
+ * @return void
  */
 void AudioHandler::requestMicrophonePermission()
 {
@@ -373,7 +434,12 @@ void AudioHandler::requestMicrophonePermission()
 /**
  * @name handlePermissionResponse
  * @brief Handles the response to the microphone permission request
- * @details Emits signals based on the user's response
+ * @details Emits signals based on the user's response to the permission request.
+ * If the permission is granted, it emits microphonePermissionGranted().
+ * If the permission is denied, it emits microphonePermissionDenied().
+ * @see requestMicrophonePermission
+ * @author Callum Thompson
+ * @return void
  */
 void AudioHandler::handlePermissionResponse()
 {
@@ -393,7 +459,12 @@ void AudioHandler::handlePermissionResponse()
 /**
  * @name playRecording
  * @brief Plays the recorded audio file
+ * @details This function uses the system command to play the recorded audio file.
+ * It uses the `afplay` command on macOS to play the audio file.
+ * @note This function assumes the audio file is in a format supported by the system player.
  * @param[in] filePath: Path to the audio file
+ * @return void
+ * @author Andres Pedreros Castro
  */
 void AudioHandler::playRecording(const QString &filePath)
 {
@@ -410,6 +481,14 @@ void AudioHandler::playRecording(const QString &filePath)
 /**
  * @name getAPIKey
  * @brief Retrieves the API key from the key file
+ * @details This function reads the key file and extracts the API key
+ * based on the provided key prefix.
+ * It searches for the line that starts with the key prefix and returns the key value.
+ * @note The key file is expected to be in the format "KEY_NAME:KEY_VALUE".
+ * @param[in] keyPrefix: Prefix of the key to search for
+ * @return API key as a string
+ * @author Callum Thompson
+ * @author Andres Pedreros Castro
  */
 QString AudioHandler::getAPIKey(const QString& keyPrefix)
 {
@@ -433,7 +512,11 @@ QString AudioHandler::getAPIKey(const QString& keyPrefix)
 /**
  * @name setOpenAIApiKey
  * @brief Sets the OpenAI API key
+ * @details This function sets the OpenAI API key for the AudioHandler instance.
+ * It can be used to update the API key if needed.
  * @param[in] key: OpenAI API key
+ * @return void
+ * @author Andres Pedreros Castro
  */
 void AudioHandler::setOpenAIApiKey(const QString& key)
 {
@@ -443,7 +526,13 @@ void AudioHandler::setOpenAIApiKey(const QString& key)
 /**
  * @name getAudioDuration
  * @brief Retrieves the duration of an audio file
+ * @details This function reads the audio file and calculates its duration
+ * based on the file size and audio format.
+ * It assumes a specific format (16-bit PCM, 2 channels, 48000Hz) for the calculation.
+ * @note This function is specific to WAV files and may not work for other audio formats.
  * @param[in] audioPath: Path to the audio file
+ * @return Duration of the audio file in seconds
+ * @author Andres Pedreros Castro
  */
 double AudioHandler::getAudioDuration(const QString& audioPath) const
 {

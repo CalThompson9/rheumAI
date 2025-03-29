@@ -20,6 +20,16 @@
 #include "summary.h"
 #include "llmclient.h"
 
+/**
+ * @class SummaryGenerator
+ * @brief Class to generate a summary from a transcript using LLM
+ * @details This class is responsible for sending a transcript to the LLM and
+ * receiving a structured summary in response. It extracts relevant sections from
+ * the LLM response and stores them in a Summary object. The class also provides
+ * a signal to notify when the summary is ready.
+ * @author Joelene Hales
+ * @author Callum Thompson
+ */
 class SummaryGenerator : public QObject
 {
    Q_OBJECT
