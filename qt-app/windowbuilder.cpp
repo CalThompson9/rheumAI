@@ -105,6 +105,7 @@ const QString WindowBuilder::disabledButtonStyle =
  *  @param[in,out] btnSummarize: "Summarize" button
  *  @param[in,out] selectSummaryLayout: Dropdown menu to select summary layout format
  *  @param[in,out] summarySection: Displays the LLM-generated summary
+ *  @param[in,out] summaryTitle: Summary section title
  *  @param[in,out] mainLayout: Main layout which contains all UI elements
  *  @param[in,out] btnAddPatient: "Add Patient" button
  *  @param[in,out] btnEditPatient: "Edit Patient" button
@@ -126,6 +127,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
                             QPushButton *&btnSummarize,
                             QPushButton *&selectSummaryLayout,
                             QVBoxLayout *&summarySection,
+                            QLabel *&summaryTitle,
                             QVBoxLayout *&mainLayout,
                             QPushButton *&btnAddPatient,
                             QPushButton *&btnEditPatient,
@@ -144,7 +146,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnEditPatient = new QPushButton("Edit", centralWidget);
     btnDeletePatient = new QPushButton("Delete Patient", centralWidget);
     btnArchivePatient = new QPushButton("Archive Patient", centralWidget);
-    QLabel *summaryTitle = new QLabel("Summary");
+    summaryTitle = new QLabel("Summary");
     selectSummaryLayout = new QPushButton(centralWidget);
     selectSummaryLayout->setCheckable(true);
     selectSummaryLayout->setText("Select Summary Layout");

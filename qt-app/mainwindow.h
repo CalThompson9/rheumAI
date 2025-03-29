@@ -85,6 +85,7 @@ private:
     QPushButton *selectSummaryLayout;
     QMenu *summaryLayoutOptions;
     QVBoxLayout *summarySection;
+    QLabel *summaryTitle;
     QDialog *loadingDialog;
     QLabel *loadingLabel;
     LLMClient *llmClient;

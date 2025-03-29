@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     WindowBuilder::setupUI(centralWidget, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
-                           selectSummaryLayout, summarySection,
+                           selectSummaryLayout, summarySection, summaryTitle,
                            mainLayout, btnAddPatient, btnEditPatient, btnDeletePatient, btnArchivePatient,
                            toggleSwitch); // Pass toggleSwitch to WindowBuilder
 
@@ -64,9 +64,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Add summary layout options
     summaryLayoutOptions = new QMenu(this);
-    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
-    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
-    QAction *optionPlainLayout = summaryLayoutOptions->addAction("Plain Text");
+    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Summary");
+    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Summary");
+    QAction *optionPlainLayout = summaryLayoutOptions->addAction("Plain Text Transcript");
 
     selectSummaryLayout->setMenu(summaryLayoutOptions);
 
@@ -81,13 +81,13 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialize summary layout formatter from settings
     QString defaultSummaryLayout = settings->getSummaryPreference();
     selectSummaryLayout->setText(defaultSummaryLayout);
-    if (defaultSummaryLayout.contains("Detailed Layout"))
+    if (defaultSummaryLayout.contains("Detailed Summary"))
     {
         qDebug() << "Setting default summary format to: Detailed Layout";
         summaryFormatter = new DetailedSummaryFormatter;
         optionDetailedLayout->setEnabled(false);
     }
-    else if (defaultSummaryLayout.contains("Concise Layout"))
+    else if (defaultSummaryLayout.contains("Concise Summary"))
     {
         qDebug() << "Setting default summary format to: Concise Layout";
         summaryFormatter = new ConciseSummaryFormatter;
@@ -283,10 +283,11 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
         delete child;
     }
 
-    if (selectedOption->text() == "Plain Text")
+    if (selectedOption->text() == "Plain Text Transcript")
     {
         qDebug() << "Switching to plain text (transcript) mode.";
-
+        summaryTitle->setText("Transcript"); // Change section header
+        
         // Ensure the transcript is actually loaded
         if (currentTranscriptText.isEmpty())
         {
@@ -307,6 +308,7 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
     else
     {
         // Display summary with the selected format
+        summaryTitle->setText("Summary");
         setSummaryFormatter(summaryFormatter);
         displaySummary(summaryGenerator->getSummary());
     }
@@ -876,21 +878,22 @@ void MainWindow::on_patientSelected(int index)
     }
 
     // Revert summary layout according to user summary layout preference.
-    if (defaultLayout.contains("Detailed Layout"))
+    if (defaultLayout.contains("Detailed Summary"))
     {
         summaryFormatter = new DetailedSummaryFormatter;
-        selectSummaryLayout->setText("Detailed Layout");
+        selectSummaryLayout->setText("Detailed Summary");
+
     }
-    else if (defaultLayout.contains("Concise Layout"))
+    else if (defaultLayout.contains("Concise Summary"))
     {
         summaryFormatter = new ConciseSummaryFormatter;
-        selectSummaryLayout->setText("Concise Layout");
+        selectSummaryLayout->setText("Concise Summary");
     }
     else
     {
         qDebug() << "Unrecognized user summary layout. Defaulting to Detailed Layout.";
         summaryFormatter = new DetailedSummaryFormatter;
-        selectSummaryLayout->setText("Detailed Layout");
+        selectSummaryLayout->setText("Detailed Summary");
     }
 
     // Refresh summary layout dropdown
