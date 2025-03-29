@@ -102,9 +102,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect "Record" button to start and stop recording
     connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
-            {
+    {
         static bool isRecording = false;
-        if (isRecording) {
+        if (isRecording) {  // If currently recording and button is pressed, stop recording
             audioHandler->stopRecording();
 
             QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
@@ -118,6 +118,8 @@ MainWindow::MainWindow(QWidget *parent)
             int selectedPatientID = patientData.toInt();
             patientID = selectedPatientID;
 
+            // Display non-modal loading dialog
+            loadingDialog->setModal(false);  // Temporarily change loading dialog to be non-modal
             loadingDialog->show();
 
             Transcript currentTranscription = audioHandler->transcribe(filePath);
@@ -131,12 +133,45 @@ MainWindow::MainWindow(QWidget *parent)
 
             btnRecord->setText("Start Recording");
 
+            // Re-enable ADD, DELETE, ARCHIVE, SUMMARIZE, VIEW ARCHIVED
+            // PATIENTS, SETTINGS, SELECT PATIENT buttons
+            btnAddPatient->setEnabled(true);
+            btnDeletePatient->setEnabled(false);
+            btnArchivePatient->setEnabled(false);
+            btnSummarize->setEnabled(true);
+            toggleSwitch->setEnabled(true);
+            btnSettings->setEnabled(true);
+            comboSelectPatient->setEnabled(true);
+            btnAddPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
+            btnDeletePatient->setStyleSheet(WindowBuilder::redButtonStyle);
+            btnArchivePatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
+            btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
+            toggleSwitch->setStyleSheet(WindowBuilder::blueButtonStyle);
+
             loadingDialog->hide();
-        } else {
+            loadingDialog->setModal(true);  // Set loading dialog as modal for next use
+        }
+        else { // If not recording and button is pressed, start recording
             audioHandler->startRecording("output.wav");
             btnRecord->setText("Stop Recording");
+
+            // Disable ADD, DELETE, ARCHIVE, SUMMARIZE, VIEW ARCHIVED
+            // PATIENTS, SETTINGS, SELECT PATIENT buttons
+            btnAddPatient->setEnabled(false);
+            btnDeletePatient->setEnabled(false);
+            btnArchivePatient->setEnabled(false);
+            btnSummarize->setEnabled(false);
+            toggleSwitch->setEnabled(false);
+            btnSettings->setEnabled(false);
+            comboSelectPatient->setEnabled(false);
+            btnAddPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            btnDeletePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            btnArchivePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            btnSummarize->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            toggleSwitch->setStyleSheet(WindowBuilder::disabledButtonStyle);
         }
-        isRecording = !isRecording; });
+        isRecording = !isRecording;
+    });
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
