@@ -6,7 +6,7 @@
  * sending requests, and handling responses.
  * 
  * @author Callum Thompson (cthom226@uwo.ca)
- * @author Thomas Llamazon (tllamazon@uwo.ca)
+ * @author Thomas Llamzon (tllamzon@uwo.ca)
  * @date Mar. 4, 2025
  */
 

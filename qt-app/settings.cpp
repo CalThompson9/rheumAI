@@ -2,7 +2,7 @@
  * @file settings.cpp
  * @brief Definition of Settings class
  * @details The settings class handles user app configurations and settings menu construction.
- * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @author Thomas Llamzon (tllamzon@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 16, 2025
  */

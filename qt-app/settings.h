@@ -2,7 +2,7 @@
  * @file settings.h
  * @brief Declaration of Settings class
  * 
- * @author Thomas Llamazon (tllamazon@uwo.ca
+ * @author Thomas Llamzon (tllamzon@uwo.ca
  * @date Mar. 16, 2025
  */
 
@@ -36,7 +36,7 @@
  *          as well as select a summary layout preference. It uses a singleton pattern
  *          to ensure that only one instance of the settings dialog is created.
  * @note The settings are stored in a configuration file for persistence across sessions.
- * @author Thomas Llamazon
+ * @author Thomas Llamzon
  */
 class Settings : public QObject {
     Q_OBJECT

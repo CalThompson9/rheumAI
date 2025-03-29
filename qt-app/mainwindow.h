@@ -6,7 +6,7 @@
  * @author Callum Thompson (cthom226@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
  * @author Kalundi Serumaga (kserumag@uwo.ca)
- * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @author Thomas Llamzon (tllamzon@uwo.ca)
  * @date Mar. 1, 2025
  */
 
