@@ -55,9 +55,6 @@ public:
     void setSummaryPreference(const QString pref);
     QString getSummaryPreference() const;
 
-signals:
-    void okButtonClicked();
-
 private:
     Settings(QObject *parent, LLMClient *llm, AudioHandler *audio);
 
