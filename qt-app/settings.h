@@ -50,12 +50,12 @@ public:
     void showSettings();
 
     void setLLMKey(const QString newKey);
-    void setAudioKey(const QString newKey);
+    void setGoogleSpeechApiKey(const QString newKey);
     void setOpenAIAudioKey(QString newKey);
     void setSummaryPreference(const QString pref);
 
     QString getLLMKey() const;
-    QString getAudioKey() const;
+    QString getGoogleSpeechApiKey() const;
     QString getOpenAIAudioKey() const;
     QString getSummaryPreference() const;
 
@@ -70,7 +70,7 @@ private:
 
     QObject *mainWindow;
     QString llmKey;
-    QString audioKey;
+    QString googleSpeechApiKey;
     QString openAIAudioKey;
     QString summaryLayoutPreference;
 

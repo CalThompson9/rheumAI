@@ -55,7 +55,7 @@ Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
         // Google audio API key
         else if (line.startsWith("GOOGLE_AUDIO_API_KEY:")) {
             file.close();
-            audioKey = line.mid(QString("GOOGLE_AUDIO_API_KEY:").length()).trimmed();
+            googleSpeechApiKey = line.mid(QString("GOOGLE_AUDIO_API_KEY:").length()).trimmed();
         }
         // OpenAi audio API key
         else if (line.startsWith("OPENAI_AUDIO_API_KEY:")) {
@@ -70,13 +70,13 @@ Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
 
     qDebug() << "Loaded settings:";
     qDebug() << "  GEMINI_API_KEY: " << llmKey;
-    qDebug() << "  GOOGLE_AUDIO_API_KEY:" << audioKey;
+    qDebug() << "  GOOGLE_AUDIO_API_KEY:" << googleSpeechApiKey;
     qDebug() << "  OPENAI_AUDIO_API_KEY:" << openAIAudioKey;
     qDebug() << "  SUMMARY_LAYOUT_PREFERENCE:" << summaryLayoutPreference;
 
     // Set API keys from keyFile
     LLMClient::getInstance()->setApiKey(llmKey);
-    AudioHandler::getInstance()->setGoogleApiKey(audioKey);
+    AudioHandler::getInstance()->setGoogleApiKey(googleSpeechApiKey);
     AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
 }
 
@@ -196,25 +196,25 @@ void Settings::showSettings()
     // ========== Google Audio API Key ==========
     QHBoxLayout *audioLayout = new QHBoxLayout();
     QLabel *audioLabel = new QLabel("Google Transcriber API Key:", settingsWindow);
-    QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
-    audioKeyField->setText(audioKey);
+    QLineEdit *googleAudioKeyField = new QLineEdit(settingsWindow);
+    googleAudioKeyField->setText(googleSpeechApiKey);
     QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
     audioLayout->addWidget(audioLabel);
-    audioLayout->addWidget(audioKeyField);
+    audioLayout->addWidget(googleAudioKeyField);
     audioLayout->addWidget(audioButtonBox);
     mainLayout->addLayout(audioLayout);
 
     connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
-        if (!audioKeyField->text().isEmpty()) {
-            setAudioKey(audioKeyField->text());
+        if (!googleAudioKeyField->text().isEmpty()) {
+            setGoogleSpeechApiKey(googleAudioKeyField->text());
             okButtonClicked();
         } else {
             qWarning() << "Google Audio key field cannot be empty.";
         }
     });
     connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        audioKeyField->clear();
+        googleAudioKeyField->clear();
     });
 
     // ========== OpenAI Audio API Key ==========
@@ -313,14 +313,15 @@ void Settings::setLLMKey(QString newKey) {
 }
 
 /**
- * @name setAudioKey
+ * @name setGoogleSpeechApiKey
  * @brief Sets Google audio transcriber API key and modifies key storage file for continual use.
  * @details This function updates the audio API key in the AudioHandler client and stores it in a configuration file for future use.
  * @details This function is used to set the API key for Google audio transcriber.
  * @param[in] newKey: API key
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
-void Settings::setAudioKey(QString newKey) {
+void Settings::setGoogleSpeechApiKey(QString newKey) {
     AudioHandler::getInstance()->setGoogleApiKey(newKey);
     storeConfig("AUDIO", newKey);
 }
@@ -331,6 +332,7 @@ void Settings::setAudioKey(QString newKey) {
  * @details This function updates the OpenAI audio API key in the AudioHandler client and stores it in a configuration file for future use.
  * @param[in] newKey: API key
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
 void Settings::setOpenAIAudioKey(QString newKey) {
     AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
@@ -343,6 +345,7 @@ void Settings::setOpenAIAudioKey(QString newKey) {
  * @details This function is called when the OK button is clicked in the settings dialog.
  * @param[in] pref - Summary Layout Preference (Detailed/Concise)
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
 void Settings::setSummaryPreference(QString pref) {
     summaryLayoutPreference = pref;
@@ -353,24 +356,27 @@ void Settings::setSummaryPreference(QString pref) {
  * @name getLLMKey
  * @brief Get Gemini API key
  * @return Gemini API key
+ * @author Joelene Hales
  */
 QString Settings::getLLMKey() const {
     return llmKey;
 }
 
 /**
- * @name getAudioKey
+ * @name getGoogleSpeechApiKey
  * @brief Get Google Speech-to-Text API key
- * @return Google Sppech-to-Text API key
+ * @return Google Speech-to-Text API key
+ * @author Joelene Hales
  */
-QString Settings::getAudioKey() const {
-    return audioKey;
+QString Settings::getGoogleSpeechApiKey() const {
+    return googleSpeechApiKey;
 }
 
 /**
  * @name getOpenAIAudioKey
  * @brief Get Open AI Whisper API key
  * @return Open AI Whisper API key
+ * @author Joelene Hales
  */
 QString Settings::getOpenAIAudioKey() const {
     return openAIAudioKey;
@@ -412,7 +418,7 @@ void Settings::storeConfig(const QString &config, const QString &value)
         return;
     }
 
-    QFile file("keyFile.txt");
+    QFile file(keyFilename);
     QStringList lines;
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
