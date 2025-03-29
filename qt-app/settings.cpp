@@ -104,19 +104,19 @@ void Settings::showSettings()
     QMenu *summaryLayoutOptions = new QMenu();
     summaryLayout->addWidget(selectLayoutButton);
 
-    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
-    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
+    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Summary");
+    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Summary");
 
     selectLayoutButton->setMenu(summaryLayoutOptions);
     selectLayoutButton->setText(summaryLayoutPreference);
     mainLayout->addLayout(summaryLayout);
 
     connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
-        setSummaryPreference("Detailed Layout");
+        setSummaryPreference("Detailed Summary");
         selectLayoutButton->setText(summaryLayoutPreference);
     });
     connect(optionConciseLayout, &QAction::triggered, this, [=]() {
-        setSummaryPreference("Concise Layout");
+        setSummaryPreference("Concise Summary");
         selectLayoutButton->setText(summaryLayoutPreference);
     });
 
