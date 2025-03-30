@@ -140,10 +140,11 @@ For those who wish to explore or modify the project, you can open the source cod
 - OpenAI for the Whisper model.
 - Google for the Speech-to-Text API and Gemini 1.5 8b model.
 - Qt for the development framework.
+- Team 1 for a totally awesome app.
 
 ## Contact
-- **Andres Pedreros Castro (apedrero@uwo.ca)** for questions related to audio recording and transcription.
-- **Callum Thompson (cthom226@uwo.ca)** for questions related to LLMs and summarization.
-- **Joelene Hales (jhales5@uwo.ca)** for questions related to design patterns used and the UML diagram.
-- **Kalundi Serumaga (kserumag@uwo.ca)** for questions related to file management and the folder structure.
-- **Thomas Llamzon (tllamzon@uwo.ca)** for questions related user configuration handling (settings menu) and UX/UI design.
+- **Andres Pedreros Castro** for questions related to audio recording and transcription.
+- **Callum Thompson** for questions related to LLMs and summarization.
+- **Joelene Hales** for questions related to design patterns used and the UML diagram.
+- **Kalundi Serumaga** for questions related to file management and the folder structure.
+- **Thomas Llamzon** for questions related settings menu features and UX/UI design.
