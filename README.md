@@ -16,6 +16,10 @@ doctor-patient interaction. The program uses a combination of Open AI's Whisper 
 ## Preview
 ![Preview](preview.png)
 
+<hr></hr>
+
+![PreviewSettings](settings-popup.png)
+
 ## Code Documentation
 All classes and methods are documented using Doxygen-style comments.
 
@@ -138,8 +142,8 @@ For those who wish to explore or modify the project, you can open the source cod
 - Qt for the development framework.
 
 ## Contact
-- **Andres Pedreros Castro (apedrero@uwo.ca)** for any questions related to audio recording and transcription.
-- **Callum Thompson (cthom226@uwo.ca)** for any questions related to LLMs and summarization.
-- **Joelene Hales (jhales5@uwo.ca)** for any questions related to design patterns used and the UML diagram.
-- **Kalundi Serumaga (kserumag@uwo.ca)** for any questions related to file management and the folder structure.
-- **Thomas Llamzon (tllamzon@uwo.ca)** for any questions related to the UI and functionality of the application.
+- **Andres Pedreros Castro (apedrero@uwo.ca)** for questions related to audio recording and transcription.
+- **Callum Thompson (cthom226@uwo.ca)** for questions related to LLMs and summarization.
+- **Joelene Hales (jhales5@uwo.ca)** for questions related to design patterns used and the UML diagram.
+- **Kalundi Serumaga (kserumag@uwo.ca)** for questions related to file management and the folder structure.
+- **Thomas Llamzon (tllamzon@uwo.ca)** for questions related user configuration handling (settings menu) and UX/UI design.
