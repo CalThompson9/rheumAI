@@ -998,10 +998,12 @@ void MainWindow::viewPatient()
     info =
         "Name: " + patient.getFirstName() + " " + patient.getLastName() + "\n" +
         "DOB: " + patient.getDateOfBirth() + "\n" +
+        "Health Card: " + patient.getHealthCard() + "\n" +
         "Phone: " + patient.getPhoneNumber() + "\n" +
         "Email: " + patient.getEmail() + "\n" +
         "Address: " + patient.getAddress() + "\n" +
         "Province: " + patient.getProvince() + "\n" +
+        "Postal Code: " + patient.getPostalCode() + "\n" +
         "Country: " + patient.getCountry();
 
     lblPatientName->setText(info);
