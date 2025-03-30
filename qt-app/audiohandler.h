@@ -69,6 +69,7 @@ signals:
     void transcriptionCompleted(const QString &transcribedText); // Signal for transcription completion
     void microphonePermissionDenied();
     void microphonePermissionGranted();
+    void badRequest(QNetworkReply *reply);
 
 private:
     QString googleSpeechApiKey;

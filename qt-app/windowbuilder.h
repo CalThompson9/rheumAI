@@ -59,6 +59,7 @@ public:
                         QPushButton *&btnSummarize,
                         QPushButton *&selectSummaryLayout,
                         QVBoxLayout *&summarySection,
+                        QLabel *&summaryTitle,
                         QVBoxLayout *&mainLayout,
                         QPushButton *&btnAddPatient,
                         QPushButton *&btnEditPatient,

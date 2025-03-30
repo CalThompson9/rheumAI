@@ -104,19 +104,19 @@ void Settings::showSettings()
     QMenu *summaryLayoutOptions = new QMenu();
     summaryLayout->addWidget(selectLayoutButton);
 
-    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
-    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
+    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Summary");
+    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Summary");
 
     selectLayoutButton->setMenu(summaryLayoutOptions);
     selectLayoutButton->setText(summaryLayoutPreference);
     mainLayout->addLayout(summaryLayout);
 
     connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
-        setSummaryPreference("Detailed Layout");
+        setSummaryPreference("Detailed Summary");
         selectLayoutButton->setText(summaryLayoutPreference);
     });
     connect(optionConciseLayout, &QAction::triggered, this, [=]() {
-        setSummaryPreference("Concise Layout");
+        setSummaryPreference("Concise Summary");
         selectLayoutButton->setText(summaryLayoutPreference);
     });
 
@@ -155,7 +155,6 @@ void Settings::showSettings()
     connect(llmButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!llmKeyField->text().isEmpty()) {
             setLLMKey(llmKeyField->text());
-            okButtonClicked();
         } else {
             qWarning() << "This field cannot be empty.";
         }
@@ -179,7 +178,6 @@ void Settings::showSettings()
     connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!audioKeyField->text().isEmpty()) {
             setAudioKey(audioKeyField->text());
-            okButtonClicked();
         } else {
             qWarning() << "Google Audio key field cannot be empty.";
         }
@@ -203,7 +201,6 @@ void Settings::showSettings()
     connect(openaiButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!openaiKeyField->text().isEmpty()) {
             setOpenAIAudioKey(openaiKeyField->text());
-            okButtonClicked();
         } else {
             qWarning() << "OpenAI Audio key field cannot be empty.";
         }
@@ -254,6 +251,7 @@ void Settings::showSettings()
  * @author Thomas Llamzon
  */
 void Settings::setLLMKey(QString newKey) {
+    llmKey = newKey;
     llmClient->apiKey = newKey;
     storeConfig("LLM", newKey);
 }
@@ -267,6 +265,7 @@ void Settings::setLLMKey(QString newKey) {
  * @author Thomas Llamzon
  */
 void Settings::setAudioKey(QString newKey) {
+    audioKey = newKey;
     audioHandlerClient->googleSpeechApiKey = newKey;
     storeConfig("AUDIO", newKey);
 }
@@ -279,13 +278,14 @@ void Settings::setAudioKey(QString newKey) {
  * @author Thomas Llamzon
  */
 void Settings::setOpenAIAudioKey(QString newKey) {
+    openAIAudioKey = newKey;
     audioHandlerClient->openAIApiKey = newKey;
     storeConfig("OPENAI_AUDIO", newKey);
 }
 
 /**
- * @name okButtonClicked
- * @brief Settings::setSummaryPreference
+ * @name setSummaryPreference
+ * @brief Stores summary preference code in the keyFile
  * @details This function is called when the OK button is clicked in the settings dialog.
  * @param[in] pref - Summary Layout Preference (Detailed/Concise)
  * @author Thomas Llamzon

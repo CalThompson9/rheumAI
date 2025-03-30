@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     WindowBuilder::setupUI(centralWidget, btnSettings,
                            lblTitle, lblPatientName, comboSelectPatient,
                            btnRecord, btnSummarize,
-                           selectSummaryLayout, summarySection,
+                           selectSummaryLayout, summarySection, summaryTitle,
                            mainLayout, btnAddPatient, btnEditPatient, btnDeletePatient, btnArchivePatient,
                            toggleSwitch); // Pass toggleSwitch to WindowBuilder
 
@@ -54,19 +54,21 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect the signal to process the generated summary when ready
     connect(summaryGenerator, &SummaryGenerator::summaryReady, this, &MainWindow::handleSummaryReady);
 
-    // Initialize AudioHandler and connect transcription signal to LLMClient
+    // Configure API handlers
     AudioHandler *audioHandler = AudioHandler::getInstance();
+    llmClient = LLMClient::getInstance();
+    connect(audioHandler, &AudioHandler::badRequest, this, &MainWindow::endLoading);
+    connect(llmClient, &LLMClient::invalidAPIKey, this, &MainWindow::endLoading);
 
     // Initialize settings
     settings = Settings::getInstance(this, summaryGenerator->llmClient, audioHandler);
     connect(btnSettings, &QPushButton::clicked, settings, &Settings::showSettings);
-    connect(settings, &Settings::okButtonClicked, this, &MainWindow::handleSummarizeButtonClicked);
 
     // Add summary layout options
     summaryLayoutOptions = new QMenu(this);
-    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Layout");
-    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Layout");
-    QAction *optionPlainLayout = summaryLayoutOptions->addAction("Plain Text");
+    QAction *optionDetailedLayout = summaryLayoutOptions->addAction("Detailed Summary");
+    QAction *optionConciseLayout = summaryLayoutOptions->addAction("Concise Summary");
+    QAction *optionPlainLayout = summaryLayoutOptions->addAction("Plain Text Transcript");
 
     selectSummaryLayout->setMenu(summaryLayoutOptions);
 
@@ -81,13 +83,13 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialize summary layout formatter from settings
     QString defaultSummaryLayout = settings->getSummaryPreference();
     selectSummaryLayout->setText(defaultSummaryLayout);
-    if (defaultSummaryLayout.contains("Detailed Layout"))
+    if (defaultSummaryLayout.contains("Detailed Summary"))
     {
         qDebug() << "Setting default summary format to: Detailed Layout";
         summaryFormatter = new DetailedSummaryFormatter;
         optionDetailedLayout->setEnabled(false);
     }
-    else if (defaultSummaryLayout.contains("Concise Layout"))
+    else if (defaultSummaryLayout.contains("Concise Summary"))
     {
         qDebug() << "Setting default summary format to: Concise Layout";
         summaryFormatter = new ConciseSummaryFormatter;
@@ -102,9 +104,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect "Record" button to start and stop recording
     connect(btnRecord, &QPushButton::clicked, this, [audioHandler, this]()
-            {
+    {
         static bool isRecording = false;
-        if (isRecording) {
+        if (isRecording) {  // If currently recording and button is pressed, stop recording
             audioHandler->stopRecording();
 
             QString projectDir = QDir(QCoreApplication::applicationDirPath()).absolutePath();
@@ -118,6 +120,8 @@ MainWindow::MainWindow(QWidget *parent)
             int selectedPatientID = patientData.toInt();
             patientID = selectedPatientID;
 
+            // Display non-modal loading dialog
+            loadingDialog->setModal(false);  // Temporarily change loading dialog to be non-modal
             loadingDialog->show();
 
             Transcript currentTranscription = audioHandler->transcribe(filePath);
@@ -131,18 +135,50 @@ MainWindow::MainWindow(QWidget *parent)
 
             btnRecord->setText("Start Recording");
 
+            // Re-enable ADD, DELETE, ARCHIVE, SUMMARIZE, VIEW ARCHIVED
+            // PATIENTS, SETTINGS, SELECT PATIENT buttons
+            btnAddPatient->setEnabled(true);
+            btnDeletePatient->setEnabled(false);
+            btnArchivePatient->setEnabled(false);
+            btnSummarize->setEnabled(true);
+            toggleSwitch->setEnabled(true);
+            btnSettings->setEnabled(true);
+            comboSelectPatient->setEnabled(true);
+            btnAddPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
+            btnDeletePatient->setStyleSheet(WindowBuilder::redButtonStyle);
+            btnArchivePatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
+            btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
+            toggleSwitch->setStyleSheet(WindowBuilder::blueButtonStyle);
+
             loadingDialog->hide();
-        } else {
+            loadingDialog->setModal(true);  // Set loading dialog as modal for next use
+        }
+        else { // If not recording and button is pressed, start recording
             audioHandler->startRecording("output.wav");
             btnRecord->setText("Stop Recording");
+
+            // Disable ADD, DELETE, ARCHIVE, SUMMARIZE, VIEW ARCHIVED
+            // PATIENTS, SETTINGS, SELECT PATIENT buttons
+            btnAddPatient->setEnabled(false);
+            btnDeletePatient->setEnabled(false);
+            btnArchivePatient->setEnabled(false);
+            btnSummarize->setEnabled(false);
+            toggleSwitch->setEnabled(false);
+            btnSettings->setEnabled(false);
+            comboSelectPatient->setEnabled(false);
+            btnAddPatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            btnDeletePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            btnArchivePatient->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            btnSummarize->setStyleSheet(WindowBuilder::disabledButtonStyle);
+            toggleSwitch->setStyleSheet(WindowBuilder::disabledButtonStyle);
         }
-        isRecording = !isRecording; });
+        isRecording = !isRecording;
+    });
 
 
 
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
-    llmClient = LLMClient::getInstance();
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
     connect(btnAddPatient, &QPushButton::clicked, this, &MainWindow::on_addPatientButton_clicked);
     connect(btnEditPatient, &::QPushButton::clicked, this, &MainWindow::on_editPatientButton_clicked);
@@ -183,6 +219,28 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect "Summarize" button to summarize transcripts and update window
     connect(btnSummarize, &QPushButton::clicked, this, &MainWindow::handleSummarizeButtonClicked);
+}
+
+/**
+ * @name endLoading
+ * @brief Handler function for when any of the the user's API keys are invalid.
+ * @param[in] Cause of error thrown by client; used to produce a descriptive error message.
+ * @author Thomas Llamzon
+ */
+void MainWindow::endLoading(QNetworkReply *reply) {
+    loadingDialog->hide();
+
+    QString errorMessage = reply->errorString();
+
+    if (errorMessage.contains("openai")) {
+        errorMessage = "Transcriber Error!\n\nPlease ensure your transcriber API Key is properly configured in Settings.";
+    } else if (errorMessage.contains("googleapis")) {
+        errorMessage = "Summarizer Error!\n\nPlease ensure your sumarizer API Key is properly configured in Settings.";
+    } else {
+        errorMessage = "Please ensure your API keys are properly configured in Settings.";
+    }
+
+    QMessageBox::warning(this, "BAD API KEY", errorMessage);
 }
 
 /**
@@ -250,10 +308,11 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
         delete child;
     }
 
-    if (selectedOption->text() == "Plain Text")
+    if (selectedOption->text() == "Plain Text Transcript")
     {
         qDebug() << "Switching to plain text (transcript) mode.";
-
+        summaryTitle->setText("Transcript"); // Change section header
+        
         // Ensure the transcript is actually loaded
         if (currentTranscriptText.isEmpty())
         {
@@ -274,6 +333,7 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
     else
     {
         // Display summary with the selected format
+        summaryTitle->setText("Summary");
         setSummaryFormatter(summaryFormatter);
         displaySummary(summaryGenerator->getSummary());
     }
@@ -321,6 +381,7 @@ void MainWindow::handleSummarizeButtonClicked()
     Transcript *transcript = new Transcript(QTime::currentTime(), currentTranscriptText);
 
     loadingDialog->show();
+
     // Send transcript to the LLM
 
     summaryGenerator->sendRequest(*transcript);
@@ -791,7 +852,7 @@ void MainWindow::checkDropdownEmpty()
             btnRecord->setEnabled(true);
             btnSummarize->setEnabled(true);
 
-            btnEditPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
+            btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
             btnRecord->setStyleSheet(WindowBuilder::blueButtonStyle);
             btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
         }
@@ -848,21 +909,22 @@ void MainWindow::on_patientSelected(int index)
     }
 
     // Revert summary layout according to user summary layout preference.
-    if (defaultLayout.contains("Detailed Layout"))
+    if (defaultLayout.contains("Detailed Summary"))
     {
         summaryFormatter = new DetailedSummaryFormatter;
-        selectSummaryLayout->setText("Detailed Layout");
+        selectSummaryLayout->setText("Detailed Summary");
+
     }
-    else if (defaultLayout.contains("Concise Layout"))
+    else if (defaultLayout.contains("Concise Summary"))
     {
         summaryFormatter = new ConciseSummaryFormatter;
-        selectSummaryLayout->setText("Concise Layout");
+        selectSummaryLayout->setText("Concise Summary");
     }
     else
     {
         qDebug() << "Unrecognized user summary layout. Defaulting to Detailed Layout.";
         summaryFormatter = new DetailedSummaryFormatter;
-        selectSummaryLayout->setText("Detailed Layout");
+        selectSummaryLayout->setText("Detailed Summary");
     }
 
     // Refresh summary layout dropdown
