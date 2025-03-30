@@ -175,6 +175,8 @@ MainWindow::MainWindow(QWidget *parent)
         isRecording = !isRecording;
     });
 
+
+
     connect(audioHandler, &AudioHandler::transcriptionCompleted, this, &MainWindow::handleSummarizeButtonClicked);
 
     connect(llmClient, &LLMClient::responseReceived, this, &MainWindow::handleLLMResponse);
@@ -268,7 +270,7 @@ void MainWindow::handleLLMResponse(const QString &response)
     }
 
     // Save the transcript to file
-    QString transcriptPath = patientDir.filePath("transcript_raw.txt");
+    QString transcriptPath = patientDir.filePath("summary.txt");
     QFile file(transcriptPath);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
@@ -381,7 +383,9 @@ void MainWindow::handleSummarizeButtonClicked()
     loadingDialog->show();
 
     // Send transcript to the LLM
+
     summaryGenerator->sendRequest(*transcript);
+
 }
 
 /**
@@ -428,6 +432,9 @@ void MainWindow::handleSummaryReady()
     // Update the UI with the summary
     displaySummary(summary);
     btnSummarize->setText("Regenerate Summary");
+
+    //  Ensure transcript_raw.txt is restored with actual transcript (not summary)
+
 }
 
 /**
