@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
                            selectSummaryLayout, summarySection, summaryTitle,
                            mainLayout, btnAddPatient, btnEditPatient, btnDeletePatient, btnArchivePatient,
                            toggleSwitch); // Pass toggleSwitch to WindowBuilder
+    checkDropdownEmpty();
 
     // Connect archive mode button
     qDebug() << "🗃️ ARCHIVE MODE:" << archiveMode;
