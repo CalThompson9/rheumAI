@@ -15,7 +15,6 @@
 #include <QObject>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <QDebug>
 #include "transcript.h"
 #include "summary.h"
 #include "llmclient.h"
@@ -47,7 +46,7 @@ private:
    LLMClient *llmClient;
    Summary summary;
 
-   QString extractSectionFromResponse(const QString &response, const QString &sectionName);
+   QString extractSectionFromResponse(const QString &response, const QString &sectionName, const QString &nextSectionName);
 
    void summarizeIntervalHistory(const QString &response);
    void summarizePhysicalExamination(const QString &response);

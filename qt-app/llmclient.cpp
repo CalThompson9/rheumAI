@@ -25,8 +25,6 @@ LLMClient *LLMClient::instance = nullptr;
 LLMClient::LLMClient()
     : QObject(nullptr), networkManager(new QNetworkAccessManager(this))
 {
-    qDebug() << "LLM API key initialized to: " << apiKey;
-
     connect(networkManager, &QNetworkAccessManager::finished, this, &LLMClient::handleNetworkReply);
 }
 
@@ -98,7 +96,6 @@ void LLMClient::sendRequest(const QString &prompt)
 void LLMClient::setApiKey(const QString& key)
 {
     apiKey = key;
-    qDebug() << "LLM API key set to: " << apiKey;
 }
 
 /**

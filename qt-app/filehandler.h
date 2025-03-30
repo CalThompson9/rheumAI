@@ -17,7 +17,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QFile>
-#include <QDebug>
 #include <QDir>
 #include "patientrecord.h"
 #include "summary.h"

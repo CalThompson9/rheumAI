@@ -94,7 +94,6 @@ void SummaryGenerator::setSummaryText(const QString &summaryText)
 {
     if (summaryText.isEmpty())
     {
-        qDebug() << "Summary text is empty, skipping parsing.";
         return;
     }
 
@@ -106,7 +105,6 @@ void SummaryGenerator::setSummaryText(const QString &summaryText)
     summarizeCurrentStatus(summaryText);
     summarizePlan(summaryText);
 
-    qDebug() << "Summary successfully loaded from saved text.";
     emit summaryReady();
 }
 
@@ -122,7 +120,7 @@ void SummaryGenerator::setSummaryText(const QString &summaryText)
  */
 void SummaryGenerator::summarizeIntervalHistory(const QString &response)
 {
-    summary.setIntervalHistory(extractSectionFromResponse(response, "INTERVAL HISTORY"));
+    summary.setIntervalHistory(extractSectionFromResponse(response, "INTERVAL HISTORY", "PHYSICAL EXAMINATION"));
 }
 
 /**
@@ -137,7 +135,7 @@ void SummaryGenerator::summarizeIntervalHistory(const QString &response)
  */
 void SummaryGenerator::summarizePhysicalExamination(const QString &response)
 {
-    summary.setPhysicalExamination(extractSectionFromResponse(response, "PHYSICAL EXAMINATION"));
+    summary.setPhysicalExamination(extractSectionFromResponse(response, "PHYSICAL EXAMINATION", "CURRENT STATUS"));
 }
 
 /**
@@ -152,7 +150,7 @@ void SummaryGenerator::summarizePhysicalExamination(const QString &response)
  */
 void SummaryGenerator::summarizeCurrentStatus(const QString &response)
 {
-    summary.setCurrentStatus(extractSectionFromResponse(response, "CURRENT STATUS"));
+    summary.setCurrentStatus(extractSectionFromResponse(response, "CURRENT STATUS", "PLAN"));
 }
 
 /**
@@ -167,7 +165,7 @@ void SummaryGenerator::summarizeCurrentStatus(const QString &response)
  */
 void SummaryGenerator::summarizePlan(const QString &response)
 {
-    summary.setPlan(extractSectionFromResponse(response, "PLAN"));
+    summary.setPlan(extractSectionFromResponse(response, "PLAN", "PHYSICAL EXAMINATION"));
 }
 
 /**
@@ -178,39 +176,41 @@ void SummaryGenerator::summarizePlan(const QString &response)
  * section header and extracts the text until the next section header.
  * @param[in] response: Full text response from LLM
  * @param[in] sectionName: Section name to extract
+ * @param[in] nextSectionName: Next section name to stop extraction
  * @return Extracted text of the section
  * @author Callum Thompson
  * @author Joelene Hales
  */
-QString SummaryGenerator::extractSectionFromResponse(const QString &response, const QString &sectionName)
+QString SummaryGenerator::extractSectionFromResponse(const QString &response, const QString &sectionName, const QString &nextSectionName)
 {
     QString searchPattern = "**" + sectionName + "**";
     QString searchPatternAlt = "**" + sectionName + ":**";
-    qDebug() << "🔍 Searching for section: " << searchPattern;
 
-    int startIndex = response.indexOf(searchPattern);
+    int startIndex = response.indexOf(searchPattern, 0, Qt::CaseInsensitive);
+    int patternLength = searchPattern.length(); // Default to original pattern length
+
     if (startIndex == -1)
     {
-        qWarning() << "❌ Section not found in LLM response: " << sectionName;
-        // Try alternative search pattern
-        startIndex = response.indexOf(searchPatternAlt);
+        startIndex = response.indexOf(searchPatternAlt, 0, Qt::CaseInsensitive);
         if (startIndex == -1)
         {
-            qWarning() << "❌ Section not found in LLM response: " << sectionName;
             return "No " + sectionName.toLower() + " found.";
         }
+        patternLength = searchPatternAlt.length(); // Use alt pattern length if matched
     }
 
-    // Find the next section header (e.g., "**SOMETHING ELSE**")
-    QRegularExpression regex(R"(\n\*\*[A-Z ]+\*\*)"); // Matches new section headers
-    QRegularExpressionMatch match = regex.match(response, startIndex + searchPattern.length());
+    // Look for the next section by name, allowing both **nextSection** and **nextSection:**
+    QString nextPattern = "**" + nextSectionName + "**";
+    QString nextPatternAlt = "**" + nextSectionName + ":**";
 
-    int endIndex = match.hasMatch() ? match.capturedStart() : response.length(); // If no match, take entire string
+    int endIndex = response.indexOf(nextPattern, startIndex + patternLength, Qt::CaseInsensitive);
+    if (endIndex == -1)
+        endIndex = response.indexOf(nextPatternAlt, startIndex + patternLength, Qt::CaseInsensitive);
+    if (endIndex == -1)
+        endIndex = response.length();
 
-    QString extractedSection = response.mid(startIndex + searchPattern.length(), endIndex - (startIndex + searchPattern.length())).trimmed();
+    QString extractedSection = response.mid(startIndex + patternLength, endIndex - (startIndex + patternLength)).trimmed();
 
-    qDebug() << "✅ Extracted section for " << sectionName << ":\n"
-             << extractedSection;
     return extractedSection;
 }
 

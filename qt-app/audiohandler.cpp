@@ -77,20 +77,17 @@ Transcript AudioHandler::transcribe(const QString &filename)
     double durationSecs = getAudioDuration(filename);
     int channelCount = getAudioChannelCount(filename);
 
-    qDebug() << "Audio duration:" << durationSecs << "seconds";
-    qDebug() << "Channel count:" << channelCount;
-
     QString response;
 
     // Use Whisper if longer than 60s or not stereo (2 channels)
     if (durationSecs > 60.0 || channelCount != 2)
     {
-        qDebug() << "Using Whisper (OpenAI)";
+        qInfo() << "Using Whisper (OpenAI)";
         response = sendToWhisperAPI(filename);
     }
     else
     {
-        qDebug() << "Using Google Speech-to-Text";
+        qInfo() << "Using Google Speech-to-Text";
         response = sendToGoogleSpeechAPI(filename);
     }
 
@@ -169,10 +166,6 @@ int AudioHandler::getAudioChannelCount(const QString &audioPath) const
  */
 QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
 {
-    qDebug() << "Preparing to send audio to Whisper API...";
-    qDebug() << "Audio path:" << audioPath;
-    qDebug() << "OpenAI API Key (first 10 chars):" << openAIApiKey.left(10) << "...";
-
     if (openAIApiKey.isEmpty())
     {
         qWarning() << "OpenAI API Key is empty!";
@@ -208,7 +201,6 @@ QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
     modelPart.setBody("whisper-1");
     multiPart->append(modelPart);
 
-    qDebug() << "Sending POST request to Whisper API...";
     QNetworkReply *reply = networkManager->post(request, multiPart);
     multiPart->setParent(reply);
 
@@ -220,14 +212,11 @@ QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
     if (reply->error() == QNetworkReply::NoError)
     {
         response = reply->readAll();
-        qDebug() << "✅ Whisper API Response:" << response;
     }
     else
     {
         emit badRequest(reply);
-        qWarning() << "❌ Whisper request failed:" << reply->errorString();
-        qDebug() << "Reply HTTP status code:" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-        qDebug() << "Raw reply:" << reply->readAll();
+        qWarning() << "Whisper request failed:" << reply->errorString();
     }
 
     reply->deleteLater();
@@ -325,7 +314,7 @@ void AudioHandler::startRecording(const QString &outputFile)
     }
 
     QAudioDevice defaultMic = devices.first();
-    qDebug() << "🎤 Using microphone:" << defaultMic.description();
+    qInfo() << "🎤 Using microphone:" << defaultMic.description();
 
     // Delete previous audio input if it exists
     if (audioInput != nullptr)
@@ -353,7 +342,6 @@ void AudioHandler::startRecording(const QString &outputFile)
     recorder.setAudioSampleRate(48000);
     recorder.setAudioChannelCount(2);
 
-    qDebug() << "🎙️ Starting recording. Output file:" << filePath;
     recorder.record();
 }
 
@@ -428,7 +416,6 @@ void AudioHandler::requestMicrophonePermission()
     switch (qApp->checkPermission(microphonePermission))
     {
     case Qt::PermissionStatus::Undetermined:
-        qDebug() << "Requesting microphone permission...";
         qApp->requestPermission(microphonePermission, this, &AudioHandler::handlePermissionResponse);
         return;
     case Qt::PermissionStatus::Denied:
@@ -436,7 +423,7 @@ void AudioHandler::requestMicrophonePermission()
         emit microphonePermissionDenied();
         return;
     case Qt::PermissionStatus::Granted:
-        qDebug() << "Microphone permission granted!";
+        qInfo() << "Microphone permission granted!";
         break;
     }
 #else
@@ -459,12 +446,13 @@ void AudioHandler::handlePermissionResponse()
     QMicrophonePermission microphonePermission;
     if (qApp->checkPermission(microphonePermission) == Qt::PermissionStatus::Granted)
     {
-        qDebug() << "Microphone permission granted!";
+
+        qInfo() << "User granted microphone permission.";
         emit microphonePermissionGranted();
     }
     else
     {
-        qWarning() << "User denied microphone permission.";
+        qInfo() << "User denied microphone permission.";
         emit microphonePermissionDenied();
     }
 }
@@ -486,7 +474,6 @@ void AudioHandler::playRecording(const QString &filePath)
         qWarning() << "Recorded file does not exist: " << filePath;
         return;
     }
-    qDebug() << "Playing recorded file:" << filePath;
     QString command = "afplay " + filePath; // macOS playback command
     system(command.toUtf8().constData());
 }
@@ -502,7 +489,6 @@ void AudioHandler::playRecording(const QString &filePath)
 void AudioHandler::setGoogleApiKey(const QString &key)
 {
     googleSpeechApiKey = key;
-    qDebug() << "Google Text-to-Speech API key set to: " << googleSpeechApiKey;
 }
 
 /**
@@ -516,7 +502,6 @@ void AudioHandler::setGoogleApiKey(const QString &key)
 void AudioHandler::setOpenAIApiKey(const QString &key)
 {
     openAIApiKey = key;
-    qDebug() << "OpenAI Whisper API key set to: " << openAIApiKey;
 }
 
 /**
