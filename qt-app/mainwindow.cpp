@@ -845,7 +845,7 @@ void MainWindow::checkDropdownEmpty()
             btnRecord->setEnabled(true);
             btnSummarize->setEnabled(true);
 
-            btnEditPatient->setStyleSheet(WindowBuilder::blueButtonStyle);
+            btnEditPatient->setStyleSheet(WindowBuilder::orangeButtonStyle);
             btnRecord->setStyleSheet(WindowBuilder::blueButtonStyle);
             btnSummarize->setStyleSheet(WindowBuilder::orangeButtonStyle);
         }
