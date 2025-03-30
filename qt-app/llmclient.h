@@ -34,9 +34,8 @@ class LLMClient : public QObject
 
 public:
     void sendRequest(const QString &prompt);
-    QString getAPIKey();
     static LLMClient *getInstance();
-    friend class Settings;
+    void setApiKey(const QString& key);
 
 signals:
     void responseReceived(const QString &response);

@@ -2,7 +2,7 @@
  * @file settings.cpp
  * @brief Definition of Settings class
  * @details The settings class handles user app configurations and settings menu construction.
- * @author Thomas Llamzon (tllamazon@uwo.ca)
+ * @author Thomas Llamzon (tllamzon@uwo.ca)
  * @author Joelene Hales (jhales5@uwo.ca)
  * @date Mar. 16, 2025
  */
@@ -15,38 +15,69 @@
 Settings* Settings::instance = nullptr;
 
 /**
+ * @brief Set key file filename.
+ */
+QString Settings::keyFilename = "keyFile.txt";
+
+/**
  * @name Settings (constructor)
  * @brief Constructor for Settings class
+ * @details This constructor initializes the application's settings by reading
+ * the key file to extract API keys and summary layout preference, and
+ * setting API keys in their corresponding object. If a field is not found, it
+ * is set to an empty string. The expected keys are the following:
+ *      GEMINI_API_KEY: Google Gemini API key
+ *      GOOGLE_AUDIO_API_KEY: Google Speech-to-Text API key
+ *      OPENAI_AUDIO_API_KEY: OpenAI Whisper API key
+ *      SUMMARY_LAYOUT_PREFERENCE: Summary layout preference. One of 
+ *                                  {"Detailed Format", "Concise Format"}
+ * @note The API keys are expected to be in the format "KEY_NAME:KEY_VALUE".
  * @param parent - MainWindow
- * @param llm - LLM Client object
- * @param audio - Audio Handler object
- * @details This constructor initializes the settings object and loads the summary layout preference from a configuration file.
- * @author Joelene Hales
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
-Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
-    : QObject(p),
-      mainWindow(p),
-      llmClient(llm),
-      audioHandlerClient(audio),
-      llmKey(llm->apiKey),
-      audioKey(audio->googleSpeechApiKey),
-      openAIAudioKey(audio->openAIApiKey)
+Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
 {
-    // Load summary format from configuration file keyFile.txt
-    summaryLayoutPreference = "";
-    QFile file("keyFile.txt");
+    // Load default settings from key file
+    QFile file(keyFilename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "keyFile.txt not found.";
+        qWarning() << "Settings key file" << keyFilename << " not found.";
     }
 
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
-        if (line.startsWith("SUMMARY_LAYOUT_PREFERENCE:")) {
+        // Gemini API key
+        if (line.startsWith("GEMINI_API_KEY:")) {
+            file.close();
+            llmKey = line.mid(QString("GEMINI_API_KEY:").length()).trimmed();
+        }
+        // Google audio API key
+        else if (line.startsWith("GOOGLE_AUDIO_API_KEY:")) {
+            file.close();
+            googleSpeechApiKey = line.mid(QString("GOOGLE_AUDIO_API_KEY:").length()).trimmed();
+        }
+        // OpenAi audio API key
+        else if (line.startsWith("OPENAI_AUDIO_API_KEY:")) {
+            file.close();
+            openAIAudioKey = line.mid(QString("OPENAI_AUDIO_API_KEY:").length()).trimmed();
+        }
+        // Summary layout preference
+        else if (line.startsWith("SUMMARY_LAYOUT_PREFERENCE:")) {
             summaryLayoutPreference = line.mid(QString("SUMMARY_LAYOUT_PREFERENCE:").length()).trimmed();
         }
     }
+
+    qDebug() << "Loaded settings:";
+    qDebug() << "  GEMINI_API_KEY: " << llmKey;
+    qDebug() << "  GOOGLE_AUDIO_API_KEY:" << googleSpeechApiKey;
+    qDebug() << "  OPENAI_AUDIO_API_KEY:" << openAIAudioKey;
+    qDebug() << "  SUMMARY_LAYOUT_PREFERENCE:" << summaryLayoutPreference;
+
+    // Set API keys from keyFile
+    LLMClient::getInstance()->setApiKey(llmKey);
+    AudioHandler::getInstance()->setGoogleApiKey(googleSpeechApiKey);
+    AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
 }
 
 /**
@@ -55,15 +86,13 @@ Settings::Settings(QObject *p, LLMClient *llm, AudioHandler *audio)
  * @details This function creates a singleton instance of the Settings class if it doesn't already exist.
  * @details It initializes the instance with the provided parameters and returns the instance.
  * @param parent - Main Window
- * @param llm - LLM Client object
- * @param audio - Audio Handler object
  * @return Returns singleton settings object.
  * @author Joelene Hales
  * @author Thomas Llamzon
  */
-Settings* Settings::getInstance(QObject *parent, LLMClient *llm, AudioHandler *audio) {
+Settings* Settings::getInstance(QObject *parent) {
     if (!instance) {
-        instance = new Settings(parent, llm, audio);
+        instance = new Settings(parent);
     }
     return instance;
 }
@@ -166,24 +195,24 @@ void Settings::showSettings()
     // ========== Google Audio API Key ==========
     QHBoxLayout *audioLayout = new QHBoxLayout();
     QLabel *audioLabel = new QLabel("Google Transcriber API Key:", settingsWindow);
-    QLineEdit *audioKeyField = new QLineEdit(settingsWindow);
-    audioKeyField->setText(audioKey);
+    QLineEdit *googleAudioKeyField = new QLineEdit(settingsWindow);
+    googleAudioKeyField->setText(googleSpeechApiKey);
     QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
     audioLayout->addWidget(audioLabel);
-    audioLayout->addWidget(audioKeyField);
+    audioLayout->addWidget(googleAudioKeyField);
     audioLayout->addWidget(audioButtonBox);
     mainLayout->addLayout(audioLayout);
 
     connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
-        if (!audioKeyField->text().isEmpty()) {
-            setAudioKey(audioKeyField->text());
+        if (!googleAudioKeyField->text().isEmpty()) {
+            setGoogleSpeechApiKey(googleAudioKeyField->text());
         } else {
             qWarning() << "Google Audio key field cannot be empty.";
         }
     });
     connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        audioKeyField->clear();
+        googleAudioKeyField->clear();
     });
 
     // ========== OpenAI Audio API Key ==========
@@ -244,57 +273,125 @@ void Settings::showSettings()
 }
 
 /**
+ * @name readKey
+ * @brief Retrieves a key value from the keyfile
+ * @details This function reads the keyfile value for the provided key prefix.
+ * It searches for the line that starts with the key prefix and returns the key value.
+ * @note The key file is expected to be in the format "KEY_NAME:KEY_VALUE".
+ * @returns Key value, or "" if key could not be found
+ * @author Thomas Llamzon
+ */
+QString Settings::readKey(const QString& keyPrefix)
+{
+    QFile file(keyFilename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Settings key file" << keyFilename << " not found.";
+        return "";
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if (line.startsWith(keyPrefix)) {
+            return line.mid(keyPrefix.length()).trimmed();
+        }
+    }
+
+    return "";
+}
+
+/**
  * @name setLLMKey
  * @brief Sets LLM API key and modifies key storage file for continual use.
- * @details This function updates the LLM API key in the LLM client and stores it in a configuration file for future use.
+ * @details This function updates the LLM API key in the LLM client and stores
+ * it in a configuration file for future use.
  * @param[in] newKey: API key
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
 void Settings::setLLMKey(QString newKey) {
     llmKey = newKey;
-    llmClient->apiKey = newKey;
+    LLMClient::getInstance()->setApiKey(newKey);
     storeConfig("LLM", newKey);
 }
 
 /**
- * @name setAudioKey
+ * @name setGoogleSpeechApiKey
  * @brief Sets Google audio transcriber API key and modifies key storage file for continual use.
- * @details This function updates the audio API key in the AudioHandler client and stores it in a configuration file for future use.
- * @details This function is used to set the API key for Google audio transcriber.
+ * @details This function updates the Google Speech-to-Text API key in the
+ * AudioHandler client and stores it in a configuration file for future use.
  * @param[in] newKey: API key
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
-void Settings::setAudioKey(QString newKey) {
-    audioKey = newKey;
-    audioHandlerClient->googleSpeechApiKey = newKey;
+void Settings::setGoogleSpeechApiKey(QString newKey) {
+    googleSpeechApiKey = newKey;
+    AudioHandler::getInstance()->setGoogleApiKey(newKey);
     storeConfig("AUDIO", newKey);
 }
 
 /**
  * @name setOpenAIAudioKey
  * @brief Sets OpenAI Whisper audio API key and stores it persistently.
- * @details This function updates the OpenAI audio API key in the AudioHandler client and stores it in a configuration file for future use.
+ * @details This function updates the OpenAI API key in the AudioHandler client
+ * used and stores it in a configuration file for future use.
  * @param[in] newKey: API key
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
 void Settings::setOpenAIAudioKey(QString newKey) {
     openAIAudioKey = newKey;
-    audioHandlerClient->openAIApiKey = newKey;
+    AudioHandler::getInstance()->setOpenAIApiKey(openAIAudioKey);
     storeConfig("OPENAI_AUDIO", newKey);
 }
 
 /**
  * @name setSummaryPreference
  * @brief Stores summary preference code in the keyFile
- * @details This function is called when the OK button is clicked in the settings dialog.
- * @param[in] pref - Summary Layout Preference (Detailed/Concise)
+ * @param[in] pref: Summary Layout Preference (Detailed/Concise)
  * @author Thomas Llamzon
+ * @author Joelene Hales
  */
 void Settings::setSummaryPreference(QString pref) {
     summaryLayoutPreference = pref;
     storeConfig("SUMM", pref);
 }
 
+/**
+ * @name getLLMKey
+ * @brief Get Google Gemini API key
+ * @details This API key is used by LLMClient to summarize transcripts using the
+ * Google Gemini API
+ * @return Google Gemini API key
+ * @author Joelene Hales
+ */
+QString Settings::getLLMKey() const {
+    return llmKey;
+}
+
+/**
+ * @name getGoogleSpeechApiKey
+ * @brief Get Google Speech-to-Text API key
+ * @details This API key is used by AudioHandler to transcribe speech using the
+ * Google Speech-to-Text API
+ * @return Google Speech-to-Text API key
+ * @author Joelene Hales
+ */
+QString Settings::getGoogleSpeechApiKey() const {
+    return googleSpeechApiKey;
+}
+
+/**
+ * @name getOpenAIAudioKey
+ * @brief Get Open AI Whisper API key
+ * @details This API key is used by AudioHandler to transcribe speech using the
+ * OpenAI Whisper API
+ * @return Open AI Whisper API key
+ * @author Joelene Hales
+ */
+QString Settings::getOpenAIAudioKey() const {
+    return openAIAudioKey;
+}
 
 /**
  * @name getSummaryPreference
@@ -311,9 +408,10 @@ QString Settings::getSummaryPreference() const
 /**
  * @name storeConfig
  * @brief Writes to hidden file storing user settings configurations.
- * @details This function stores user settings configurations in a hidden file for future use.
- * @param[in] config - target setting to store
- * @param[in] value - value of user configuration
+ * @details This function stores user settings configurations in a hidden file
+ * for future use.
+ * @param[in] config: Target setting to store
+ * @param[in] value: Value of user configuration
  * @author Thomas Llamzon
  */
 void Settings::storeConfig(const QString &config, const QString &value)
@@ -332,7 +430,7 @@ void Settings::storeConfig(const QString &config, const QString &value)
         return;
     }
 
-    QFile file("keyFile.txt");
+    QFile file(keyFilename);
     QStringList lines;
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {

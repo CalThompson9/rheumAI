@@ -2,7 +2,7 @@
  * @file settings.h
  * @brief Declaration of Settings class
  * 
- * @author Thomas Llamazon (tllamazon@uwo.ca
+ * @author Thomas Llamzon (tllamzon@uwo.ca
  * @date Mar. 16, 2025
  */
 
@@ -36,7 +36,7 @@
  *          as well as select a summary layout preference. It uses a singleton pattern
  *          to ensure that only one instance of the settings dialog is created.
  * @note The settings are stored in a configuration file for persistence across sessions.
- * @author Thomas Llamazon
+ * @author Thomas Llamzon
  */
 class Settings : public QObject {
     Q_OBJECT
@@ -44,30 +44,34 @@ class Settings : public QObject {
     friend class MainWindow;
 
 public:
-    static Settings* getInstance(QObject *parent, LLMClient *llm, AudioHandler *audio);
+    static Settings* getInstance(QObject *parent);
     ~Settings() = default;
 
     void showSettings();
 
     void setLLMKey(const QString newKey);
-    void setAudioKey(const QString newKey);
+    void setGoogleSpeechApiKey(const QString newKey);
     void setOpenAIAudioKey(QString newKey);
     void setSummaryPreference(const QString pref);
+
+    QString getLLMKey() const;
+    QString getGoogleSpeechApiKey() const;
+    QString getOpenAIAudioKey() const;
     QString getSummaryPreference() const;
 
 private:
-    Settings(QObject *parent, LLMClient *llm, AudioHandler *audio);
+    Settings(QObject *parent);
 
+    static QString readKey(const QString& keyPrefix);
     void storeConfig(const QString &config, const QString &value);
 
     QObject *mainWindow;
-    LLMClient *llmClient;
-    AudioHandler *audioHandlerClient;
     QString llmKey;
-    QString audioKey;
+    QString googleSpeechApiKey;
     QString openAIAudioKey;
     QString summaryLayoutPreference;
 
+    static QString keyFilename;
     static Settings *instance;
 };
 
