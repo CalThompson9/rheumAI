@@ -109,7 +109,10 @@ QString FileHandler::readTranscript()
     qDebug() << "Transcript Read:\n"
              << content;
     return content;
+
 }
+
+
 
 /**
  * @name saveOrAppendRawTranscript
