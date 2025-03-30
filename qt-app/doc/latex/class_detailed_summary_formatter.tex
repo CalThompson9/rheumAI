@@ -1,0 +1,77 @@
+\doxysection{Detailed\+Summary\+Formatter Class Reference}
+\hypertarget{class_detailed_summary_formatter}{}\label{class_detailed_summary_formatter}\index{DetailedSummaryFormatter@{DetailedSummaryFormatter}}
+
+
+Class to format detailed summaries.  
+
+
+
+
+{\ttfamily \#include $<$detailedsummaryformatter.\+h$>$}
+
+Inheritance diagram for Detailed\+Summary\+Formatter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_detailed_summary_formatter}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ generate\+Layout}\par
+{\em Creates a detailed layout of the summary
+
+Includes interval history, physical examination, current status, and plan sections. This is the standard detailed summary format. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em summary} & \doxylink{class_summary}{Summary} to create layout for \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em summary\+Layout} & Layout to display summary in. Existing layout elements will be cleared. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_detailed_summary_formatter_a2805db29c503f6f041c72d373a6925e3}{generate\+Layout}} (const \mbox{\hyperlink{class_summary}{Summary}} \&summary, QVBox\+Layout \texorpdfstring{$\ast$}{*}summary\+Layout) const override
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_summary_formatter}{Summary\+Formatter}}}
+\begin{DoxyCompactItemize}
+\item 
+QString {\bfseries format\+Bold\+Text} (const QString \&text) const
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries clear\+Layout} (QVBox\+Layout \texorpdfstring{$\ast$}{*}layout) const
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries add\+Section} (const \mbox{\hyperlink{struct_summary_formatter_1_1_section}{Section}} \&section, QVBox\+Layout \texorpdfstring{$\ast$}{*}summary\+Layout) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class to format detailed summaries. 
+
+This class is responsible for generating a detailed layout of the summary. It includes sections for interval history, physical examination, current status, and plan. This is the standard detailed summary format. \begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_detailed_summary_formatter_a2805db29c503f6f041c72d373a6925e3}\index{DetailedSummaryFormatter@{DetailedSummaryFormatter}!generateLayout@{generateLayout}}
+\index{generateLayout@{generateLayout}!DetailedSummaryFormatter@{DetailedSummaryFormatter}}
+\doxysubsubsection{\texorpdfstring{generateLayout()}{generateLayout()}}
+{\footnotesize\ttfamily \label{class_detailed_summary_formatter_a2805db29c503f6f041c72d373a6925e3} 
+void Detailed\+Summary\+Formatter\+::generate\+Layout (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_summary}{Summary}} \&}]{summary}{, }\item[{QVBox\+Layout \texorpdfstring{$\ast$}{*}}]{summary\+Layout}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_summary_formatter}{Summary\+Formatter}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{detailedsummaryformatter_8h}{detailedsummaryformatter.\+h}}\item 
+\mbox{\hyperlink{detailedsummaryformatter_8cpp}{detailedsummaryformatter.\+cpp}}\end{DoxyCompactItemize}

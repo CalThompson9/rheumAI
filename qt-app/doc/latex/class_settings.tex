@@ -1,0 +1,214 @@
+\doxysection{Settings Class Reference}
+\hypertarget{class_settings}{}\label{class_settings}\index{Settings@{Settings}}
+
+
+The \doxylink{class_settings}{Settings} class provides a dialog for configuring application settings.  
+
+
+
+
+{\ttfamily \#include $<$settings.\+h$>$}
+
+Inheritance diagram for Settings\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_settings}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ Settings\+::show\+Settings}\par
+{\em Handles constructing the settings pop-\/up menu.
+
+This function creates a dialog window for the settings menu, allowing users to modify their preferences. \begin{DoxyAuthor}{Author}
+Thomas Llamzon 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_a3243cda13317a332f0061c1d56ba505f}\label{class_settings_a3243cda13317a332f0061c1d56ba505f} 
+void {\bfseries show\+Settings} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ set\+LLMKey}\par
+{\em Sets LLM API key and modifies key storage file for continual use.
+
+This function updates the LLM API key in the LLM client and stores it in a configuration file for future use. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em new\+Key} & API key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Thomas Llamzon 
+
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_a198e6b63c2abe7129efbba2292c15ef9}\label{class_settings_a198e6b63c2abe7129efbba2292c15ef9} 
+void {\bfseries set\+LLMKey} (const QString new\+Key)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ set\+Google\+Speech\+Api\+Key}\par
+{\em Sets Google audio transcriber API key and modifies key storage file for continual use.
+
+This function updates the Google Speech-\/to-\/\+Text API key in the \doxylink{class_audio_handler}{Audio\+Handler} client and stores it in a configuration file for future use. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em new\+Key} & API key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Thomas Llamzon 
+
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_a55ccf353dfe369da8692085679c3018e}\label{class_settings_a55ccf353dfe369da8692085679c3018e} 
+void {\bfseries set\+Google\+Speech\+Api\+Key} (const QString new\+Key)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ set\+Open\+AIAudio\+Key}\par
+{\em Sets Open\+AI Whisper audio API key and stores it persistently.
+
+This function updates the Open\+AI API key in the \doxylink{class_audio_handler}{Audio\+Handler} client used and stores it in a configuration file for future use. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em new\+Key} & API key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Thomas Llamzon 
+
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_aff86ffafc1a8615fa8f94547bc3829cf}\label{class_settings_aff86ffafc1a8615fa8f94547bc3829cf} 
+void {\bfseries set\+Open\+AIAudio\+Key} (QString new\+Key)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ set\+Summary\+Preference}\par
+{\em Stores summary preference code in the key\+File
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em pref} & \doxylink{class_summary}{Summary} Layout Preference (Detailed/\+Concise) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Thomas Llamzon 
+
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_a7b6465ba23410ba3a9c7a0463455fce5}\label{class_settings_a7b6465ba23410ba3a9c7a0463455fce5} 
+void {\bfseries set\+Summary\+Preference} (const QString pref)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+LLMKey}\par
+{\em Get Google Gemini API key
+
+This API key is used by \doxylink{class_l_l_m_client}{LLMClient} to summarize transcripts using the Google Gemini API \begin{DoxyReturn}{Returns}
+Google Gemini API key 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_ad7c5958384664978df8d241fac9e8c8d}\label{class_settings_ad7c5958384664978df8d241fac9e8c8d} 
+QString {\bfseries get\+LLMKey} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Google\+Speech\+Api\+Key}\par
+{\em Get Google Speech-\/to-\/\+Text API key
+
+This API key is used by \doxylink{class_audio_handler}{Audio\+Handler} to transcribe speech using the Google Speech-\/to-\/\+Text API \begin{DoxyReturn}{Returns}
+Google Speech-\/to-\/\+Text API key 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_a9e54fb1fdaaa69b78e0364297e5aa439}\label{class_settings_a9e54fb1fdaaa69b78e0364297e5aa439} 
+QString {\bfseries get\+Google\+Speech\+Api\+Key} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Open\+AIAudio\+Key}\par
+{\em Get Open AI Whisper API key
+
+This API key is used by \doxylink{class_audio_handler}{Audio\+Handler} to transcribe speech using the Open\+AI Whisper API \begin{DoxyReturn}{Returns}
+Open AI Whisper API key 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_a2ca83d1b54e402db4edd4d25da08891d}\label{class_settings_a2ca83d1b54e402db4edd4d25da08891d} 
+QString {\bfseries get\+Open\+AIAudio\+Key} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Summary\+Preference}\par
+{\em Get the summary layout preference
+
+This function retrieves the summary layout preference from the settings. \begin{DoxyReturn}{Returns}
+\doxylink{class_summary}{Summary} layout preference (Detailed/\+Concise) 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Thomas Llamzon 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_a16d6e68c345b23373d7a718e78a2a2e1}\label{class_settings_a16d6e68c345b23373d7a718e78a2a2e1} 
+QString {\bfseries get\+Summary\+Preference} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{Indent}\textbf{ Settings\+::get\+Instance}\par
+{\em Returns single static instance.
+
+This function creates a singleton instance of the \doxylink{class_settings}{Settings} class if it doesn\textquotesingle{}t already exist.
+
+It initializes the instance with the provided parameters and returns the instance. 
+\begin{DoxyParams}{Parameters}
+{\em parent} & -\/ Main Window \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns singleton settings object. 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+
+Thomas Llamzon 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_a732278fa374264393e832a35e66e24c7}\label{class_settings_a732278fa374264393e832a35e66e24c7} 
+static \mbox{\hyperlink{class_settings}{Settings}} \texorpdfstring{$\ast$}{*} {\bfseries get\+Instance} (QObject \texorpdfstring{$\ast$}{*}parent)
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_settings_af9db4b672c4d3104f5541893e08e1809}\label{class_settings_af9db4b672c4d3104f5541893e08e1809} 
+class {\bfseries Main\+Window}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \doxylink{class_settings}{Settings} class provides a dialog for configuring application settings. 
+
+This class allows the user to set API keys for LLM and audio services, as well as select a summary layout preference. It uses a singleton pattern to ensure that only one instance of the settings dialog is created. \begin{DoxyNote}{Note}
+The settings are stored in a configuration file for persistence across sessions. 
+\end{DoxyNote}
+\begin{DoxyAuthor}{Author}
+Thomas Llamzon 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{settings_8h}{settings.\+h}}\item 
+\mbox{\hyperlink{settings_8cpp}{settings.\+cpp}}\end{DoxyCompactItemize}

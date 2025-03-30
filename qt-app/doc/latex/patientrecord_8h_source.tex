@@ -1,0 +1,71 @@
+\doxysection{patientrecord.\+h}
+\hypertarget{patientrecord_8h_source}{}\label{patientrecord_8h_source}\mbox{\hyperlink{patientrecord_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ PATIENTRECORD\_H}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ PATIENTRECORD\_H}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QJsonObject>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }PatientRecord\ \{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ patientID;}
+\DoxyCodeLine{00031\ \ \ \ \ QString\ healthCard;}
+\DoxyCodeLine{00032\ \ \ \ \ QString\ firstName;}
+\DoxyCodeLine{00033\ \ \ \ \ QString\ lastName;}
+\DoxyCodeLine{00034\ \ \ \ \ QString\ dateOfBirth;}
+\DoxyCodeLine{00035\ \ \ \ \ QString\ email;}
+\DoxyCodeLine{00036\ \ \ \ \ QString\ phoneNumber;}
+\DoxyCodeLine{00037\ \ \ \ \ QString\ address;}
+\DoxyCodeLine{00038\ \ \ \ \ QString\ postalCode;}
+\DoxyCodeLine{00039\ \ \ \ \ QString\ province;}
+\DoxyCodeLine{00040\ \ \ \ \ QString\ country;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00043\ \ \ \ \ PatientRecord(}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\&\ healthCard,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&firstName,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&lastName,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&dob,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&email,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&phoneNumber,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&address,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&postalCode,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&province,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ QString\ \&country);}
+\DoxyCodeLine{00055\ \ \ \ \ PatientRecord();\ \textcolor{comment}{//\ Default\ constructor}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{int}\ getID()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ \ \ \ \ QString\ getHealthCard()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00059\ \ \ \ \ QString\ getFirstName()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00060\ \ \ \ \ QString\ getLastName()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00061\ \ \ \ \ QString\ getDateOfBirth()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00062\ \ \ \ \ QString\ getEmail()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00063\ \ \ \ \ QString\ getPhoneNumber()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00064\ \ \ \ \ QString\ getAddress()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00065\ \ \ \ \ QString\ getPostalCode()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00066\ \ \ \ \ QString\ getProvince()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00067\ \ \ \ \ QString\ getCountry()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ setFirstName(\textcolor{keyword}{const}\ QString\ \&firstName);}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{void}\ setLastName(\textcolor{keyword}{const}\ QString\ \&lastName);}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ setDateOfBirth(\textcolor{keyword}{const}\ QString\ \&dob);}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ setHealthCard(\textcolor{keyword}{const}\ QString\ \&card);}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ setEmail(\textcolor{keyword}{const}\ QString\ \&email);}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{void}\ setPhoneNumber(\textcolor{keyword}{const}\ QString\ \&phone);}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ setAddress(\textcolor{keyword}{const}\ QString\ \&address);}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{void}\ setPostalCode(\textcolor{keyword}{const}\ QString\ \&postalCode);}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ setProvince(\textcolor{keyword}{const}\ QString\ \&province);}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{void}\ setCountry(\textcolor{keyword}{const}\ QString\ \&country);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ QJsonObject\ toJson()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{static}\ PatientRecord\ fromJson(\textcolor{keyword}{const}\ QJsonObject\ \&json);}
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ PATIENTRECORD\_H}}
+
+\end{DoxyCode}

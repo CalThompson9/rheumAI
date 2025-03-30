@@ -1,0 +1,441 @@
+\doxysection{Patient\+Record Class Reference}
+\hypertarget{class_patient_record}{}\label{class_patient_record}\index{PatientRecord@{PatientRecord}}
+
+
+Represents a patient\textquotesingle{}s record in the system.  
+
+
+
+
+{\ttfamily \#include $<$patientrecord.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ Patient\+Record (constructor)}\par
+{\em Initializes a patient record
+
+Sets the patient ID and all other fields to the provided values. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & Patient ID \\
+\hline
+\mbox{\texttt{ in}}  & {\em health\+Card} & Patient\textquotesingle{}s health card number (ex OHIP) \\
+\hline
+\mbox{\texttt{ in}}  & {\em first\+Name} & Patient\textquotesingle{}s first name \\
+\hline
+\mbox{\texttt{ in}}  & {\em last\+Name} & Patient\textquotesingle{}s last name \\
+\hline
+\mbox{\texttt{ in}}  & {\em date\+Of\+Birth} & Patient\textquotesingle{}s date of birth \\
+\hline
+\mbox{\texttt{ in}}  & {\em email} & Patient\textquotesingle{}s email \\
+\hline
+\mbox{\texttt{ in}}  & {\em phone\+Number} & Patient\textquotesingle{}s phone number \\
+\hline
+\mbox{\texttt{ in}}  & {\em address} & Patient\textquotesingle{}s address \\
+\hline
+\mbox{\texttt{ in}}  & {\em postal\+Code} & Patient\textquotesingle{}s postal code \\
+\hline
+\mbox{\texttt{ in}}  & {\em province} & Patient\textquotesingle{}s province \\
+\hline
+\mbox{\texttt{ in}}  & {\em country} & Patient\textquotesingle{}s country \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a2b113bbf3c483422eddda725b6469da0}\label{class_patient_record_a2b113bbf3c483422eddda725b6469da0} 
+{\bfseries Patient\+Record} (int id, const QString \&health\+Card, const QString \&first\+Name, const QString \&last\+Name, const QString \&dob, const QString \&email, const QString \&phone\+Number, const QString \&address, const QString \&postal\+Code, const QString \&province, const QString \&country)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record (default constructor)}\par
+{\em Default constructor creates an empty patient record
+
+Initializes ID to -\/1 and all strings to empty \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\end{Indent}
+\begin{Indent}\textbf{ get\+Id}\par
+{\em Get the patient\textquotesingle{}s ID number
+
+The ID is a unique identifier for the patient \begin{DoxyReturn}{Returns}
+Patient ID 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_ab38ba8548a6eb0b482bda7b1ae3cb8e4}\label{class_patient_record_ab38ba8548a6eb0b482bda7b1ae3cb8e4} 
+int {\bfseries get\+ID} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Health\+Card}\par
+{\em Get the patient\textquotesingle{}s health card number
+
+The health card number is used to identify the patient \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s health card number 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_afcb45771bcc0b61a9f2a46856880be69}\label{class_patient_record_afcb45771bcc0b61a9f2a46856880be69} 
+QString {\bfseries get\+Health\+Card} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+First\+Name}\par
+{\em Get the patient\textquotesingle{}s first name
+
+First name field stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s first name 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_ab8d2f614e0dc7c73104bee489def619f}\label{class_patient_record_ab8d2f614e0dc7c73104bee489def619f} 
+QString {\bfseries get\+First\+Name} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Last\+Name}\par
+{\em Get the patient\textquotesingle{}s last name
+
+Last name field stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s last name 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a0bc7f6e974a72c65cabb4ee681fb3ff7}\label{class_patient_record_a0bc7f6e974a72c65cabb4ee681fb3ff7} 
+QString {\bfseries get\+Last\+Name} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Date\+Of\+Birth}\par
+{\em Gets the patient\textquotesingle{}s date of birth
+
+The date of birth stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s date of birth 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_ad4fb31d4c7a1593bdc379f8b7a735432}\label{class_patient_record_ad4fb31d4c7a1593bdc379f8b7a735432} 
+QString {\bfseries get\+Date\+Of\+Birth} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Email}\par
+{\em Gets the patient\textquotesingle{}s email
+
+The email stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s email 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_ab15961653f768aa0aa98798ff7019438}\label{class_patient_record_ab15961653f768aa0aa98798ff7019438} 
+QString {\bfseries get\+Email} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Phone\+Number}\par
+{\em Gets the patient\textquotesingle{}s phone number
+
+The phone number stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s phone number 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_ae2325a97067a10c32775a3fea545d205}\label{class_patient_record_ae2325a97067a10c32775a3fea545d205} 
+QString {\bfseries get\+Phone\+Number} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Home\+Address}\par
+{\em Gets the patient\textquotesingle{}s home address
+
+The home address stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s home address 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_ab4bd89e9a27677936da0dbb9275a551c}\label{class_patient_record_ab4bd89e9a27677936da0dbb9275a551c} 
+QString {\bfseries get\+Address} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Postal\+Code}\par
+{\em Gets the patient\textquotesingle{}s postal code
+
+The postal code stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s postal code 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a174908f770bc286f4a2ca9fcbdcadecb}\label{class_patient_record_a174908f770bc286f4a2ca9fcbdcadecb} 
+QString {\bfseries get\+Postal\+Code} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Province}\par
+{\em Gets the patient\textquotesingle{}s province
+
+The province stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s province 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_af08a8fab62d72c9e6ab5da39d6a0c302}\label{class_patient_record_af08a8fab62d72c9e6ab5da39d6a0c302} 
+QString {\bfseries get\+Province} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Country}\par
+{\em Gets the patient\textquotesingle{}s country
+
+The country stored in the patients file \begin{DoxyReturn}{Returns}
+Patient\textquotesingle{}s country 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a0b943b6e12780ee311539d036a79027d}\label{class_patient_record_a0b943b6e12780ee311539d036a79027d} 
+QString {\bfseries get\+Country} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+First\+Name}\par
+{\em Sets the patient\textquotesingle{}s first name
+
+Assigns the provided value to the patient\textquotesingle{}s first name field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s first name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a34cf92fceb23e7649b0cfca15ccd1aec}\label{class_patient_record_a34cf92fceb23e7649b0cfca15ccd1aec} 
+void {\bfseries set\+First\+Name} (const QString \&first\+Name)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Last\+Name}\par
+{\em Sets the patient\textquotesingle{}s last name
+
+Assigns the provided value to the patient\textquotesingle{}s last name field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s last name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a1619bcbb927bff9ae9274a142eee4daa}\label{class_patient_record_a1619bcbb927bff9ae9274a142eee4daa} 
+void {\bfseries set\+Last\+Name} (const QString \&last\+Name)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Date\+Of\+Birth}\par
+{\em Sets the patient\textquotesingle{}s date of birth
+
+Assigns the provided value to the patient\textquotesingle{}s date of birth field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s date of birth \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a56d64313672219aae9c3c7c5348f597b}\label{class_patient_record_a56d64313672219aae9c3c7c5348f597b} 
+void {\bfseries set\+Date\+Of\+Birth} (const QString \&dob)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Health\+Card}\par
+{\em Sets the patient\textquotesingle{}s health card number
+
+Assigns the provided value to the patient\textquotesingle{}s health card field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s health card number \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a6ed076c2c714e7c031bd94bd8516aafa}\label{class_patient_record_a6ed076c2c714e7c031bd94bd8516aafa} 
+void {\bfseries set\+Health\+Card} (const QString \&card)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Email}\par
+{\em Sets the patient\textquotesingle{}s email address
+
+Assigns the provided value to the patient\textquotesingle{}s email field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s email address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a7d8bf94b21544614967bb31ffaab3998}\label{class_patient_record_a7d8bf94b21544614967bb31ffaab3998} 
+void {\bfseries set\+Email} (const QString \&email)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Phone\+Number}\par
+{\em Sets the patient\textquotesingle{}s phone number
+
+Assigns the provided value to the patient\textquotesingle{}s phone number field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s phone number \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a5dfdbbe054f602b2fa5dc323ef612c21}\label{class_patient_record_a5dfdbbe054f602b2fa5dc323ef612c21} 
+void {\bfseries set\+Phone\+Number} (const QString \&phone)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Address}\par
+{\em Sets the patient\textquotesingle{}s address
+
+Assigns the provided value to the patient\textquotesingle{}s address field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a13b6d1afb30fe3e7e2f75a51bf313af6}\label{class_patient_record_a13b6d1afb30fe3e7e2f75a51bf313af6} 
+void {\bfseries set\+Address} (const QString \&address)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Postal\+Code}\par
+{\em Sets the patient\textquotesingle{}s postal code
+
+Assigns the provided value to the patient\textquotesingle{}s postal code field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s postal code \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_acf9d9ecc6b5418e295f877e289a5afaf}\label{class_patient_record_acf9d9ecc6b5418e295f877e289a5afaf} 
+void {\bfseries set\+Postal\+Code} (const QString \&postal\+Code)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Province}\par
+{\em Sets the patient\textquotesingle{}s province
+
+Assigns the provided value to the patient\textquotesingle{}s province field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s province \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_abc4c503b752b61dc591031362ebe671d}\label{class_patient_record_abc4c503b752b61dc591031362ebe671d} 
+void {\bfseries set\+Province} (const QString \&province)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Patient\+Record\+::set\+Country}\par
+{\em Sets the patient\textquotesingle{}s country
+
+Assigns the provided value to the patient\textquotesingle{}s country field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em value} & The patient\textquotesingle{}s country \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a201913fc0f6db624d7acbb0eba1c5456}\label{class_patient_record_a201913fc0f6db624d7acbb0eba1c5456} 
+void {\bfseries set\+Country} (const QString \&country)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ to\+Json}\par
+{\em Converts the patient record to a JSON object
+
+This function creates a JSON object that contains all the patient\textquotesingle{}s information. The JSON object can be used to save the patient record to a file or send it over the network. \begin{DoxyReturn}{Returns}
+JSON object storing the patient record 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a38d9e43c3d271345eac5d0d49d253d1c}\label{class_patient_record_a38d9e43c3d271345eac5d0d49d253d1c} 
+QJson\+Object {\bfseries to\+Json} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{Indent}\textbf{ from\+Json}\par
+{\em Creates a patient record from a JSON object
+
+This function takes a JSON object that contains all the patient\textquotesingle{}s information and creates a new patient record from it. The JSON object can be used to load the patient record from a file or receive it over the network. \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em json} & JSON object containing patient record data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Patient record 
+\end{DoxyReturn}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_patient_record_a1ffe80d95d59a582a9beccc812e27d9c}\label{class_patient_record_a1ffe80d95d59a582a9beccc812e27d9c} 
+static \mbox{\hyperlink{class_patient_record}{Patient\+Record}} {\bfseries from\+Json} (const QJson\+Object \&json)
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+Represents a patient\textquotesingle{}s record in the system. 
+
+This class contains personal information such as name, date of birth, contact details, and health card information. It provides methods to access and modify these details, as well as to convert the record to and from JSON format for easy storage and retrieval. \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{patientrecord_8h}{patientrecord.\+h}}\item 
+\mbox{\hyperlink{patientrecord_8cpp}{patientrecord.\+cpp}}\end{DoxyCompactItemize}

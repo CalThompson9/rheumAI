@@ -1,0 +1,324 @@
+\doxysection{File\+Handler Class Reference}
+\hypertarget{class_file_handler}{}\label{class_file_handler}\index{FileHandler@{FileHandler}}
+
+
+Handles file operations for patient records and transcripts.  
+
+
+
+
+{\ttfamily \#include $<$filehandler.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ set\+Transcript\+Filename}\par
+{\em Sets the filepath to the transcript file
+
+This method is used to specify the file where the transcript data will be saved. It is important to set this filepath before attempting to read or write transcript data. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em filepath} & Filepath to transcript file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_a9eabad847338e0ef2c60fc42264407ad}\label{class_file_handler_a9eabad847338e0ef2c60fc42264407ad} 
+void {\bfseries set\+Transcript\+Filename} (const QString \&filepath)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ set\+Json\+Filename}\par
+{\em Sets the filepath to the patient information JSON file
+
+This method is used to specify the file where the patient information will be saved. It is important to set this filepath before attempting to read or write patient information. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em filepath} & Filepath to the patient information JSON file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_aeba0fdcab9f7d0ac897e916d22021ab3}\label{class_file_handler_aeba0fdcab9f7d0ac897e916d22021ab3} 
+void {\bfseries set\+Json\+Filename} (const QString \&filepath)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ save\+Patient\+Record}\par
+{\em Saves the patient record to file
+
+File will be named according to the patient ID stored in the patient record, and located in the directory configured in the constructor. \begin{DoxyWarning}{Warning}
+If the file already exists, it will be overwritten 
+\end{DoxyWarning}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em record} & Patient record to save \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_aff647c1f73953dad2ed7c741829875e4}\label{class_file_handler_aff647c1f73953dad2ed7c741829875e4} 
+void {\bfseries save\+Patient\+Record} (const \mbox{\hyperlink{class_patient_record}{Patient\+Record}} \&record)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ load\+Patient\+Json}\par
+{\em Read the raw text stored in the patient information JSON file and print it
+
+This method reads the JSON file and prints the contents to the console. It is useful for debugging purposes to ensure that the JSON data is being correctly loaded and parsed.
+
+Patient information filepath must first be set using {\ttfamily set\+Json\+Filename} \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_af136e88ddcdd3c29a9492a04fc14706d}\label{class_file_handler_af136e88ddcdd3c29a9492a04fc14706d} 
+void {\bfseries load\+Patient\+Json} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ save\+Transcript}\par
+{\em Save the given transcript text to transcript\+\_\+raw.\+txt for a specific patient
+
+This method will overwrite the existing transcript file. The file will be located in the patient\textquotesingle{}s folder, which is determined by the patient ID. \begin{DoxyWarning}{Warning}
+If the file already exists, it will be overwritten. 
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em patient\+ID} & ID of the patient whose transcript is being saved \\
+\hline
+{\em transcript} & The full text of the transcript to write \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_ad0ef16a2bc4ebed25190e90a7a27f3cf}\label{class_file_handler_ad0ef16a2bc4ebed25190e90a7a27f3cf} 
+void {\bfseries save\+Transcript} (int patient\+ID, const QString \&transcript)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ save\+Transcript\+To\+Json}\par
+{\em Convert the currently stored transcript text into JSON format and save it
+
+\doxylink{class_transcript}{Transcript} filepath must first be set using {\ttfamily set\+Transcript\+Filename}. The JSON file will be saved in the same directory as the transcript file. \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_a4fe51072119c2a02dd2ffb4c9ac97f3c}\label{class_file_handler_a4fe51072119c2a02dd2ffb4c9ac97f3c} 
+void {\bfseries save\+Transcript\+To\+Json} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ save\+Or\+Append\+Raw\+Transcript}\par
+{\em Appends a timestamped transcript to the patient\textquotesingle{}s daily raw file
+
+Also updates {\ttfamily transcript\+\_\+raw.\+txt} with full daily content for summarization 
+\begin{DoxyParams}{Parameters}
+{\em patient\+ID} & The ID of the patient \\
+\hline
+{\em transcript} & The transcript object to save \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_a4a696b0f6a7076b20d053b461fe2ae82}\label{class_file_handler_a4a696b0f6a7076b20d053b461fe2ae82} 
+void {\bfseries save\+Or\+Append\+Raw\+Transcript} (int patient\+ID, const \mbox{\hyperlink{class_transcript}{Transcript}} \&transcript)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ load\+Patient\+Record}\par
+{\em Reads a patient record from file
+
+File will be named according to the patient ID stored in the patient record, and located in the directory configured in the constructor. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em patient\+ID} & Patient ID of record to read \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Read patient record, or an empty record if the file could not be read 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_a830070a0ca4b510ac617d8f62cd3e77d}\label{class_file_handler_a830070a0ca4b510ac617d8f62cd3e77d} 
+\mbox{\hyperlink{class_patient_record}{Patient\+Record}} {\bfseries load\+Patient\+Record} (int patient\+ID)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ archive\+Patient\+Record}\par
+{\em Moves a patient record to the archive folder
+
+The patient record is moved from the \textquotesingle{}Patients\textquotesingle{} folder to the \textquotesingle{}Archived\textquotesingle{} folder. The original patient folder is deleted after the move. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em patient\+ID} & Patient ID of record to archive \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Patient record that was archived 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Andres Pedreros 
+
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_a2aef95fd9d9f7155a4dc2e9e9d8e4a25}\label{class_file_handler_a2aef95fd9d9f7155a4dc2e9e9d8e4a25} 
+\mbox{\hyperlink{class_patient_record}{Patient\+Record}} {\bfseries archive\+Patient\+Record} (int patient\+ID)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ unarchive\+Patient\+Record}\par
+{\em Moves a patient record to the \textquotesingle{}Patients\textquotesingle{} folder
+
+The patient record is moved from the \textquotesingle{}Archived\textquotesingle{} folder to the \textquotesingle{}Patients\textquotesingle{} folder. The original archive folder is deleted after the move. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em patient\+ID} & Patient ID of record to unarchive \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Patient record that was unarchived 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Andres Pedreros 
+
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_a6113b7a1da5390a78111c62b953e735b}\label{class_file_handler_a6113b7a1da5390a78111c62b953e735b} 
+\mbox{\hyperlink{class_patient_record}{Patient\+Record}} {\bfseries unarchive\+Patient\+Record} (int patient\+ID)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Transcript\+Filename}\par
+{\em Get the filepath to the transcript file
+
+This method returns the filepath to the transcript file that was previously set using {\ttfamily set\+Transcript\+Filename}. \begin{DoxyReturn}{Returns}
+Filepath to the transcript file 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_a4a55d852ab16746e27243fe35610b560}\label{class_file_handler_a4a55d852ab16746e27243fe35610b560} 
+QString {\bfseries get\+Transcript\+Filename} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Json\+Filename}\par
+{\em Gets the filepath to the patient information JSON file
+
+This method returns the filepath to the patient information JSON file that was previously set using {\ttfamily set\+Json\+Filename}. \begin{DoxyReturn}{Returns}
+Filepath to the patient information JSON file 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_a60c56f857acc04704a2d6bbf311f6325}\label{class_file_handler_a60c56f857acc04704a2d6bbf311f6325} 
+QString {\bfseries get\+Json\+Filename} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Read transcript from file}\par
+{\em \doxylink{class_transcript}{Transcript} filepath must first be set using {\ttfamily set\+Transcript\+Filename} \begin{DoxyReturn}{Returns}
+\doxylink{class_transcript}{Transcript} data, or an empty string if the file could not be read 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_af88eeecdbfb9539e1c56b0284184afd7}\label{class_file_handler_af88eeecdbfb9539e1c56b0284184afd7} 
+QString {\bfseries read\+Transcript} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ load\+Summary\+Text}\par
+{\em File\+Handler\+::load\+Summary\+Text
+
+
+\begin{DoxyParams}{Parameters}
+{\em patient\+ID} & The ID of the patient\\
+\hline
+\end{DoxyParams}
+The summary is stored in a file named {\ttfamily summary.\+txt} in the patient\textquotesingle{}s folder. \begin{DoxyReturn}{Returns}
+The summary text for the patient 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_aa6f81acf6b54433d15bdcdd6a73d15b1}\label{class_file_handler_aa6f81acf6b54433d15bdcdd6a73d15b1} 
+QString {\bfseries load\+Summary\+Text} (int patient\+ID)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ load\+Transcript}\par
+{\em Loads the most recent transcript for a patient
+
+Reads from {\ttfamily transcript\+\_\+raw.\+txt} in the patient\textquotesingle{}s folder 
+\begin{DoxyParams}{Parameters}
+{\em patient\+ID} & The ID of the patient \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The full transcript content, or an empty string if not found 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_abfcb58ea3201096d22f277992af3b6bf}\label{class_file_handler_abfcb58ea3201096d22f277992af3b6bf} 
+QString {\bfseries load\+Transcript} (int patient\+ID)
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{Indent}\textbf{ get\+Instance}\par
+{\em Returns the singleton instance of \doxylink{class_file_handler}{File\+Handler}
+
+If the instance does not exist, it creates a new one. This ensures that only one instance of \doxylink{class_file_handler}{File\+Handler} is created and used throughout the application. \begin{DoxyReturn}{Returns}
+Singleton instance of \doxylink{class_file_handler}{File\+Handler} 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_file_handler_aa1bba3c063b2a8e9912515606a21d4ca}\label{class_file_handler_aa1bba3c063b2a8e9912515606a21d4ca} 
+static \mbox{\hyperlink{class_file_handler}{File\+Handler}} \texorpdfstring{$\ast$}{*} {\bfseries get\+Instance} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+Handles file operations for patient records and transcripts. 
+
+This class provides methods to save, load, and manage patient records, transcripts, and JSON files. It follows the Singleton design pattern to ensure only one instance of the class exists throughout the application. \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+
+Joelene Hales 
+
+Callum Thompson 
+
+Andres Pedreros 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{filehandler_8h}{filehandler.\+h}}\item 
+\mbox{\hyperlink{filehandler_8cpp}{filehandler.\+cpp}}\end{DoxyCompactItemize}

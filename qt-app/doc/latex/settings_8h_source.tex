@@ -1,0 +1,68 @@
+\doxysection{settings.\+h}
+\hypertarget{settings_8h_source}{}\label{settings_8h_source}\mbox{\hyperlink{settings_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ SETTINGS\_H}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ SETTINGS\_H}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QObject>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QTextEdit>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QDialog>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QVBoxLayout>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <QPushButton>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <QLineEdit>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <QDialogButtonBox>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <QFile>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <QTextStream>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <QMenu>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <QAction>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <QMediaDevices>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <QtMultimedia/qaudiodevice.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{llmclient_8h}{llmclient.h}}"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{audiohandler_8h}{audiohandler.h}}"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{windowbuilder_8h}{windowbuilder.h}}"{}}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{class\ }Settings\ :\ \textcolor{keyword}{public}\ QObject\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }MainWindow;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{static}\ Settings*\ getInstance(QObject\ *parent);}
+\DoxyCodeLine{00048\ \ \ \ \ \string~Settings()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ showSettings();}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ setLLMKey(\textcolor{keyword}{const}\ QString\ newKey);}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ setGoogleSpeechApiKey(\textcolor{keyword}{const}\ QString\ newKey);}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ setOpenAIAudioKey(QString\ newKey);}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ setSummaryPreference(\textcolor{keyword}{const}\ QString\ pref);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ QString\ getLLMKey()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ \ \ \ \ QString\ getGoogleSpeechApiKey()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00059\ \ \ \ \ QString\ getOpenAIAudioKey()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00060\ \ \ \ \ QString\ getSummaryPreference()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00063\ \ \ \ \ Settings(QObject\ *parent);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{static}\ QString\ readKey(\textcolor{keyword}{const}\ QString\&\ keyPrefix);}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ storeConfig(\textcolor{keyword}{const}\ QString\ \&config,\ \textcolor{keyword}{const}\ QString\ \&value);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ QObject\ *mainWindow;}
+\DoxyCodeLine{00069\ \ \ \ \ QString\ llmKey;}
+\DoxyCodeLine{00070\ \ \ \ \ QString\ googleSpeechApiKey;}
+\DoxyCodeLine{00071\ \ \ \ \ QString\ openAIAudioKey;}
+\DoxyCodeLine{00072\ \ \ \ \ QString\ summaryLayoutPreference;}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{static}\ QString\ keyFilename;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{static}\ Settings\ *instance;}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SETTINGS\_H}}
+
+\end{DoxyCode}

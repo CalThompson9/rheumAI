@@ -1,0 +1,41 @@
+\doxysection{addpatientdialog.\+h}
+\hypertarget{addpatientdialog_8h_source}{}\label{addpatientdialog_8h_source}\mbox{\hyperlink{addpatientdialog_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ ADDPATIENTDIALOG\_H}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ ADDPATIENTDIALOG\_H}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QDialog>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }Ui\ \{}
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }AddPatientDialog;}
+\DoxyCodeLine{00020\ \}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{class\ }AddPatientDialog\ :\ \textcolor{keyword}{public}\ QDialog\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{explicit}\ AddPatientDialog(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00040\ \ \ \ \ \string~AddPatientDialog();}
+\DoxyCodeLine{00041\ \ \ \ \ QString\ getFirstName()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00042\ \ \ \ \ QString\ getLastName()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00043\ \ \ \ \ QString\ getDateOfBirth()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00044\ \ \ \ \ QString\ getHealthCard()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00045\ \ \ \ \ QString\ getEmail()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00046\ \ \ \ \ QString\ getPhoneNumber()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00047\ \ \ \ \ QString\ getAddress()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00048\ \ \ \ \ QString\ getPostalCode()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00049\ \ \ \ \ QString\ getProvince()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00050\ \ \ \ \ QString\ getCountry()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ accept();}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00056\ \ \ \ \ Ui::AddPatientDialog\ *ui;}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ ADDPATIENTDIALOG\_H}}
+
+\end{DoxyCode}

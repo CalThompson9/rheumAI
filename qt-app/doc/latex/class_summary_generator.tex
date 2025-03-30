@@ -1,0 +1,97 @@
+\doxysection{Summary\+Generator Class Reference}
+\hypertarget{class_summary_generator}{}\label{class_summary_generator}\index{SummaryGenerator@{SummaryGenerator}}
+
+
+Class to generate a summary from a transcript using LLM.  
+
+
+
+
+{\ttfamily \#include $<$summarygenerator.\+h$>$}
+
+Inheritance diagram for Summary\+Generator\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_summary_generator}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_generator_a2903f0c7da8823b9fbf743ac8e443ff8}\label{class_summary_generator_a2903f0c7da8823b9fbf743ac8e443ff8} 
+void {\bfseries summary\+Ready} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ Summary\+Generator}\par
+{\em Constructor for the \doxylink{class_summary_generator}{Summary\+Generator} class
+
+Sends the transcript to the LLM and stores the structured response. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em transcript} & \doxylink{class_transcript}{Transcript} to summarize \\
+\hline
+\mbox{\texttt{ in}}  & {\em parent} & Parent object in Qt application \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_generator_a06ba88c2391787c5ddf1e45324bbbff3}\label{class_summary_generator_a06ba88c2391787c5ddf1e45324bbbff3} 
+{\bfseries Summary\+Generator} (QObject \texorpdfstring{$\ast$}{*}parent=nullptr)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Send\+Request}\par
+{\em Sends a request to the \doxylink{class_l_l_m_client}{LLMClient}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em prompt} & Prompt to send to the \doxylink{class_l_l_m_client}{LLMClient}\\
+\hline
+\end{DoxyParams}
+Sends a request to the \doxylink{class_l_l_m_client}{LLMClient} with the given prompt and stores the response in the summary object \begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_generator_abe76f859307f52f52a5a2cb00150fd3c}\label{class_summary_generator_abe76f859307f52f52a5a2cb00150fd3c} 
+void {\bfseries send\+Request} (\mbox{\hyperlink{class_transcript}{Transcript}} \&prompt)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Summary}\par
+{\em Returns the generated summary
+
+This function returns the generated summary object. \begin{DoxyReturn}{Returns}
+Generated summary 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_generator_adaaf83d72d70111b3667458b5c0d058a}\label{class_summary_generator_adaaf83d72d70111b3667458b5c0d058a} 
+\mbox{\hyperlink{class_summary}{Summary}} {\bfseries get\+Summary} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_generator_af9db4b672c4d3104f5541893e08e1809}\label{class_summary_generator_af9db4b672c4d3104f5541893e08e1809} 
+class {\bfseries Main\+Window}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class to generate a summary from a transcript using LLM. 
+
+This class is responsible for sending a transcript to the LLM and receiving a structured summary in response. It extracts relevant sections from the LLM response and stores them in a \doxylink{class_summary}{Summary} object. The class also provides a signal to notify when the summary is ready. \begin{DoxyAuthor}{Author}
+Joelene Hales 
+
+Callum Thompson 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{summarygenerator_8h}{summarygenerator.\+h}}\item 
+\mbox{\hyperlink{summarygenerator_8cpp}{summarygenerator.\+cpp}}\end{DoxyCompactItemize}

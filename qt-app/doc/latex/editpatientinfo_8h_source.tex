@@ -1,0 +1,54 @@
+\doxysection{editpatientinfo.\+h}
+\hypertarget{editpatientinfo_8h_source}{}\label{editpatientinfo_8h_source}\mbox{\hyperlink{editpatientinfo_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifndef\ EDITPATIENTINFO\_H}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ EDITPATIENTINFO\_H}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QDialog>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }Ui\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }EditPatientInfo;}
+\DoxyCodeLine{00017\ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }EditPatientInfo\ :\ \textcolor{keyword}{public}\ QDialog}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{explicit}\ EditPatientInfo(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00036\ \ \ \ \ \string~EditPatientInfo();}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ Setters}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ setFirstName(\textcolor{keyword}{const}\ QString\ \&firstName);}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ setLastName(\textcolor{keyword}{const}\ QString\ \&lastName);}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ setDateOfBirth(\textcolor{keyword}{const}\ QString\ \&dob);}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ setHealthCard(\textcolor{keyword}{const}\ QString\ \&card);}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ setEmail(\textcolor{keyword}{const}\ QString\ \&email);}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ setPhoneNumber(\textcolor{keyword}{const}\ QString\ \&phone);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ setAddress(\textcolor{keyword}{const}\ QString\ \&address);}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ setPostalCode(\textcolor{keyword}{const}\ QString\ \&postalCode);}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ setProvince(\textcolor{keyword}{const}\ QString\ \&province);}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ setCountry(\textcolor{keyword}{const}\ QString\ \&country);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{//\ Getters}}
+\DoxyCodeLine{00051\ \ \ \ \ QString\ getFirstName()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00052\ \ \ \ \ QString\ getLastName()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00053\ \ \ \ \ QString\ getDateOfBirth()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00054\ \ \ \ \ QString\ getHealthCard()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00055\ \ \ \ \ QString\ getEmail()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00056\ \ \ \ \ QString\ getPhoneNumber()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00057\ \ \ \ \ QString\ getAddress()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ \ \ \ \ QString\ getPostalCode()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00059\ \ \ \ \ QString\ getProvince()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00060\ \ \ \ \ QString\ getCountry()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00064\ \ \ \ \ Ui::EditPatientInfo\ *ui;}
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ EDITPATIENTINFO\_H}}
+
+\end{DoxyCode}

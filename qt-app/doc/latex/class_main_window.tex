@@ -1,0 +1,238 @@
+\doxysection{Main\+Window Class Reference}
+\hypertarget{class_main_window}{}\label{class_main_window}\index{MainWindow@{MainWindow}}
+
+
+Main application window for the program.  
+
+
+
+
+{\ttfamily \#include $<$mainwindow.\+h$>$}
+
+Inheritance diagram for Main\+Window\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_main_window}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Slots}
+\begin{Indent}\textbf{ on\+\_\+patient\+Selected}\par
+{\em Handles the signal that a new patient has been selected
+
+Updates the UI to display the select patient\textquotesingle{}s ID 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em index} & Index of option selected in the dropdown \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_a4b1f9fb69a2825e2c4c9d782dbc94c6e}\label{class_main_window_a4b1f9fb69a2825e2c4c9d782dbc94c6e} 
+void {\bfseries on\+\_\+patient\+Selected} (int index)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ on\+\_\+remove\+Patient\+Button\+\_\+clicked}\par
+{\em Handle deletion of the selected patient from the system
+
+Deletes the selected patient\textquotesingle{}s folder and all associated files from either the active or archived directory. Updates the dropdown and UI accordingly. \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+
+Andres Pedreros Castro 
+
+Thomas Llamzon 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_a6b956b94cc93c028705df3727398c8f8}\label{class_main_window_a6b956b94cc93c028705df3727398c8f8} 
+void {\bfseries on\+\_\+remove\+Patient\+Button\+\_\+clicked} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a44868afe2b71fcca045aa4f511f96aa6}{on\+\_\+archive\+Patient\+Button\+\_\+clicked}} ()
+\begin{DoxyCompactList}\small\item\em \doxylink{class_main_window_a44868afe2b71fcca045aa4f511f96aa6}{Main\+Window\+::on\+\_\+archive\+Patient\+Button\+\_\+clicked}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ load\+Patients\+Into\+Dropdown}\par
+{\em Handles adding a new patient record
+
+Loads all patients from the Patients directory into the dropdown \begin{DoxyReturn}{Returns}
+Returns false if the Patients directory is empty 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_af976ca3624c38c6eeac26e762b269a0a}\label{class_main_window_af976ca3624c38c6eeac26e762b269a0a} 
+bool {\bfseries load\+Patients\+Into\+Dropdown} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ load\+Archived\+Patients\+Into\+Dropdown}\par
+{\em Handles loading archived patients into the dropdown
+
+Loads all archived patients from the Archived directory into the dropdown. If the directory does not exist, it returns true. \begin{DoxyReturn}{Returns}
+Returns false if the archived patients directory is empty. 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+
+Kalundi Serumaga 
+
+Thomas Llamzon 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+boolean -\/ true if the directory does not exist, false otherwise. 
+\end{DoxyReturn}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_a9f44ec9f424b8b4043484c3cc6d73d84}\label{class_main_window_a9f44ec9f424b8b4043484c3cc6d73d84} 
+bool {\bfseries load\+Archived\+Patients\+Into\+Dropdown} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ handle\+LLMResponse}\par
+{\em Handler function called when the LLM returns a response
+
+Sets the plan text transcription displayed in the main window and saves the transcript to a file. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em response} & Response returned by the LLM \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_aac828bca6fc03da10920628f0d62b4c9}\label{class_main_window_aac828bca6fc03da10920628f0d62b4c9} 
+void {\bfseries handle\+LLMResponse} (const QString \&response)
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ Main\+Window (constructor)}\par
+{\em Initializes a \doxylink{class_main_window}{Main\+Window} instance
+
+Sets up the UI elements and connects signals to slots. Initializes the \doxylink{class_summary_generator}{Summary\+Generator} and \doxylink{class_audio_handler}{Audio\+Handler} instances. Sets up the layout and connects buttons to their respective handlers. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em parent} & Parent widget \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+
+Andres Pedreros Castro 
+
+Joelene Hales 
+
+Thomas Llamzon 
+
+Kalundi Serumaga 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_a996c5a2b6f77944776856f08ec30858d}\label{class_main_window_a996c5a2b6f77944776856f08ec30858d} 
+{\bfseries Main\+Window} (QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ \texorpdfstring{$\sim$}{\string~}\+Main\+Window}\par
+{\em Deconstructor for \doxylink{class_main_window}{Main\+Window}
+
+Does nothing \begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+}\end{Indent}
+\begin{Indent}\textbf{ set\+Summary\+Formatter}\par
+{\em Set the formatter used to create the summary
+
+Deletes the old formatter and sets the new one 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em summary\+Formatter} & \doxylink{class_summary}{Summary} layout formatter \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_aa2835d00463f8d9542f895daf260b7bc}\label{class_main_window_aa2835d00463f8d9542f895daf260b7bc} 
+void {\bfseries set\+Summary\+Formatter} (\mbox{\hyperlink{class_summary_formatter}{Summary\+Formatter}} \texorpdfstring{$\ast$}{*}summary\+Formatter)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ display\+Summary}\par
+{\em Display summary using the configured layout
+
+Uses the summary\+Formatter to generate the layout for the summary. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em summary} & \doxylink{class_summary}{Summary} to display \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_a154e6115dcfbacf2a5761887b68ead00}\label{class_main_window_a154e6115dcfbacf2a5761887b68ead00} 
+void {\bfseries display\+Summary} (const \mbox{\hyperlink{class_summary}{Summary}} \&summary)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ view\+Patient}\par
+{\em When switched to a patient, display their information in the top corner
+
+This function is called when a patient is selected from the dropdown \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_main_window_a3f4ff15c3cee06171074cbd4949739aa}\label{class_main_window_a3f4ff15c3cee06171074cbd4949739aa} 
+void {\bfseries view\+Patient} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+Main application window for the program. 
+
+This class manages the main window of the application, including the UI elements, patient management, and summary generation. It handles user interactions, such as adding, editing, and deleting patients, as well as generating and displaying summaries based on the patient\textquotesingle{}s transcript. The class also manages the layout of the summary display and provides functionality to switch between different summary formats. It connects to the \doxylink{class_l_l_m_client}{LLMClient} for generating summaries and handles the responses from the LLM. \begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+
+Callum Thompson 
+
+Joelene Hales 
+
+Kalundi Serumaga 
+
+Thomas Llamzon 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_main_window_a44868afe2b71fcca045aa4f511f96aa6}\index{MainWindow@{MainWindow}!on\_archivePatientButton\_clicked@{on\_archivePatientButton\_clicked}}
+\index{on\_archivePatientButton\_clicked@{on\_archivePatientButton\_clicked}!MainWindow@{MainWindow}}
+\doxysubsubsection{\texorpdfstring{on\_archivePatientButton\_clicked}{on\_archivePatientButton\_clicked}}
+{\footnotesize\ttfamily \label{class_main_window_a44868afe2b71fcca045aa4f511f96aa6} 
+void Main\+Window\+::on\+\_\+archive\+Patient\+Button\+\_\+clicked (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+
+
+\doxylink{class_main_window_a44868afe2b71fcca045aa4f511f96aa6}{Main\+Window\+::on\+\_\+archive\+Patient\+Button\+\_\+clicked}. 
+
+Handler function called when the "{}\+Archive Patient"{} button is pressed
+
+Returns patient to active patients directory. \begin{DoxyAuthor}{Author}
+Kalundi Serumaga 
+
+Andres Pedreros Castro 
+
+Thomas Llamzon 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{mainwindow_8h}{mainwindow.\+h}}\item 
+\mbox{\hyperlink{mainwindow_8cpp}{mainwindow.\+cpp}}\end{DoxyCompactItemize}

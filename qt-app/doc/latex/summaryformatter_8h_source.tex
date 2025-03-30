@@ -1,0 +1,36 @@
+\doxysection{summaryformatter.\+h}
+\hypertarget{summaryformatter_8h_source}{}\label{summaryformatter_8h_source}\mbox{\hyperlink{summaryformatter_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ SUMMARYFORMATTER\_H}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ SUMMARYFORMATTER\_H}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QVBoxLayout>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QRegularExpression>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QTextBrowser>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{summary_8h}{summary.h}}"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_summary_formatter}{SummaryFormatter}}}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00035\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_summary_formatter_1_1_section}{Section}}}
+\DoxyCodeLine{00037\ \ \ \ \ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ QString\ title;\ \ \ \textcolor{comment}{//\ Section\ title}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ QString\ content;\ \textcolor{comment}{//\ Body\ text}}
+\DoxyCodeLine{00040\ \ \ \ \ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ generateLayout(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_summary}{Summary}}\ \&summary,\ QVBoxLayout\ *summaryLayout)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_summary_formatter}{\string~SummaryFormatter}}()\ =\ \textcolor{keywordflow}{default};\ \textcolor{comment}{//\ Qt\ automatically\ manages\ memory\ of\ QObjects,\ no\ need\ for\ manual\ deletion}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00046\ \ \ \ \ QString\ formatBoldText(\textcolor{keyword}{const}\ QString\ \&text)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ clearLayout(QVBoxLayout\ *layout)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ addSection(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_summary_formatter_1_1_section}{Section}}\ \&section,\ QVBoxLayout\ *summaryLayout)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00049\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,265 @@
+\doxysection{Audio\+Handler Class Reference}
+\hypertarget{class_audio_handler}{}\label{class_audio_handler}\index{AudioHandler@{AudioHandler}}
+
+
+Singleton class for handling audio recording and transcription.  
+
+
+
+
+{\ttfamily \#include $<$audiohandler.\+h$>$}
+
+Inheritance diagram for Audio\+Handler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_audio_handler}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_a19a1eb8920c3589cfcf808ead869b13a}\label{class_audio_handler_a19a1eb8920c3589cfcf808ead869b13a} 
+void {\bfseries transcription\+Completed} (const QString \&transcribed\+Text)
+\item 
+\Hypertarget{class_audio_handler_a1a5b0dc8c89c2641527cb83018867c2c}\label{class_audio_handler_a1a5b0dc8c89c2641527cb83018867c2c} 
+void {\bfseries microphone\+Permission\+Denied} ()
+\item 
+\Hypertarget{class_audio_handler_a6857eb2ddb971a895d4a78d7e9b8bd48}\label{class_audio_handler_a6857eb2ddb971a895d4a78d7e9b8bd48} 
+void {\bfseries microphone\+Permission\+Granted} ()
+\item 
+\Hypertarget{class_audio_handler_a13cb1582538fb39147387c59785cbdbc}\label{class_audio_handler_a13cb1582538fb39147387c59785cbdbc} 
+void {\bfseries bad\+Request} (QNetwork\+Reply \texorpdfstring{$\ast$}{*}reply)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ transcribe}\par
+{\em Transcribes the audio file using Google Speech-\/to-\/\+Text API
+
+This function checks the duration and channel count of the audio file. If the duration is longer than 60 seconds or if the audio is not stereo (2 channels), it uses the Whisper API for transcription. Otherwise, it uses Google Speech-\/to-\/\+Text API. It returns a \doxylink{class_transcript}{Transcript} object containing the transcribed text. \begin{DoxyNote}{Note}
+The function emits a signal when the transcription is completed. 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+get\+Audio\+Duration 
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em filename} & Path to the audio file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{class_transcript}{Transcript} object containing the transcribed text 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_aea0011010067308df83d0af31dcbac5c}\label{class_audio_handler_aea0011010067308df83d0af31dcbac5c} 
+\mbox{\hyperlink{class_transcript}{Transcript}} {\bfseries transcribe} (const QString \&filename)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ start\+Recording}\par
+{\em Starts audio recording
+
+This function initializes the audio input and recorder, sets the output file, and starts recording. It also requests microphone permission if not already granted. \begin{DoxyNote}{Note}
+The function emits a signal when the recording starts. 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+request\+Microphone\+Permission 
+
+QAudio\+Input 
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em output\+File} & Path to the output file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_a73b827ca25b167d545187236634bd084}\label{class_audio_handler_a73b827ca25b167d545187236634bd084} 
+void {\bfseries start\+Recording} (const QString \&output\+File)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ stop\+Recording}\par
+{\em Stops audio recording
+
+This function stops the audio recording and finalizes the output file. It can be called after recording is complete or if the user wants to stop recording. \begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_ae545fcf5c9690964f09dd6091d3e6ed2}\label{class_audio_handler_ae545fcf5c9690964f09dd6091d3e6ed2} 
+void {\bfseries stop\+Recording} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ pause\+Recording}\par
+{\em Pauses audio recording
+
+This function pauses the audio recording. It can be resumed later using the resume\+Recording() function. \begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_ae2270b2612639999f71ab0db118add1b}\label{class_audio_handler_ae2270b2612639999f71ab0db118add1b} 
+void {\bfseries pause\+Recording} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ resume\+Recording}\par
+{\em Resumes audio recording
+
+This function resumes the audio recording after it has been paused. It continues recording from the point where it was paused. \begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_a0b836e4aec90f9a68fdb719a09399848}\label{class_audio_handler_a0b836e4aec90f9a68fdb719a09399848} 
+void {\bfseries resume\+Recording} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ handle\+Permission\+Response}\par
+{\em Handles the response to the microphone permission request
+
+Emits signals based on the user\textquotesingle{}s response to the permission request. If the permission is granted, it emits microphone\+Permission\+Granted(). If the permission is denied, it emits microphone\+Permission\+Denied(). \begin{DoxySeeAlso}{See also}
+request\+Microphone\+Permission 
+\end{DoxySeeAlso}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_a992379422df7a22d2f12609174a8a69f}\label{class_audio_handler_a992379422df7a22d2f12609174a8a69f} 
+void {\bfseries handle\+Permission\+Response} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ play\+Recording}\par
+{\em Plays the recorded audio file
+
+This function uses the system command to play the recorded audio file. It uses the {\ttfamily afplay} command on mac\+OS to play the audio file. \begin{DoxyNote}{Note}
+This function assumes the audio file is in a format supported by the system player. 
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em file\+Path} & Path to the audio file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_a41af8ea1c195bbe23b8322aec3ed699a}\label{class_audio_handler_a41af8ea1c195bbe23b8322aec3ed699a} 
+void {\bfseries play\+Recording} (const QString \&file\+Path)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ set\+Google\+AIApi\+Key}\par
+{\em Sets the Google Text-\/to-\/\+Speech API key
+
+This function sets the Google Text-\/to-\/\+Speech API key for the \doxylink{class_audio_handler}{Audio\+Handler} instance. It can be used to update the API key if needed. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em key} & Google Text-\/to-\/\+Speech API key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_abbfb810f920ef5339c17d7cc4957d054}\label{class_audio_handler_abbfb810f920ef5339c17d7cc4957d054} 
+void {\bfseries set\+Google\+Api\+Key} (const QString \&key)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ set\+Open\+AIApi\+Key}\par
+{\em Sets the Open\+AI API key
+
+This function sets the Open\+AI API key for the \doxylink{class_audio_handler}{Audio\+Handler} instance. It can be used to update the API key if needed. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em key} & Open\+AI API key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_a8e887bf6081b25c288c607ac2599f510}\label{class_audio_handler_a8e887bf6081b25c288c607ac2599f510} 
+void {\bfseries set\+Open\+AIApi\+Key} (const QString \&key)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Audio\+Duration}\par
+{\em Retrieves the duration of an audio file
+
+This function reads the audio file and calculates its duration based on the file size and audio format. It assumes a specific format (16-\/bit PCM, 2 channels, 48000Hz) for the calculation. \begin{DoxyNote}{Note}
+This function is specific to WAV files and may not work for other audio formats. 
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em audio\+Path} & Path to the audio file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Duration of the audio file in seconds 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_aeeacd2c0f66665a7eb01b5a67149a860}\label{class_audio_handler_aeeacd2c0f66665a7eb01b5a67149a860} 
+double {\bfseries get\+Audio\+Duration} (const QString \&path) const
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{Indent}\textbf{ get\+Instance}\par
+{\em Returns the singleton instance of \doxylink{class_audio_handler}{Audio\+Handler}
+
+If the instance does not exist, it creates a new one. This ensures that only one instance of \doxylink{class_audio_handler}{Audio\+Handler} exists throughout the application. \begin{DoxyNote}{Note}
+This is a singleton pattern implementation. 
+\end{DoxyNote}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+Singleton instance of \doxylink{class_audio_handler}{Audio\+Handler} 
+\end{DoxyReturn}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_handler_ab431a9dbaab18740bc72f3e8d418691a}\label{class_audio_handler_ab431a9dbaab18740bc72f3e8d418691a} 
+static \mbox{\hyperlink{class_audio_handler}{Audio\+Handler}} \texorpdfstring{$\ast$}{*} {\bfseries get\+Instance} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+Singleton class for handling audio recording and transcription. 
+
+This class provides methods to record audio, transcribe it using Google Speech API, and manage microphone permissions. It uses QMedia\+Recorder for recording and QNetwork\+Access\+Manager for sending audio data to the API. The class is designed as a singleton to ensure that only one instance exists throughout the application. \begin{DoxyNote}{Note}
+The class is not thread-\/safe and should be used in a single-\/threaded context. 
+\end{DoxyNote}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{audiohandler_8h}{audiohandler.\+h}}\item 
+\mbox{\hyperlink{audiohandler_8cpp}{audiohandler.\+cpp}}\end{DoxyCompactItemize}

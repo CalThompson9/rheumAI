@@ -1,0 +1,56 @@
+\doxysection{filehandler.\+h}
+\hypertarget{filehandler_8h_source}{}\label{filehandler_8h_source}\mbox{\hyperlink{filehandler_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ FILEHANDLER\_H}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ FILEHANDLER\_H}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QObject>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QJsonDocument>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QJsonObject>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <QJsonArray>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <QFile>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <QDir>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{patientrecord_8h}{patientrecord.h}}"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{summary_8h}{summary.h}}"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}transcript.h"{}}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{class\ }FileHandler}
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{static}\ FileHandler\ *instance;}
+\DoxyCodeLine{00041\ \ \ \ \ QString\ transcriptFilename;}
+\DoxyCodeLine{00042\ \ \ \ \ QString\ jsonFilename;}
+\DoxyCodeLine{00043\ \ \ \ \ QString\ patientDatabasePath;}
+\DoxyCodeLine{00044\ \ \ \ \ QString\ archivedDatabasePath;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ FileHandler();\ \textcolor{comment}{//\ Private\ constructor\ (Singleton\ pattern)}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{static}\ FileHandler\ *getInstance();\ \textcolor{comment}{//\ Singleton\ access}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ setTranscriptFilename(\textcolor{keyword}{const}\ QString\ \&filepath);}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ setJsonFilename(\textcolor{keyword}{const}\ QString\ \&filepath);}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ savePatientRecord(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_patient_record}{PatientRecord}}\ \&record);}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ loadPatientJson();\ \textcolor{comment}{//\ Read\ and\ display\ JSON}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ saveTranscript(\textcolor{keywordtype}{int}\ patientID,\ \textcolor{keyword}{const}\ QString\ \&transcript);}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ saveTranscriptToJson();\ \textcolor{comment}{//\ Convert\ transcript\ to\ JSON}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ saveOrAppendRawTranscript(\textcolor{keywordtype}{int}\ patientID,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_transcript}{Transcript}}\ \&transcript);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{class_patient_record}{PatientRecord}}\ loadPatientRecord(\textcolor{keywordtype}{int}\ patientID);}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{class_patient_record}{PatientRecord}}\ archivePatientRecord(\textcolor{keywordtype}{int}\ patientID);}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{class_patient_record}{PatientRecord}}\ unarchivePatientRecord(\textcolor{keywordtype}{int}\ patientID);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ QString\ getTranscriptFilename()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00065\ \ \ \ \ QString\ getJsonFilename()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00066\ \ \ \ \ QString\ readTranscript();\ \textcolor{comment}{//\ Read\ raw\ transcript\ file}}
+\DoxyCodeLine{00067\ \ \ \ \ QString\ loadSummaryText(\textcolor{keywordtype}{int}\ patientID);}
+\DoxyCodeLine{00068\ \ \ \ \ QString\ loadTranscript(\textcolor{keywordtype}{int}\ patientID);}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ FILEHANDLER\_H}}
+
+\end{DoxyCode}

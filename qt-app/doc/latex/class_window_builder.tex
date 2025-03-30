@@ -1,0 +1,236 @@
+\doxysection{Window\+Builder Class Reference}
+\hypertarget{class_window_builder}{}\label{class_window_builder}\index{WindowBuilder@{WindowBuilder}}
+
+
+\doxylink{class_window_builder}{Window\+Builder} class.  
+
+
+
+
+{\ttfamily \#include $<$windowbuilder.\+h$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{Indent}\textbf{ setup\+UI}\par
+{\em Builds the application\textquotesingle{}s main user interface
+
+Includes initializing UI elements, layout, and styling 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em central\+Widget} & Central widget displaying {\ttfamily main\+Layout} \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em btn\+Settings} & "{}\+Settings"{} button \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em lbl\+Title} & Window title \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em lbl\+Patient\+Name} & Patient\textquotesingle{}s name \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em combo\+Select\+Patient} & Dropdown menu to select patient \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em btn\+Record} & "{}\+Record"{} button \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em btn\+Summarize} & "{}\+Summarize"{} button \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em select\+Summary\+Layout} & Dropdown menu to select summary layout format \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em summary\+Section} & Displays the LLM-\/generated summary \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em summary\+Title} & \doxylink{class_summary}{Summary} section title \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em main\+Layout} & Main layout which contains all UI elements \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em btn\+Add\+Patient} & "{}\+Add Patient"{} button \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em btn\+Edit\+Patient} & "{}\+Edit Patient"{} button \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em btn\+Delete\+Patient} & "{}\+Delete Patient"{} button \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em btn\+Archive\+Patient} & "{}\+Archive Patient"{} button \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em toggle\+Switch} & Toggle switch to show archived summaries \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+
+Andres Pedreros Castro 
+
+Joelene Hales 
+
+Kalundi Serumaga 
+
+Thomas Llamzon 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_window_builder_a43dc6d1e01536e0b17eebe1d801c179f}\label{class_window_builder_a43dc6d1e01536e0b17eebe1d801c179f} 
+static void {\bfseries setup\+UI} (QWidget \texorpdfstring{$\ast$}{*}central\+Widget, QPush\+Button \texorpdfstring{$\ast$}{*}\&btn\+Settings, QLabel \texorpdfstring{$\ast$}{*}\&lbl\+Title, QLabel \texorpdfstring{$\ast$}{*}\&lbl\+Patient\+Name, QCombo\+Box \texorpdfstring{$\ast$}{*}\&combo\+Select\+Patient, QPush\+Button \texorpdfstring{$\ast$}{*}\&btn\+Record, QPush\+Button \texorpdfstring{$\ast$}{*}\&btn\+Summarize, QPush\+Button \texorpdfstring{$\ast$}{*}\&select\+Summary\+Layout, QVBox\+Layout \texorpdfstring{$\ast$}{*}\&summary\+Section, QLabel \texorpdfstring{$\ast$}{*}\&summary\+Title, QVBox\+Layout \texorpdfstring{$\ast$}{*}\&main\+Layout, QPush\+Button \texorpdfstring{$\ast$}{*}\&btn\+Add\+Patient, QPush\+Button \texorpdfstring{$\ast$}{*}\&btn\+Edit\+Patient, QPush\+Button \texorpdfstring{$\ast$}{*}\&btn\+Delete\+Patient, QPush\+Button \texorpdfstring{$\ast$}{*}\&btn\+Archive\+Patient, QPush\+Button \texorpdfstring{$\ast$}{*}\&toggle\+Switch)
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const QString \mbox{\hyperlink{class_window_builder_ae0bdecf4e1255b42f737dfe0d4bd20cf}{blue\+Button\+Style}}
+\item 
+static const QString \mbox{\hyperlink{class_window_builder_a1bc1456833d4a5fa8eeea259af6b9e45}{orange\+Button\+Style}}
+\item 
+static const QString \mbox{\hyperlink{class_window_builder_a3701bcd4cf7a5373c0a4d2a8888f9d38}{red\+Button\+Style}}
+\item 
+static const QString \mbox{\hyperlink{class_window_builder_a7aaa86146cbde36099ad4d010cc1792d}{grey\+Button\+Style}}
+\item 
+static const QString \mbox{\hyperlink{class_window_builder_a83c53cdbad725c12d4a84713d146e3af}{settings\+Blue\+Button\+Style}}
+\item 
+static const QString \mbox{\hyperlink{class_window_builder_af12e1bedc37438546169437e3d25af74}{disabled\+Button\+Style}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_window_builder}{Window\+Builder} class. 
+
+This class is responsible for building the main user interface of the application. It includes methods to set up the UI elements, layout, and styling. The UI includes buttons, labels, combo boxes, and layouts for organizing the interface. The class also provides styles for different buttons used in the application. The setup\+UI method initializes the UI elements and arranges them in a layout. The class is designed to be used in conjunction with the main application window. The UI elements include buttons for settings, recording, summarizing, and managing patients. It also includes labels for displaying the title and patient name, as well as a combo box for selecting patients. The class provides a consistent look and feel for the application. The button styles are defined as static constants, allowing for easy customization and reuse. The setup\+UI method takes pointers to the UI elements and arranges them in a layout. \begin{DoxyAuthor}{Author}
+Andres Pedreros Castro 
+
+Callum Thompson 
+
+Joelene Hales 
+
+Kalundi Serumaga 
+
+Thomas Llamzon 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_window_builder_ae0bdecf4e1255b42f737dfe0d4bd20cf}\index{WindowBuilder@{WindowBuilder}!blueButtonStyle@{blueButtonStyle}}
+\index{blueButtonStyle@{blueButtonStyle}!WindowBuilder@{WindowBuilder}}
+\doxysubsubsection{\texorpdfstring{blueButtonStyle}{blueButtonStyle}}
+{\footnotesize\ttfamily \label{class_window_builder_ae0bdecf4e1255b42f737dfe0d4bd20cf} 
+const QString Window\+Builder\+::blue\+Button\+Style\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#5371ff;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}border-\/radius:\ 8px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}color:\ white;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}padding:\ 6px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}font-\/size:\ 12px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton:hover\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#425BD0;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}"{}}}
+
+\end{DoxyCode}
+\Hypertarget{class_window_builder_af12e1bedc37438546169437e3d25af74}\index{WindowBuilder@{WindowBuilder}!disabledButtonStyle@{disabledButtonStyle}}
+\index{disabledButtonStyle@{disabledButtonStyle}!WindowBuilder@{WindowBuilder}}
+\doxysubsubsection{\texorpdfstring{disabledButtonStyle}{disabledButtonStyle}}
+{\footnotesize\ttfamily \label{class_window_builder_af12e1bedc37438546169437e3d25af74} 
+const QString Window\+Builder\+::disabled\+Button\+Style\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#454545;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}color:\ \#5e5e5e;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}border-\/radius:\ 8px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}padding:\ 6px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}font-\/size:\ 12px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+
+\end{DoxyCode}
+\Hypertarget{class_window_builder_a7aaa86146cbde36099ad4d010cc1792d}\index{WindowBuilder@{WindowBuilder}!greyButtonStyle@{greyButtonStyle}}
+\index{greyButtonStyle@{greyButtonStyle}!WindowBuilder@{WindowBuilder}}
+\doxysubsubsection{\texorpdfstring{greyButtonStyle}{greyButtonStyle}}
+{\footnotesize\ttfamily \label{class_window_builder_a7aaa86146cbde36099ad4d010cc1792d} 
+const QString Window\+Builder\+::grey\+Button\+Style\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#AAAAAA;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}color:\ black;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}border-\/radius:\ 8px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}padding:\ 6px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}font-\/size:\ 12px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton:hover\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#949494;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton:pressed\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#5F5F5F;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+
+\end{DoxyCode}
+\Hypertarget{class_window_builder_a1bc1456833d4a5fa8eeea259af6b9e45}\index{WindowBuilder@{WindowBuilder}!orangeButtonStyle@{orangeButtonStyle}}
+\index{orangeButtonStyle@{orangeButtonStyle}!WindowBuilder@{WindowBuilder}}
+\doxysubsubsection{\texorpdfstring{orangeButtonStyle}{orangeButtonStyle}}
+{\footnotesize\ttfamily \label{class_window_builder_a1bc1456833d4a5fa8eeea259af6b9e45} 
+const QString Window\+Builder\+::orange\+Button\+Style\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#FF914D;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}border-\/radius:\ 8px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}color:\ white;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}padding:\ 6px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}font-\/size:\ 12px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton:hover\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#C56E39;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}"{}}}
+
+\end{DoxyCode}
+\Hypertarget{class_window_builder_a3701bcd4cf7a5373c0a4d2a8888f9d38}\index{WindowBuilder@{WindowBuilder}!redButtonStyle@{redButtonStyle}}
+\index{redButtonStyle@{redButtonStyle}!WindowBuilder@{WindowBuilder}}
+\doxysubsubsection{\texorpdfstring{redButtonStyle}{redButtonStyle}}
+{\footnotesize\ttfamily \label{class_window_builder_a3701bcd4cf7a5373c0a4d2a8888f9d38} 
+const QString Window\+Builder\+::red\+Button\+Style\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#b30000;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}border-\/radius:\ 8px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}color:\ white;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}padding:\ 6px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}font-\/size:\ 12px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton:hover\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ darkred;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}"{}}}
+
+\end{DoxyCode}
+\Hypertarget{class_window_builder_a83c53cdbad725c12d4a84713d146e3af}\index{WindowBuilder@{WindowBuilder}!settingsBlueButtonStyle@{settingsBlueButtonStyle}}
+\index{settingsBlueButtonStyle@{settingsBlueButtonStyle}!WindowBuilder@{WindowBuilder}}
+\doxysubsubsection{\texorpdfstring{settingsBlueButtonStyle}{settingsBlueButtonStyle}}
+{\footnotesize\ttfamily \label{class_window_builder_a83c53cdbad725c12d4a84713d146e3af} 
+const QString Window\+Builder\+::settings\+Blue\+Button\+Style\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#5371ff;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}color:\ white;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}border-\/radius:\ 8px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}padding:\ 6px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}font-\/size:\ 12px;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton:hover\ \{;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#425BD0;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}QPushButton:pressed\ \{"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}background-\/color:\ \#006ae6;"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{stringliteral}{"{}\}\ "{}}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{windowbuilder_8h}{windowbuilder.\+h}}\item 
+\mbox{\hyperlink{windowbuilder_8cpp}{windowbuilder.\+cpp}}\end{DoxyCompactItemize}

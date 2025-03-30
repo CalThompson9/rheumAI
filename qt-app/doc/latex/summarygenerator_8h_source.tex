@@ -1,0 +1,51 @@
+\doxysection{summarygenerator.\+h}
+\hypertarget{summarygenerator_8h_source}{}\label{summarygenerator_8h_source}\mbox{\hyperlink{summarygenerator_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifndef\ SUMMARYGENERATOR\_H}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ SUMMARYGENERATOR\_H}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QObject>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QRegularExpression>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QRegularExpressionMatch>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}transcript.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{summary_8h}{summary.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{llmclient_8h}{llmclient.h}}"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }SummaryGenerator\ :\ \textcolor{keyword}{public}\ QObject}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00037\ \ \ \ \textcolor{keyword}{explicit}\ SummaryGenerator(QObject\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00038\ \ \ \ \textcolor{keyword}{virtual}\ \string~SummaryGenerator()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00039\ \ \ \ \textcolor{keywordtype}{void}\ sendRequest(\mbox{\hyperlink{class_transcript}{Transcript}}\ \&prompt);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \mbox{\hyperlink{class_summary}{Summary}}\ getSummary();}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }MainWindow;}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00046\ \ \ \ \mbox{\hyperlink{class_l_l_m_client}{LLMClient}}\ *llmClient;}
+\DoxyCodeLine{00047\ \ \ \ \mbox{\hyperlink{class_summary}{Summary}}\ summary;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ QString\ extractSectionFromResponse(\textcolor{keyword}{const}\ QString\ \&response,\ \textcolor{keyword}{const}\ QString\ \&sectionName,\ \textcolor{keyword}{const}\ QString\ \&nextSectionName);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \textcolor{keywordtype}{void}\ summarizeIntervalHistory(\textcolor{keyword}{const}\ QString\ \&response);}
+\DoxyCodeLine{00052\ \ \ \ \textcolor{keywordtype}{void}\ summarizePhysicalExamination(\textcolor{keyword}{const}\ QString\ \&response);}
+\DoxyCodeLine{00053\ \ \ \ \textcolor{keywordtype}{void}\ summarizeCurrentStatus(\textcolor{keyword}{const}\ QString\ \&response);}
+\DoxyCodeLine{00054\ \ \ \ \textcolor{keywordtype}{void}\ summarizePlan(\textcolor{keyword}{const}\ QString\ \&response);}
+\DoxyCodeLine{00055\ \ \ \ \textcolor{keywordtype}{void}\ setSummary(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_summary}{Summary}}\ \&summary);}
+\DoxyCodeLine{00056\ \ \ \ \textcolor{keywordtype}{void}\ setSummaryText(\textcolor{keyword}{const}\ QString\ \&summaryText);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00059\ \ \ \ \textcolor{keywordtype}{void}\ handleLLMResponse(\textcolor{keyword}{const}\ QString\ \&response);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ signals:}
+\DoxyCodeLine{00062\ \ \ \ \textcolor{keywordtype}{void}\ summaryReady();}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SUMMARYGENERATOR\_H}}
+
+\end{DoxyCode}

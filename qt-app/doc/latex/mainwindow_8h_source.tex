@@ -1,0 +1,104 @@
+\doxysection{mainwindow.\+h}
+\hypertarget{mainwindow_8h_source}{}\label{mainwindow_8h_source}\mbox{\hyperlink{mainwindow_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ MAINWINDOW\_H}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ MAINWINDOW\_H}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QDialog>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <QVBoxLayout>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <QMovie>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <QMainWindow>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <QMenu>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <QMessageBox>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <QMediaDevices>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <QAudioDevice>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <QTimer>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{editpatientinfo_8h}{editpatientinfo.h}}"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{audiohandler_8h}{audiohandler.h}}"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{detailedsummaryformatter_8h}{detailedsummaryformatter.h}}"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{concisesummaryformatter_8h}{concisesummaryformatter.h}}"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{filehandler_8h}{filehandler.h}}"{}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{patientrecord_8h}{patientrecord.h}}"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}transcript.h"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{addpatientdialog_8h}{addpatientdialog.h}}"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{windowbuilder_8h}{windowbuilder.h}}"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{llmclient_8h}{llmclient.h}}"{}}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{summary_8h}{summary.h}}"{}}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{summaryformatter_8h}{summaryformatter.h}}"{}}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{summarygenerator_8h}{summarygenerator.h}}"{}}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{settings_8h}{settings.h}}"{}}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{class\ }MainWindow\ :\ \textcolor{keyword}{public}\ QMainWindow}
+\DoxyCodeLine{00059\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{explicit}\ MainWindow(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00064\ \ \ \ \ \string~MainWindow();}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ setSummaryFormatter(\mbox{\hyperlink{class_summary_formatter}{SummaryFormatter}}\ *summaryFormatter);}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ displaySummary(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_summary}{Summary}}\ \&summary);}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ viewPatient();}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00071\ \ \ \ \ QWidget\ *centralWidget;}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ UI\ Components}}
+\DoxyCodeLine{00074\ \ \ \ \ QPushButton\ *btnSettings;}
+\DoxyCodeLine{00075\ \ \ \ \ QLabel\ *lblTitle;}
+\DoxyCodeLine{00076\ \ \ \ \ QLabel\ *lblPatientName;}
+\DoxyCodeLine{00077\ \ \ \ \ QComboBox\ *comboSelectPatient;}
+\DoxyCodeLine{00078\ \ \ \ \ QPushButton\ *btnRecord;}
+\DoxyCodeLine{00079\ \ \ \ \ QPushButton\ *btnSummarize;}
+\DoxyCodeLine{00080\ \ \ \ \ QPushButton\ *btnAddPatient;}
+\DoxyCodeLine{00081\ \ \ \ \ QPushButton\ *btnEditPatient;}
+\DoxyCodeLine{00082\ \ \ \ \ QPushButton\ *btnDeletePatient;}
+\DoxyCodeLine{00083\ \ \ \ \ QPushButton\ *btnArchivePatient;}
+\DoxyCodeLine{00084\ \ \ \ \ QPushButton\ *toggleSwitch;}
+\DoxyCodeLine{00085\ \ \ \ \ QPushButton\ *selectSummaryLayout;}
+\DoxyCodeLine{00086\ \ \ \ \ QMenu\ *summaryLayoutOptions;}
+\DoxyCodeLine{00087\ \ \ \ \ QVBoxLayout\ *summarySection;}
+\DoxyCodeLine{00088\ \ \ \ \ QLabel\ *summaryTitle;}
+\DoxyCodeLine{00089\ \ \ \ \ QDialog\ *loadingDialog;}
+\DoxyCodeLine{00090\ \ \ \ \ QLabel\ *loadingLabel;}
+\DoxyCodeLine{00091\ \ \ \ \ \mbox{\hyperlink{class_l_l_m_client}{LLMClient}}\ *llmClient;}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ Layout}}
+\DoxyCodeLine{00094\ \ \ \ \ QVBoxLayout\ *mainLayout;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ Summarization}}
+\DoxyCodeLine{00097\ \ \ \ \ \mbox{\hyperlink{class_summary_formatter}{SummaryFormatter}}\ *summaryFormatter;}
+\DoxyCodeLine{00098\ \ \ \ \ \mbox{\hyperlink{class_summary_generator}{SummaryGenerator}}\ *summaryGenerator;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ QString\ currentTranscriptText;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{int}\ patientID;}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{bool}\ archiveMode;}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \mbox{\hyperlink{class_settings}{Settings}}\ *settings;}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{void}\ handleSummaryLayoutChanged(\mbox{\hyperlink{class_summary_formatter}{SummaryFormatter}}\ *summaryFormatter);}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{void}\ handleSummarizeButtonClicked();}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{void}\ handleSummaryReady();}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_addPatientButton\_clicked();}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_editPatientButton\_clicked();}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{void}\ handleArchiveToggled();}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{void}\ checkDropdownEmpty();}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{void}\ endLoading(QNetworkReply\ *reply);}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{public}\ slots:}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_patientSelected(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_removePatientButton\_clicked();}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_main_window_a44868afe2b71fcca045aa4f511f96aa6}{on\_archivePatientButton\_clicked}}();}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{bool}\ loadPatientsIntoDropdown();}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{bool}\ loadArchivedPatientsIntoDropdown();}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{void}\ handleLLMResponse(\textcolor{keyword}{const}\ QString\ \&response);}
+\DoxyCodeLine{00124\ \};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ MAINWINDOW\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,101 @@
+\doxysection{Summary\+Formatter Class Reference}
+\hypertarget{class_summary_formatter}{}\label{class_summary_formatter}\index{SummaryFormatter@{SummaryFormatter}}
+
+
+Abstract base class for formatting summary layouts.  
+
+
+
+
+{\ttfamily \#include $<$summaryformatter.\+h$>$}
+
+Inheritance diagram for Summary\+Formatter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_summary_formatter}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_summary_formatter_1_1_section}{Section}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_formatter_a220f71968d9c6f26628a9755c0b1bd48}\label{class_summary_formatter_a220f71968d9c6f26628a9755c0b1bd48} 
+virtual void {\bfseries generate\+Layout} (const \mbox{\hyperlink{class_summary}{Summary}} \&summary, QVBox\+Layout \texorpdfstring{$\ast$}{*}summary\+Layout) const =0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{Indent}\textbf{ format\+Bold\+Text}\par
+{\em Formats bold text in the summary
+
+Replaces {\bfseries{bold text}} with {\bfseries{bold text}} and preserves new lines. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em text} & Text to format \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Formatted text with bold tags 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_formatter_add5793665138a4aff393666b79b89d7a}\label{class_summary_formatter_add5793665138a4aff393666b79b89d7a} 
+QString {\bfseries format\+Bold\+Text} (const QString \&text) const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ clear\+Layout}\par
+{\em Clears all layout elements
+
+Deletes all widgets and items in the provided layout. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em layout} & Layout to be cleared \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_formatter_a2f65780f0180266e9615078947d29563}\label{class_summary_formatter_a2f65780f0180266e9615078947d29563} 
+void {\bfseries clear\+Layout} (QVBox\+Layout \texorpdfstring{$\ast$}{*}layout) const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ add\+Section}\par
+{\em Adds a section to the summary layout
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em section} & \doxylink{struct_summary_formatter_1_1_section}{Section} content \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em summary\+Layout} & Layout to add section to\\
+\hline
+\end{DoxyParams}
+Creates a label and text browser for the section, sets styling, and adds them to the layout. \begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_formatter_aa62df58ca33a8f9da5b4a8adabda0c8f}\label{class_summary_formatter_aa62df58ca33a8f9da5b4a8adabda0c8f} 
+void {\bfseries add\+Section} (const \mbox{\hyperlink{struct_summary_formatter_1_1_section}{Section}} \&section, QVBox\+Layout \texorpdfstring{$\ast$}{*}summary\+Layout) const
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+Abstract base class for formatting summary layouts. 
+
+This class provides an interface for all summary layout formats. It defines a method to generate the layout and a method to format bold text. The class also provides a method to clear the layout and a method to add sections. The formatting of the summary is done using HTML tags. The class is designed to be inherited by specific formatters that implement the generate\+Layout method. The class uses the Strategy pattern to allow for different formatting strategies. \begin{DoxyAuthor}{Author}
+Joelene Hales 
+
+Callum Thompson 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{summaryformatter_8h}{summaryformatter.\+h}}\item 
+\mbox{\hyperlink{summaryformatter_8cpp}{summaryformatter.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,93 @@
+\doxysection{LLMClient Class Reference}
+\hypertarget{class_l_l_m_client}{}\label{class_l_l_m_client}\index{LLMClient@{LLMClient}}
+
+
+A class to handle communication with a large language model (LLM) API.  
+
+
+
+
+{\ttfamily \#include $<$llmclient.\+h$>$}
+
+Inheritance diagram for LLMClient\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_l_l_m_client}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_l_l_m_client_ad8b95bc35593961e15b6ddc24f0773e6}\label{class_l_l_m_client_ad8b95bc35593961e15b6ddc24f0773e6} 
+void {\bfseries response\+Received} (const QString \&response)
+\item 
+\Hypertarget{class_l_l_m_client_a30a562d78589aa7d03a045cd380d52d3}\label{class_l_l_m_client_a30a562d78589aa7d03a045cd380d52d3} 
+void {\bfseries invalid\+APIKey} (QNetwork\+Reply \texorpdfstring{$\ast$}{*}reply)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ send\+Request}\par
+{\em Combines the initial prompt with an additional prompt and sends as a request to the LLM.
+
+Initial prompt is read from file, {\ttfamily llmprompt.\+txt}. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em prompt} & Additional prompt \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_l_l_m_client_adc4d7ab06fcf88511e7b564785b7c4b9}\label{class_l_l_m_client_adc4d7ab06fcf88511e7b564785b7c4b9} 
+void {\bfseries send\+Request} (const QString \&prompt)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ set\+Api\+Key}\par
+{\em Sets the API key
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em key} & API key \\
+\hline
+\end{DoxyParams}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_l_l_m_client_af38555726274dd9996ce517a41028f91}\label{class_l_l_m_client_af38555726274dd9996ce517a41028f91} 
+void {\bfseries set\+Api\+Key} (const QString \&key)
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{Indent}\textbf{ get\+Instance}\par
+{\em Returns the singleton instance of \doxylink{class_l_l_m_client}{LLMClient}
+
+This function ensures that only one instance of \doxylink{class_l_l_m_client}{LLMClient} exists at a time. It is a singleton pattern implementation. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em parent} & Parent widget \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Singleton instance of \doxylink{class_l_l_m_client}{LLMClient} 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_l_l_m_client_a64465088d951e9d65a2013270ea75f13}\label{class_l_l_m_client_a64465088d951e9d65a2013270ea75f13} 
+static \mbox{\hyperlink{class_l_l_m_client}{LLMClient}} \texorpdfstring{$\ast$}{*} {\bfseries get\+Instance} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+A class to handle communication with a large language model (LLM) API. 
+
+This class is responsible for sending requests to the LLM API and receiving responses. It uses the QNetwork\+Access\+Manager class to handle network operations and emits signals when responses are received. The class also manages the API key and user prompt for the requests. \begin{DoxyAuthor}{Author}
+Callum Thompson 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{llmclient_8h}{llmclient.\+h}}\item 
+\mbox{\hyperlink{llmclient_8cpp}{llmclient.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,229 @@
+\doxysection{Summary Class Reference}
+\hypertarget{class_summary}{}\label{class_summary}\index{Summary@{Summary}}
+
+
+Represents a summary with various sections.  
+
+
+
+
+{\ttfamily \#include $<$summary.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ Summary (Default Constructor)}\par
+{\em Constructor creates an empty \doxylink{class_summary}{Summary} object.
+
+Initializes all strings to empty. \begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\end{Indent}
+\begin{Indent}\textbf{ Summary (Copy Constructor)}\par
+{\em Creates a copy of a \doxylink{class_summary}{Summary}
+
+Initializes the new \doxylink{class_summary}{Summary} object with the values from the provided object. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em other} & \doxylink{class_summary}{Summary} object to copy \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_a66a5050a6d2cf0395e71615f7febdb0e}\label{class_summary_a66a5050a6d2cf0395e71615f7febdb0e} 
+{\bfseries Summary} (const \mbox{\hyperlink{class_summary}{Summary}} \&other)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ operator=}\par
+{\em Assigns one \doxylink{class_summary}{Summary} to another
+
+Copies the values from the provided \doxylink{class_summary}{Summary} object to the current object. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em original} & \doxylink{class_summary}{Summary} to copy \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the updated \doxylink{class_summary}{Summary} object 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_ae5994a250093a23a7c783f50d079cb34}\label{class_summary_ae5994a250093a23a7c783f50d079cb34} 
+\mbox{\hyperlink{class_summary}{Summary}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_summary}{Summary}} \&original)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ get\+Text}\par
+{\em Retrieves the full summary as a formatted string
+
+\begin{DoxyReturn}{Returns}
+A QString containing the entire summary
+\end{DoxyReturn}
+The summary is formatted with section headers for interval history, physical examination, current status, and plan. Each section is separated by a newline. If any section is empty, a default message is included in its place. \begin{DoxyAuthor}{Author}
+Joelene Hales 
+
+Callum Thompson 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_ad0da980806e518765e518bfe478c062e}\label{class_summary_ad0da980806e518765e518bfe478c062e} 
+QString {\bfseries get\+Text} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Summary\+::get\+Interval\+History}\par
+{\em Retrieves the interval history section of the summary
+
+Returns a reference to the interval history field \begin{DoxyReturn}{Returns}
+Interval history section as a const QString reference 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_aa56d61caf207d9c545becf16a712224d}\label{class_summary_aa56d61caf207d9c545becf16a712224d} 
+const QString \& {\bfseries get\+Interval\+History} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Summary\+::set\+Interval\+History}\par
+{\em Sets the interval history section of the summary
+
+Assigns a new value to the interval history field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em new\+Interval\+History} & New interval history section \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_a4d5f0fcaa4987ee880f5f2f09a1506ee}\label{class_summary_a4d5f0fcaa4987ee880f5f2f09a1506ee} 
+void {\bfseries set\+Interval\+History} (const QString \&interval\+History)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Summary\+::get\+Physical\+Examination}\par
+{\em Retrieves the physical examination section of the summary
+
+Returns a reference to the physical examination field \begin{DoxyReturn}{Returns}
+Physical examination section as a const QString reference 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_a0ad8911d9d4ea45bfddc9d97862145cf}\label{class_summary_a0ad8911d9d4ea45bfddc9d97862145cf} 
+const QString \& {\bfseries get\+Physical\+Examination} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Summary\+::set\+Physical\+Examination}\par
+{\em Sets the physical examination section of the summary
+
+Assigns a new value to the physical examination field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em new\+Physical\+Examination} & New physical examination section \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_aa45eb1f4403a5383ebf6641837cc0bc8}\label{class_summary_aa45eb1f4403a5383ebf6641837cc0bc8} 
+void {\bfseries set\+Physical\+Examination} (const QString \&physical\+Examination)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Summary\+::get\+Current\+Status}\par
+{\em Retrieves the current status section of the summary
+
+Returns a reference to the current status field \begin{DoxyReturn}{Returns}
+Current status section as a const QString reference 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_a4025e7e298340a357a76e8f751fdfc47}\label{class_summary_a4025e7e298340a357a76e8f751fdfc47} 
+const QString \& {\bfseries get\+Current\+Status} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Summary\+::set\+Current\+Status}\par
+{\em Sets the current status section of the summary
+
+Assigns a new value to the current status field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em new\+Current\+Status} & New current status section \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_ac7cdb0cc9900c2c7cfa76811cb885500}\label{class_summary_ac7cdb0cc9900c2c7cfa76811cb885500} 
+void {\bfseries set\+Current\+Status} (const QString \&current\+Status)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Summary\+::get\+Plan}\par
+{\em Retrieves the plan section of the summary
+
+Returns a reference to the plan field \begin{DoxyReturn}{Returns}
+Plan section as a const QString reference 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_a328581ab2c7e8b4df7c1c36f2b439460}\label{class_summary_a328581ab2c7e8b4df7c1c36f2b439460} 
+const QString \& {\bfseries get\+Plan} () const
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Summary\+::set\+Plan}\par
+{\em Sets the plan section of the summary
+
+Assigns a new value to the plan field 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em new\+Plan} & New plan section \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_aca92f46a8d520297cef72e4287f369d2}\label{class_summary_aca92f46a8d520297cef72e4287f369d2} 
+void {\bfseries set\+Plan} (const QString \&plan)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ clear}\par
+{\em Clears all fields of the summary
+
+Sets all strings to empty. This is useful for resetting the summary before generating a new one. \begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_summary_a76c778be4ec87e3084dae7703f5f76d0}\label{class_summary_a76c778be4ec87e3084dae7703f5f76d0} 
+void {\bfseries clear} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+Represents a summary with various sections. 
+
+This class provides methods to manage the interval history, physical examination, current status, and plan sections of a summary. It includes methods to get and set these sections, as well as a method to clear all sections. \begin{DoxyAuthor}{Author}
+Joelene Hales 
+
+Callum Thompson 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{summary_8h}{summary.\+h}}\item 
+\mbox{\hyperlink{summary_8cpp}{summary.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,50 @@
+\doxysection{llmclient.\+h}
+\hypertarget{llmclient_8h_source}{}\label{llmclient_8h_source}\mbox{\hyperlink{llmclient_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ LLMCLIENT\_H}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ LLMCLIENT\_H}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QObject>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QtNetwork/QNetworkAccessManager>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QtNetwork/QNetworkReply>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QJsonDocument>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QJsonObject>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QJsonArray>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <QtNetwork/QNetworkRequest>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <QUrl>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <QDebug>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <QFile>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{class\ }LLMClient\ :\ \textcolor{keyword}{public}\ QObject}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ sendRequest(\textcolor{keyword}{const}\ QString\ \&prompt);}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{static}\ LLMClient\ *getInstance();}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ setApiKey(\textcolor{keyword}{const}\ QString\&\ key);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ signals:}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ responseReceived(\textcolor{keyword}{const}\ QString\ \&response);}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ invalidAPIKey(QNetworkReply\ *reply);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ handleNetworkReply(QNetworkReply\ *reply);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{static}\ LLMClient\ *instance;\ \textcolor{comment}{//\ Singleton\ instance}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{explicit}\ LLMClient();}
+\DoxyCodeLine{00050\ \ \ \ \ LLMClient(\textcolor{keyword}{const}\ LLMClient\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00051\ \ \ \ \ LLMClient\ \&operator=(\textcolor{keyword}{const}\ LLMClient\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00052\ \ \ \ \ QNetworkAccessManager\ *networkManager;}
+\DoxyCodeLine{00053\ \ \ \ \ QString\ apiKey;}
+\DoxyCodeLine{00054\ \ \ \ \ QString\ userPrompt;\ \textcolor{comment}{//\ Stores\ the\ user\ prompt\ for\ the\ second\ request}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ sendLLMRequest(\textcolor{keyword}{const}\ QString\ \&inputPrompt);}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ LLMCLIENT\_H}}
+
+\end{DoxyCode}

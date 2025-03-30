@@ -1,0 +1,77 @@
+\doxysection{Concise\+Summary\+Formatter Class Reference}
+\hypertarget{class_concise_summary_formatter}{}\label{class_concise_summary_formatter}\index{ConciseSummaryFormatter@{ConciseSummaryFormatter}}
+
+
+A class that formats the summary in a concise manner.  
+
+
+
+
+{\ttfamily \#include $<$concisesummaryformatter.\+h$>$}
+
+Inheritance diagram for Concise\+Summary\+Formatter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_concise_summary_formatter}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{Indent}\textbf{ generate\+Layout}\par
+{\em Creates a concise layout of the summary
+
+Includes current status and plan sections. Removes all other sections to keep the layout concise. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em summary} & \doxylink{class_summary}{Summary} to create layout for \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em summary\+Layout} & Layout to display summary in. Existing layout elements will be cleared. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+}\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_concise_summary_formatter_abef59aed244e74d7481fe40f8f348b74}{generate\+Layout}} (const \mbox{\hyperlink{class_summary}{Summary}} \&summary, QVBox\+Layout \texorpdfstring{$\ast$}{*}summary\+Layout) const override
+\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_summary_formatter}{Summary\+Formatter}}}
+\begin{DoxyCompactItemize}
+\item 
+QString {\bfseries format\+Bold\+Text} (const QString \&text) const
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries clear\+Layout} (QVBox\+Layout \texorpdfstring{$\ast$}{*}layout) const
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries add\+Section} (const \mbox{\hyperlink{struct_summary_formatter_1_1_section}{Section}} \&section, QVBox\+Layout \texorpdfstring{$\ast$}{*}summary\+Layout) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class that formats the summary in a concise manner. 
+
+This class inherits from \doxylink{class_summary_formatter}{Summary\+Formatter} and implements the generate\+Layout method to create a concise layout for the summary. \begin{DoxyAuthor}{Author}
+Joelene Hales 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_concise_summary_formatter_abef59aed244e74d7481fe40f8f348b74}\index{ConciseSummaryFormatter@{ConciseSummaryFormatter}!generateLayout@{generateLayout}}
+\index{generateLayout@{generateLayout}!ConciseSummaryFormatter@{ConciseSummaryFormatter}}
+\doxysubsubsection{\texorpdfstring{generateLayout()}{generateLayout()}}
+{\footnotesize\ttfamily \label{class_concise_summary_formatter_abef59aed244e74d7481fe40f8f348b74} 
+void Concise\+Summary\+Formatter\+::generate\+Layout (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_summary}{Summary}} \&}]{summary}{, }\item[{QVBox\+Layout \texorpdfstring{$\ast$}{*}}]{summary\+Layout}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_summary_formatter}{Summary\+Formatter}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{concisesummaryformatter_8h}{concisesummaryformatter.\+h}}\item 
+\mbox{\hyperlink{concisesummaryformatter_8cpp}{concisesummaryformatter.\+cpp}}\end{DoxyCompactItemize}

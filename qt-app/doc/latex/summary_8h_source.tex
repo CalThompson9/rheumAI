@@ -1,0 +1,46 @@
+\doxysection{summary.\+h}
+\hypertarget{summary_8h_source}{}\label{summary_8h_source}\mbox{\hyperlink{summary_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifndef\ SUMMARY\_H}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ SUMMARY\_H}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }Summary}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ Summary();}
+\DoxyCodeLine{00028\ \ \ \ \ Summary(\textcolor{keyword}{const}\ Summary\&\ other);}
+\DoxyCodeLine{00029\ \ \ \ \ \string~Summary()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ Summary\&\ operator=(\textcolor{keyword}{const}\ Summary\&\ original);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ QString\ getText()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{const}\ QString\&\ getIntervalHistory()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ setIntervalHistory(\textcolor{keyword}{const}\ QString\&\ intervalHistory);}
+\DoxyCodeLine{00037\ \ \ \ \ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{const}\ QString\&\ getPhysicalExamination()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ setPhysicalExamination(\textcolor{keyword}{const}\ QString\&\ physicalExamination);}
+\DoxyCodeLine{00040\ \ \ \ \ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{const}\ QString\&\ getCurrentStatus()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ setCurrentStatus(\textcolor{keyword}{const}\ QString\&\ currentStatus);}
+\DoxyCodeLine{00043\ \ \ \ \ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{const}\ QString\&\ getPlan()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ setPlan(\textcolor{keyword}{const}\ QString\&\ plan);}
+\DoxyCodeLine{00046\ \ \ \ \ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ clear();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00051\ \ \ \ \ QString\ intervalHistory;}
+\DoxyCodeLine{00052\ \ \ \ \ QString\ physicalExamination;}
+\DoxyCodeLine{00053\ \ \ \ \ QString\ currentStatus;}
+\DoxyCodeLine{00054\ \ \ \ \ QString\ plan;}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SUMMARY\_H}}
+
+\end{DoxyCode}
