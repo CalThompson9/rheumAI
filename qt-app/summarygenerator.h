@@ -15,7 +15,6 @@
 #include <QObject>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <QDebug>
 #include "transcript.h"
 #include "summary.h"
 #include "llmclient.h"

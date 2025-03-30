@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
                            toggleSwitch); // Pass toggleSwitch to WindowBuilder
 
     // Connect archive mode button
-    qDebug() << "🗃️ ARCHIVE MODE:" << archiveMode;
     connect(toggleSwitch, &QPushButton::clicked, this, &MainWindow::handleArchiveToggled);
 
     // Initialize SummaryGenerator
@@ -85,19 +84,16 @@ MainWindow::MainWindow(QWidget *parent)
     selectSummaryLayout->setText(defaultSummaryLayout);
     if (defaultSummaryLayout.contains("Detailed Summary"))
     {
-        qDebug() << "Setting default summary format to: Detailed Layout";
         summaryFormatter = new DetailedSummaryFormatter;
         optionDetailedLayout->setEnabled(false);
     }
     else if (defaultSummaryLayout.contains("Concise Summary"))
     {
-        qDebug() << "Setting default summary format to: Concise Layout";
         summaryFormatter = new ConciseSummaryFormatter;
         optionConciseLayout->setEnabled(false);
     }
     else
     {
-        qDebug() << "Unrecognized summary format in settings: " << defaultSummaryLayout << ". Using detailed layout instead...";
         summaryFormatter = new DetailedSummaryFormatter;
         optionDetailedLayout->setEnabled(false);
     }
@@ -125,7 +121,6 @@ MainWindow::MainWindow(QWidget *parent)
             loadingDialog->show();
 
             Transcript currentTranscription = audioHandler->transcribe(filePath);
-            qDebug() << "Transcription: " << currentTranscription.getContent();
 
             //  Overwrite 'transcript_raw.txt' for summarizer
             FileHandler::getInstance()->saveTranscript(selectedPatientID, currentTranscription.getContent());
@@ -277,11 +272,10 @@ void MainWindow::handleLLMResponse(const QString &response)
         QTextStream out(&file);
         out << response;
         file.close();
-        qDebug() << "Transcript saved to: " << transcriptPath;
     }
     else
     {
-        qDebug() << "Failed to save transcript!";
+        qInfo() << "Failed to save transcript!";
     }
 }
 
@@ -310,13 +304,12 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
 
     if (selectedOption->text() == "Plain Text Transcript")
     {
-        qDebug() << "Switching to plain text (transcript) mode.";
         summaryTitle->setText("Transcript"); // Change section header
         
         // Ensure the transcript is actually loaded
         if (currentTranscriptText.isEmpty())
         {
-            qDebug() << "No transcript available.";
+            qInfo() << "No transcript available.";
             return;
         }
 
@@ -327,8 +320,6 @@ void MainWindow::handleSummaryLayoutChanged(SummaryFormatter *summaryFormatter)
 
         // Add it inside the summary layout
         summarySection->addWidget(transcriptLabel);
-
-        qDebug() << "Transcript displayed inside summary section.";
     }
     else
     {
@@ -422,11 +413,10 @@ void MainWindow::handleSummaryReady()
         QTextStream out(&file);
         out << summary.getText();
         file.close();
-        qDebug() << "Summary saved to: " << summaryPath;
     }
     else
     {
-        qDebug() << "Failed to save summary!";
+        qInfo() << "Failed to save summary!";
     }
 
     // Update the UI with the summary
@@ -447,12 +437,10 @@ void MainWindow::handleSummaryReady()
 bool MainWindow::loadPatientsIntoDropdown()
 {
     comboSelectPatient->clear(); // Clear dropdown before loading
-    qDebug() << "Loading patients from Patients folder...";
     QDir patientsDir("Patients");
 
     if (!patientsDir.exists())
     {
-        qDebug() << "Patients directory does not exist!";
         return false;
     }
 
@@ -466,8 +454,6 @@ bool MainWindow::loadPatientsIntoDropdown()
         QString displayName = patient.getFirstName() + " " + patient.getLastName() + " [" + QString::number(patientID) + "]";
         comboSelectPatient->addItem(displayName, patientID);
     }
-
-    qDebug() << "Loaded patients into dropdown.";
     return !empty;
 }
 
@@ -485,12 +471,10 @@ bool MainWindow::loadPatientsIntoDropdown()
 bool MainWindow::loadArchivedPatientsIntoDropdown()
 {
     comboSelectPatient->clear(); // Clear dropdown before loading
-    qDebug() << "Loading archived patients from Archived folder...";
     QDir archivedDir("Archived");
 
     if (!archivedDir.exists())
     {
-        qDebug() << "Archived directory does not exist!";
         return true;
     }
 
@@ -505,7 +489,6 @@ bool MainWindow::loadArchivedPatientsIntoDropdown()
         comboSelectPatient->addItem(displayName, patientID);
     }
 
-    qDebug() << "Loaded archived patients into dropdown.";
     return !empty;
 }
 
@@ -535,7 +518,6 @@ void MainWindow::displaySummary(const Summary &summary)
 {
     if (!summaryFormatter)
     {
-        qDebug() << "Warning: summaryFormatter is null, cannot display summary.";
         return;
     }
 
@@ -618,7 +600,6 @@ void MainWindow::on_addPatientButton_clicked()
 
         // Update user interface to show new patient in dropdown
         comboSelectPatient->addItem(displayName, patientID);
-        qDebug() << "New patient added: " << patientID << " - " << displayName;
 
         checkDropdownEmpty(); // Refresh UI
         viewPatient();
@@ -669,7 +650,6 @@ void MainWindow::on_editPatientButton_clicked()
         existing.setCountry(dialog.getCountry());
 
         FileHandler::getInstance()->savePatientRecord(existing);
-        qDebug() << "Patient updated: " << patientID;
 
         loadPatientsIntoDropdown(); // Refresh display names if changed
         viewPatient();
@@ -704,7 +684,7 @@ void MainWindow::on_removePatientButton_clicked()
     {
         if (dir.removeRecursively())
         {
-            qDebug() << "Patient folder deleted successfully:" << patientDirPath;
+            qInfo() << "Patient folder deleted successfully:" << patientDirPath;
         }
         else
         {
@@ -760,7 +740,6 @@ void MainWindow::on_archivePatientButton_clicked()
 void MainWindow::handleArchiveToggled()
 {
     archiveMode = !archiveMode; // Toggle archive mode
-    qDebug() << "🗃️ ARCHIVE MODE:" << archiveMode;
 
     if (archiveMode) // IN ARCHIVE MODE
     {
@@ -877,7 +856,6 @@ void MainWindow::on_patientSelected(int index)
         return;
 
     patientID = comboSelectPatient->currentData().toInt();
-    qDebug() << "Selected patient: " << patientID;
 
     viewPatient();
 
@@ -885,21 +863,17 @@ void MainWindow::on_patientSelected(int index)
     QString savedTranscript = FileHandler::getInstance()->loadTranscript(patientID);
     if (!savedTranscript.isEmpty())
     {
-        qDebug() << "Transcript found, storing in currentTranscriptText.";
         currentTranscriptText = savedTranscript; // Store transcript
     }
     else
     {
-        qDebug() << "No transcript found, clearing UI.";
         currentTranscriptText.clear();
     }
 
     // Load the structured summary according to default summary layout preference
-    qDebug() << "Attempting to load summary for patient ID: " << patientID;
     QString savedSummaryText = FileHandler::getInstance()->loadSummaryText(patientID);
 
     QString defaultLayout = settings->getSummaryPreference();
-    qDebug() << "Reverting to user summary layout preference:" << defaultLayout;
 
     // Clear existing summary layout
     QLayoutItem *child;
@@ -926,7 +900,6 @@ void MainWindow::on_patientSelected(int index)
     }
     else
     {
-        qDebug() << "Unrecognized user summary layout. Defaulting to Detailed Layout.";
         summaryFormatter = new DetailedSummaryFormatter;
         selectSummaryLayout->setText("Detailed Summary");
     }
@@ -940,19 +913,15 @@ void MainWindow::on_patientSelected(int index)
 
     if (!savedSummaryText.isEmpty())
     {
-        qDebug() << "Summary found, sending to SummaryGenerator...";
         summaryGenerator->setSummaryText(savedSummaryText);
 
         Summary summary = summaryGenerator->getSummary();
-        qDebug() << "Summary successfully retrieved, attempting to display...";
 
         displaySummary(summary);
         btnSummarize->setText("Regenerate Summary");
-        qDebug() << "Summary display completed.";
     }
     else
     {
-        qDebug() << "No saved summary found.";
         // Clear the summary UI
         QLayoutItem *child;
         while ((child = summarySection->takeAt(0)) != nullptr)

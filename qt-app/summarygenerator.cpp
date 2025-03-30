@@ -94,7 +94,6 @@ void SummaryGenerator::setSummaryText(const QString &summaryText)
 {
     if (summaryText.isEmpty())
     {
-        qDebug() << "Summary text is empty, skipping parsing.";
         return;
     }
 
@@ -106,7 +105,6 @@ void SummaryGenerator::setSummaryText(const QString &summaryText)
     summarizeCurrentStatus(summaryText);
     summarizePlan(summaryText);
 
-    qDebug() << "Summary successfully loaded from saved text.";
     emit summaryReady();
 }
 
@@ -187,18 +185,15 @@ QString SummaryGenerator::extractSectionFromResponse(const QString &response, co
 {
     QString searchPattern = "**" + sectionName + "**";
     QString searchPatternAlt = "**" + sectionName + ":**";
-    qDebug() << "🔍 Searching for section: " << searchPattern;
 
     int startIndex = response.indexOf(searchPattern, 0, Qt::CaseInsensitive);
     int patternLength = searchPattern.length(); // Default to original pattern length
 
     if (startIndex == -1)
     {
-        qWarning() << "❌ Section not found in LLM response: " << sectionName;
         startIndex = response.indexOf(searchPatternAlt, 0, Qt::CaseInsensitive);
         if (startIndex == -1)
         {
-            qWarning() << "❌ Section not found in LLM response: " << sectionName;
             return "No " + sectionName.toLower() + " found.";
         }
         patternLength = searchPatternAlt.length(); // Use alt pattern length if matched
@@ -215,9 +210,6 @@ QString SummaryGenerator::extractSectionFromResponse(const QString &response, co
         endIndex = response.length();
 
     QString extractedSection = response.mid(startIndex + patternLength, endIndex - (startIndex + patternLength)).trimmed();
-
-    qDebug() << "✅ Extracted section for " << sectionName << ":\n"
-             << extractedSection;
 
     return extractedSection;
 }

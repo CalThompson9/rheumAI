@@ -14,8 +14,6 @@
  */
 
 #include <QTextStream>
-#include <QJsonDocument>
-#include <QFile>
 #include <QDebug>
 #include "filehandler.h"
 
@@ -91,14 +89,12 @@ QString FileHandler::readTranscript()
 {
     if (transcriptFilename.isEmpty())
     {
-        qDebug() << "Transcript file is not set!";
         return "";
     }
 
     QFile file(transcriptFilename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << "Could not open transcript file for reading";
         return "";
     }
 
@@ -106,8 +102,6 @@ QString FileHandler::readTranscript()
     QString content = in.readAll();
     file.close();
 
-    qDebug() << "Transcript Read:\n"
-             << content;
     return content;
 
 }
@@ -150,9 +144,8 @@ void FileHandler::saveOrAppendRawTranscript(int patientID, const Transcript &tra
         QTextStream out(&file);
         out << fileContents;
         file.close();
-        qDebug() << "Raw transcript appended to file: " << filePath;
     } else {
-        qDebug() << "Failed to open file for writing: " << filePath;
+        qInfo() << "Failed to open file for writing: " << filePath;
     }
 
     // 🔁 Update transcript_raw.txt with full daily content for summary
@@ -162,9 +155,8 @@ void FileHandler::saveOrAppendRawTranscript(int patientID, const Transcript &tra
         QTextStream latestOut(&latestFile);
         latestOut << fileContents;
         latestFile.close();
-        qDebug() << "Updated transcript_raw.txt for summarizer.";
     } else {
-        qDebug() << "Failed to update transcript_raw.txt!";
+        qInfo() << "Failed to update transcript_raw.txt!";
     }
 }
 
@@ -183,7 +175,6 @@ QString FileHandler::loadSummaryText(int patientID)
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << " No summary found for patient:" << patientID;
         return "";
     }
 
@@ -191,8 +182,6 @@ QString FileHandler::loadSummaryText(int patientID)
     QString summaryContent = in.readAll();
     file.close();
 
-    qDebug() << " Loaded summary from file (before returning):\n"
-             << summaryContent;
     return summaryContent;
 }
 
@@ -211,7 +200,6 @@ QString FileHandler::loadTranscript(int patientID)
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << "No transcript found for patient:" << patientID;
         return "";
     }
 
@@ -240,14 +228,12 @@ void FileHandler::savePatientRecord(const PatientRecord &record)
     QFile file(patientPath + "/patient_info.json");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "Could not save patient record!";
         return;
     }
 
     QJsonDocument doc(record.toJson());
     file.write(doc.toJson());
     file.close();
-    qDebug() << "Patient record saved to:" << file.fileName();
 }
 
 /**
@@ -267,7 +253,6 @@ void FileHandler::saveTranscript(int patientID, const QString &transcript)
     QFile file(transcriptPath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "Could not save transcript!";
         return;
     }
 
@@ -276,7 +261,6 @@ void FileHandler::saveTranscript(int patientID, const QString &transcript)
     QTextStream out(&file);
     out << transcript;
     file.close();
-    qDebug() << "Transcript saved to:" << transcriptPath;
 }
 
 /**
@@ -300,7 +284,6 @@ PatientRecord FileHandler::loadPatientRecord(int patientID)
         QFile archive(archivePath);
         if (!archive.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            qDebug() << "Could not load patient record from either active or archived database!";
             return PatientRecord(); // Return an empty record if both fail
         }
         file.setFileName(archivePath);                    // Update file to point to the archive path
@@ -311,7 +294,7 @@ PatientRecord FileHandler::loadPatientRecord(int patientID)
     file.close();
 
     QJsonDocument doc = QJsonDocument::fromJson(fileData);
-    qDebug() << "Patient record loaded for ID:" << patientID;
+
     return PatientRecord::fromJson(doc.object());
 }
 
@@ -334,7 +317,6 @@ PatientRecord FileHandler::archivePatientRecord(int patientID)
     QDir patientDir(patientPath);
     if (!patientDir.exists())
     {
-        qDebug() << "Patient folder does not exist for ID:" << patientID;
         return PatientRecord();
     }
 
@@ -345,18 +327,14 @@ PatientRecord FileHandler::archivePatientRecord(int patientID)
         QString destFilePath = archivePath + "/" + fileName;
         if (!QFile::rename(srcFilePath, destFilePath))
         {
-            qDebug() << "Failed to move file:" << srcFilePath << "to" << destFilePath;
+            qInfo() << "Failed to move file:" << srcFilePath << "to" << destFilePath;
         }
     }
 
     // Remove the old patient folder
     if (!QDir(patientPath).removeRecursively())
     {
-        qDebug() << "Failed to remove old patient folder:" << patientPath;
-    }
-    else
-    {
-        qDebug() << "Patient folder ARCHIVED for ID:" << patientID;
+        qInfo() << "Failed to remove old patient folder:" << patientPath;
     }
 
     return loadPatientRecord(patientID);
@@ -381,7 +359,6 @@ PatientRecord FileHandler::unarchivePatientRecord(int patientID)
     QDir archiveDir(archivePath);
     if (!archiveDir.exists())
     {
-        qDebug() << "Archive folder does not exist for ID:" << patientID;
         return PatientRecord();
     }
 
@@ -392,18 +369,14 @@ PatientRecord FileHandler::unarchivePatientRecord(int patientID)
         QString destFilePath = patientPath + "/" + fileName;
         if (!QFile::rename(srcFilePath, destFilePath))
         {
-            qDebug() << "Failed to move file:" << srcFilePath << "to" << destFilePath;
+            qInfo() << "Failed to move file:" << srcFilePath << "to" << destFilePath;
         }
     }
 
     // Remove the old patient folder
     if (!QDir(archivePath).removeRecursively())
     {
-        qDebug() << "Failed to remove old archive folder:" << archivePath;
-    }
-    else
-    {
-        qDebug() << "Patient folder UNARCHIVED for ID:" << patientID;
+        qInfo() << "Failed to remove old archive folder:" << archivePath;
     }
 
     return loadPatientRecord(patientID);
@@ -433,13 +406,12 @@ void FileHandler::saveTranscriptToJson()
     QFile jsonFile(jsonFilename);
     if (!jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "Could not open JSON file for writing";
+        qInfo() << "Could not open JSON file for writing";
         return;
     }
 
     jsonFile.write(jsonDoc.toJson());
     jsonFile.close();
-    qDebug() << "Transcript saved as JSON to:" << jsonFilename;
 }
 
 /**
@@ -483,7 +455,6 @@ void FileHandler::loadPatientJson()
     QFile jsonFile(jsonFilename);
     if (!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << "Could not open JSON file for reading";
         return;
     }
 
@@ -492,5 +463,4 @@ void FileHandler::loadPatientJson()
 
     QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
     QJsonObject jsonObj = jsonDoc.object();
-    qDebug() << "Loaded JSON data:" << jsonObj;
 }
