@@ -43,7 +43,10 @@ deployment/
 qt-app/
     main.cpp                # Main source file
     ... (other source files)
-README                      # This file
+doc/
+    html/                  # Doxygen generated documentation
+    latex/                 # Doxygen generated LaTeX documentation
+README                     # This file
 ```
 
 ## API Keys
