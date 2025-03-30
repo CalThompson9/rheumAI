@@ -687,6 +687,10 @@ void MainWindow::on_editPatientButton_clicked()
  */
 void MainWindow::on_removePatientButton_clicked()
 {
+    if (QMessageBox::question(this, "Delete Confirmation", "Are you sure you want to delete this patient?", QMessageBox::Yes | QMessageBox::Cancel)
+        == QMessageBox::Cancel)
+    return;
+
     int index = comboSelectPatient->currentIndex();
     if (index == -1)
         return; // No patient selected
