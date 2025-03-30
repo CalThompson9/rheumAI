@@ -51,8 +51,34 @@ README                      # This file
 - OpenAI Whisper: You will need to set up your own OpenAI account and get your API key. Follow the instructions [here](https://platform.openai.com/docs/api-reference/introduction) to get your API key. This is a **paid service so we will not** be providing the API key in the repository.
 - Google Gemini: You will need to set up your own Google account and get your API key. Follow the instructions [here](https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com?invt=AbtcGQ&project=gen-lang-client-0999730694) to get your API key.
 
+### Why Do We Use 2 Transcription APIs?
+The Google Speech transcription API comes with a free trial. We use that to test our product without racking up charges. 
+The OpenAI Whisper API is a paid service so using it would incur costs. We still needed to use it however, since Google Speech 
+requires **2 channels** to be recorded in order to transcribe the audio, and recordings must be under **60 seconds**. The OpenAI Whisper API does not require this, so it is used as a fallback in case the Google Speech API fails to transcribe the audio.
+
 ## Provided API Keys
 Check the submitted PDF file for our project. We will give the API keys for Google Speech and Google Gemini. The API key for OpenAI Whisper is a paid service and we will not be providing it.
+
+## Example Transcription for Testing
+```
+"Good morning, Mr. Taylor! It’s nice to meet you—how are you doing today?"
+"Morning, Dr. Lee. I'm doing okay, a bit stiff this morning, but I made it in."
+"Glad you did. Mondays can be a bit rough on all of us, huh? Especially when you wake up to chilly weather like this. Now, I’ve read through your referral, your primary mentioned joint pain, particularly in the mornings. Can you tell me more about that?"
+"Yeah, it’s mainly in my hands and knees. The mornings are the worst—feels like I’m wearing concrete gloves. It takes at least 30 minutes before I can move properly."
+"That definitely sounds discomforting. Any swelling or redness in those joints?"
+"My fingers get puffy sometimes, but not really red."
+"Got it. Any family history of arthritis or autoimmune conditions?"
+"My mom has lupus, and my sister was recently diagnosed with rheumatoid arthritis."
+"Thanks for sharing that. That family history does raise my index of suspicion. Let’s do a quick physical exam. I’m going to check your joints, let me know if anything feels tender."
+"I’m noticing some mild swelling in your MCP joints and slight warmth around your knees. Any pain with this pressure?"
+"Yeah, a bit—mostly in the fingers."
+"Okay. Based on this exam and your history, I’m considering an early inflammatory arthritis like rheumatoid arthritis. We’ll run some blood tests—CBC, ESR, CRP, rheumatoid factor, and anti-CCP antibodies. I’ll also order X-rays of your hands and knees."
+"Sounds good. Is this something that can be managed?"
+"Absolutely. If we catch it early, treatment is very effective. We’ll meet again in about two weeks once your test results are back. In the meantime, gentle stretching in the morning and maybe using a warm compress can help ease the stiffness."
+"Thanks, Dr. Lee. I appreciate that."
+"No problem, Mr. Taylor. And if you’re a coffee drinker, now’s a good time to warm up those hands with a nice cup. Take care—I’ll see you soon."
+"You bet. Thanks again."
+```
 
 ## How to Run the Application
 
