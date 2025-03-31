@@ -51,6 +51,9 @@ qt-app/
 doc/
     html/                  # Doxygen generated documentation
     latex/                 # Doxygen generated LaTeX documentation
+uml-and-user-stories/
+    CS3307-Group1-FinalSubmission-UML.pdf
+    FinalSubmission.pdf    # User stories for the project
 README                     # This file
 ```
 
