@@ -221,7 +221,7 @@ QString PatientRecord::getCountry() const
  */
 QJsonObject PatientRecord::toJson() const
 {
-    QJsonObject json;
+    QJsonObject json; // Patient record JSON structure
     json["patientID"] = patientID;
     json["healthCard"] = healthCard;
     json["firstName"] = firstName;
@@ -249,7 +249,7 @@ QJsonObject PatientRecord::toJson() const
  */
 PatientRecord PatientRecord::fromJson(const QJsonObject &json)
 {
-    return PatientRecord(
+    return PatientRecord( // Patient record JSON structure
         json["patientID"].toInt(),
         json["healthCard"].toString(),
         json["firstName"].toString(),

@@ -44,6 +44,7 @@ Settings::Settings(QObject *p) : QObject(p), mainWindow(p)
         qWarning() << "Settings key file" << keyFilename << " not found.";
     }
 
+    // Read in keyFile to load in user configurations on app startup
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -94,25 +95,24 @@ Settings* Settings::getInstance(QObject *parent) {
 /**
  * @name Settings::showSettings
  * @brief Handles constructing the settings pop-up menu.
- * @details This function creates a dialog window for the settings menu, allowing users to modify their preferences.
+ * @details This function creates a pop-up window for the settings menu, allowing users to modify their preferences.
  * @author Thomas Llamzon
  */
 void Settings::showSettings()
 {
     QWidget *parent = (QWidget *)mainWindow;
 
-    // ========== Layout ==========
+    // ========== Layout & Position ==========
     QDialog *settingsWindow = new QDialog(parent);
     settingsWindow->setWindowTitle("Settings");
     settingsWindow->setGeometry(0, 0, 800, 250);
     settingsWindow->adjustSize();
 
+    // Move settings window to center of the main window
     QRect parentRect = parent->geometry();
     QSize dialogSize = settingsWindow->size();
-
     int x = parentRect.x() + ((parentRect.width()-dialogSize.width()) / 2);
     int y = parentRect.y() + ((parentRect.height()-dialogSize.height()) / 2);
-
     settingsWindow->move(x, y);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(settingsWindow);
@@ -123,6 +123,7 @@ void Settings::showSettings()
     QLabel *sLabel = new QLabel("Default Summary Layout Preference:", settingsWindow);
     summaryLayout->addWidget(sLabel);
 
+    // Construct default summary layout preference drop down menu
     QPushButton *selectLayoutButton = new QPushButton(settingsWindow);
     QMenu *summaryLayoutOptions = new QMenu();
     summaryLayout->addWidget(selectLayoutButton);
@@ -134,6 +135,7 @@ void Settings::showSettings()
     selectLayoutButton->setText(summaryLayoutPreference);
     mainLayout->addLayout(summaryLayout);
 
+    // Connect selected user preference to storage in keyFile
     connect(optionDetailedLayout, &QAction::triggered, this, [=]() {
         setSummaryPreference("Detailed Summary");
         selectLayoutButton->setText(summaryLayoutPreference);
@@ -148,11 +150,13 @@ void Settings::showSettings()
     QLabel *cpLabel = new QLabel("Connected Peripherals:", settingsWindow);
     peripheralsLayout->addWidget(cpLabel);
 
+    // Create text field for where the user's connected devices will be listed to them
     QTextEdit *peripheralsField = new QTextEdit(settingsWindow);
     peripheralsField->setReadOnly(true);
     peripheralsField->setFixedHeight(60);
     peripheralsField->setStyleSheet("background-color: white; border: 1px solid gray;");
 
+    // Get conected devices through QAudioDevice library
     const QList<QAudioDevice> audioDevices = QMediaDevices::audioInputs();
     peripheralsField->setText(
         !audioDevices.isEmpty()
@@ -160,6 +164,7 @@ void Settings::showSettings()
             : "No microphone detected."
         );
 
+    // Add to main settings window layout
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);
 
@@ -170,11 +175,13 @@ void Settings::showSettings()
     llmKeyField->setText(llmKey);
     QDialogButtonBox *llmButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
+    // Configure layout of LLM API key configuration field
     llmLayout->addWidget(llmLabel);
     llmLayout->addWidget(llmKeyField);
     llmLayout->addWidget(llmButtonBox);
     mainLayout->addLayout(llmLayout);
 
+    // Connect entered user API Key to storing in keyFile and updating relevant classes with this value.
     connect(llmButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!llmKeyField->text().isEmpty()) {
             setLLMKey(llmKeyField->text());
@@ -183,7 +190,7 @@ void Settings::showSettings()
         }
     });
     connect(llmButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        llmKeyField->clear();
+        llmKeyField->clear(); // Make cancel button clear the text field
     });
 
     // ========== Google Audio API Key ==========
@@ -193,11 +200,13 @@ void Settings::showSettings()
     googleAudioKeyField->setText(googleSpeechApiKey);
     QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
+    // Configure layout of Google Audio API key configuration field
     audioLayout->addWidget(audioLabel);
     audioLayout->addWidget(googleAudioKeyField);
     audioLayout->addWidget(audioButtonBox);
     mainLayout->addLayout(audioLayout);
 
+    // Connect entered user API Key to storing in keyFile and updating relevant classes with this value.
     connect(audioButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!googleAudioKeyField->text().isEmpty()) {
             setGoogleSpeechApiKey(googleAudioKeyField->text());
@@ -206,7 +215,7 @@ void Settings::showSettings()
         }
     });
     connect(audioButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        googleAudioKeyField->clear();
+        googleAudioKeyField->clear(); // Make cancel button clear the text field
     });
 
     // ========== OpenAI Audio API Key ==========
@@ -216,11 +225,13 @@ void Settings::showSettings()
     openaiKeyField->setText(openAIAudioKey);
     QDialogButtonBox *openaiButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
+    // Configure layout of OpenAI API key configuration field
     openaiLayout->addWidget(openaiLabel);
     openaiLayout->addWidget(openaiKeyField);
     openaiLayout->addWidget(openaiButtonBox);
     mainLayout->addLayout(openaiLayout);
 
+    // Connect entered user API Key to storing in keyFile and updating relevant classes with this value.
     connect(openaiButtonBox, &QDialogButtonBox::accepted, this, [=]() {
         if (!openaiKeyField->text().isEmpty()) {
             setOpenAIAudioKey(openaiKeyField->text());
@@ -229,7 +240,7 @@ void Settings::showSettings()
         }
     });
     connect(openaiButtonBox, &QDialogButtonBox::rejected, this, [=]() {
-        openaiKeyField->clear();
+        openaiKeyField->clear(); // Make cancel button clear the text field
     });
 
     // ========== Close Settings Menu ==========
@@ -246,6 +257,7 @@ void Settings::showSettings()
     QPushButton *openAIOkButton = openaiButtonBox->button(QDialogButtonBox::Ok);
     QPushButton *openAICancelButton = openaiButtonBox->button(QDialogButtonBox::Cancel);
 
+    // Disable default button styles to allow custom styles
     llmOkButton->setDefault(false);
     llmOkButton->setAutoDefault(false);
     audioOkButton->setDefault(false);
@@ -253,6 +265,7 @@ void Settings::showSettings()
     openAIOkButton->setDefault(false);
     openAIOkButton->setAutoDefault(false);
 
+    // Assign custom button styles
     llmOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
     llmCancelButton->setStyleSheet(WindowBuilder::greyButtonStyle);
     audioOkButton->setStyleSheet(WindowBuilder::settingsBlueButtonStyle);
@@ -277,12 +290,14 @@ void Settings::showSettings()
  */
 QString Settings::readKey(const QString& keyPrefix)
 {
+    // Open keyFile
     QFile file(keyFilename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "Settings key file" << keyFilename << " not found.";
         return "";
     }
 
+    // Find prefix in keyFile that indicates where the API key will be stored (similar to a dictionary)
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -410,6 +425,7 @@ QString Settings::getSummaryPreference() const
  */
 void Settings::storeConfig(const QString &config, const QString &value)
 {
+    // Identify which API key the user wishes to store
     QString prefix;
     if (config == "LLM") {
         prefix = "GEMINI_API_KEY:";
@@ -427,6 +443,7 @@ void Settings::storeConfig(const QString &config, const QString &value)
     QFile file(keyFilename);
     QStringList lines;
 
+    // Find and open keyFile
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
         while (!in.atEnd()) {
@@ -450,6 +467,7 @@ void Settings::storeConfig(const QString &config, const QString &value)
         }
     }
 
+    // Create new line for new API key field (user's first time entering that API key)
     if (!foundLine) {
         lines << prefix + " " + value;
     }
