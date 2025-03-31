@@ -104,7 +104,7 @@ Check the submitted PDF file for our project. We will give the API keys for Goog
 3. If you encounter a security warning about the app being from an unverified developer:
    - Open System Preferences > Security & Privacy.
    - Click Open Anyway to allow the app to run.
-**Step 3 is very important, as macOS will not allow the app to run otherwise.**
+<br>**Step 3 is very important, as macOS will not allow the app to run otherwise.**
 
 ### Linux
 1. Navigate to the linux/deployment/ folder.
