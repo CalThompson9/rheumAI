@@ -100,7 +100,8 @@ Check the submitted PDF file for our project. We will give the API keys for Goog
 
 ### macOS
 1. Navigate to the mac/ folder.
-2. Double-click on RheumAI.app to launch the application.
+2. Use the ./run.sh script to launch the application. 
+Note: You may need to run this twice for it to work, due to security permissions.
 3. If you encounter a security warning about the app being from an unverified developer:
    - Open System Preferences > Security & Privacy.
    - Click Open Anyway to allow the app to run.
@@ -109,10 +110,10 @@ Check the submitted PDF file for our project. We will give the API keys for Goog
 
 ### Linux
 1. Navigate to the linux/deployment/ folder.
-2. Run the provided shell script:
-   ```bash
-   ./run.sh
-   ```
+2. Run the provided application using the following command:
+   ``
+    ./qt-app
+    ``
    - This script sets up the required library paths and launches the application.
 3. Make sure your system has a working display (X11 or Wayland) for the GUI.
 4. Note: If Linux fails to run, you will have to open the project in QT creator, as shown below.
