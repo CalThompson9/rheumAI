@@ -39,10 +39,12 @@ LLMClient::LLMClient()
  */
 LLMClient *LLMClient::getInstance()
 {
+    // Create the singleton instance if it hasn't been initialized yet
     if (!instance)
     {
         instance = new LLMClient();
     }
+    // Return the shared instance
     return instance;
 }
 
@@ -56,6 +58,7 @@ LLMClient *LLMClient::getInstance()
  */
 void LLMClient::sendRequest(const QString &prompt)
 {
+    // Abort if no API key is set
     if (apiKey.isEmpty())
     {
         qWarning() << "API Key is empty! Request aborted.";
@@ -74,6 +77,7 @@ void LLMClient::sendRequest(const QString &prompt)
     initialPrompt = QTextStream(&file).readAll().trimmed();
     file.close();
 
+    // Abort if the initial system prompt is empty
     if (initialPrompt.isEmpty())
     {
         qWarning() << "Initial prompt is empty! Request aborted.";
@@ -85,6 +89,7 @@ void LLMClient::sendRequest(const QString &prompt)
 
     userPrompt = fullPrompt; // Store user prompt including initial prompt
 
+    // Send the combined prompt to the LLM
     sendLLMRequest(fullPrompt);
 }
 
@@ -109,8 +114,10 @@ void LLMClient::setApiKey(const QString& key)
  */
 void LLMClient::sendLLMRequest(const QString &inputPrompt)
 {
+    // Construct the API URL with the provided API key
     QUrl url("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=" + apiKey);
 
+    // Set up the network request headers
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -150,16 +157,19 @@ void LLMClient::sendLLMRequest(const QString &inputPrompt)
  */
 void LLMClient::handleNetworkReply(QNetworkReply *reply)
 {
+    // Read the full response payload from the network reply
     QByteArray responseData = reply->readAll();
     reply->deleteLater(); // Clean up the reply object
 
+    // Check for network errors (e.g., invalid API key or no connection)
     if (reply->error() != QNetworkReply::NoError)
     {
         qWarning() << "Network error:" << reply->errorString();
-        emit invalidAPIKey(reply);
+        emit invalidAPIKey(reply);// Notify the rest of the app
         return;
     }
 
+    // Parse the response JSON
     QJsonDocument jsonResponse = QJsonDocument::fromJson(responseData);
     if (!jsonResponse.isObject())
     {
@@ -168,6 +178,8 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     }
 
     QJsonObject jsonObj = jsonResponse.object();
+
+    // Verify the presence of "candidates" array
     if (!jsonObj.contains("candidates") || !jsonObj["candidates"].isArray())
     {
         qWarning() << "No candidates found in response.";
@@ -175,6 +187,8 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     }
 
     QJsonArray candidates = jsonObj["candidates"].toArray();
+
+    // Ensure the array isn't empty and contains a valid object
     if (candidates.isEmpty() || !candidates[0].isObject())
     {
         qWarning() << "Empty candidates list.";
@@ -182,6 +196,8 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     }
 
     QJsonObject candidate = candidates[0].toObject();
+
+    // Check for the presence of a "content" object
     if (!candidate.contains("content") || !candidate["content"].isObject())
     {
         qWarning() << "No content in response.";
@@ -189,6 +205,8 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     }
 
     QJsonObject contentObj = candidate["content"].toObject();
+
+    // Check for a "parts" array inside content
     if (!contentObj.contains("parts") || !contentObj["parts"].isArray())
     {
         qWarning() << "No parts in content.";
@@ -196,12 +214,15 @@ void LLMClient::handleNetworkReply(QNetworkReply *reply)
     }
 
     QJsonArray parts = contentObj["parts"].toArray();
+
+    // Ensure the parts array contains at least one object
     if (parts.isEmpty() || !parts[0].isObject())
     {
         qWarning() << "No valid text response found.";
         return;
     }
 
+    // Extract the final text response from the first part
     QString responseText = parts[0].toObject().value("text").toString();
     if (responseText.isEmpty())
     {

@@ -16,6 +16,10 @@ doctor-patient interaction. The program uses a combination of Open AI's Whisper 
 ## Preview
 ![Preview](preview.png)
 
+<hr></hr>
+
+![PreviewSettings](settings-popup.png)
+
 ## Code Documentation
 All classes and methods are documented using Doxygen-style comments.
 
@@ -38,6 +42,7 @@ deployment/
         rheumai
     mac/                    # macOS build with .app bundle
         RheumAI.app         # macOS application
+        run.sh              # Shell script to run the application (NEED TO USE THIS TO PROPERLY RUN THE APP)
     windows/                # Windows build with .exe and DLL dependencies
         rheumai.exe         # Executable for Windows
 qt-app/
@@ -46,6 +51,9 @@ qt-app/
 doc/
     html/                  # Doxygen generated documentation
     latex/                 # Doxygen generated LaTeX documentation
+uml-and-user-stories/
+    CS3307-Group1-FinalSubmission-UML.pdf
+    FinalSubmission.pdf    # User stories for the project
 README                     # This file
 ```
 
@@ -136,10 +144,11 @@ For those who wish to explore or modify the project, you can open the source cod
 - OpenAI for the Whisper model.
 - Google for the Speech-to-Text API and Gemini 1.5 8b model.
 - Qt for the development framework.
+- Team 1 for a totally awesome app.
 
 ## Contact
-- **Andres Pedreros Castro (apedrero@uwo.ca)** for any questions related to audio recording and transcription.
-- **Callum Thompson (cthom226@uwo.ca)** for any questions related to LLMs and summarization.
-- **Joelene Hales (jhales5@uwo.ca)** for any questions related to design patterns used and the UML diagram.
-- **Kalundi Serumaga (kserumag@uwo.ca)** for any questions related to file management and the folder structure.
-- **Thomas Llamzon (tllamzon@uwo.ca)** for any questions related to the UI and functionality of the application.
+- **Andres Pedreros Castro** for questions related to audio recording and transcription.
+- **Callum Thompson** for questions related to LLMs and summarization.
+- **Joelene Hales** for questions related to design patterns used and the UML diagram.
+- **Kalundi Serumaga** for questions related to file management and the folder structure.
+- **Thomas Llamzon** for questions related settings menu features and UX/UI design.

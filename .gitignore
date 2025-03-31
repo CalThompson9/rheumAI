@@ -177,3 +177,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,qt,qtcreator,macos,windows
 api.h
+
+/deployment
