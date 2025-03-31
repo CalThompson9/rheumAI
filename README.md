@@ -42,6 +42,7 @@ deployment/
         rheumai
     mac/                    # macOS build with .app bundle
         RheumAI.app         # macOS application
+        run.sh              # Shell script to run the application (NEED TO USE THIS TO PROPERLY RUN THE APP)
     windows/                # Windows build with .exe and DLL dependencies
         rheumai.exe         # Executable for Windows
 qt-app/
