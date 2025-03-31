@@ -51,10 +51,13 @@ AudioHandler::AudioHandler() : QObject(nullptr)
  */
 AudioHandler *AudioHandler::getInstance()
 {
+    // Create the singleton instance if it doesn't already exist
     if (!instance)
     {
         instance = new AudioHandler();
     }
+
+    // Return the shared AudioHandler instance
     return instance;
 }
 
@@ -74,6 +77,7 @@ AudioHandler *AudioHandler::getInstance()
  */
 Transcript AudioHandler::transcribe(const QString &filename)
 {
+    // Determine audio properties
     double durationSecs = getAudioDuration(filename);
     int channelCount = getAudioChannelCount(filename);
 
@@ -91,12 +95,14 @@ Transcript AudioHandler::transcribe(const QString &filename)
         response = sendToGoogleSpeechAPI(filename);
     }
 
+    // Handle failure to get a valid response
     if (response.isEmpty())
     {
         emit transcriptionCompleted("Transcription failed");
         return Transcript(getCurrentTime(), "");
     }
 
+     // Parse the JSON response
     QString result;
     QJsonDocument doc = QJsonDocument::fromJson(response.toUtf8());
     if (!doc.isObject())
@@ -105,12 +111,15 @@ Transcript AudioHandler::transcribe(const QString &filename)
         return Transcript(getCurrentTime(), "");
     }
 
+    // Extract transcribed text depending on which service was used
     if (durationSecs > 60.0 || channelCount != 2)
     {
+        // Whisper returns a flat "text" field
         result = doc.object().value("text").toString();
     }
     else
     {
+         // Google Speech returns a nested array of results and alternatives
         QJsonArray results = doc.object().value("results").toArray();
         for (const QJsonValue &val : results)
         {
@@ -122,6 +131,7 @@ Transcript AudioHandler::transcribe(const QString &filename)
         }
     }
 
+    // Emit signal and return the transcript with timestamp
     emit transcriptionCompleted(result);
     return Transcript(getCurrentTime(), result);
 }
@@ -140,6 +150,8 @@ Transcript AudioHandler::transcribe(const QString &filename)
 int AudioHandler::getAudioChannelCount(const QString &audioPath) const
 {
     QFile file(audioPath);
+
+    // Try to open the audio file in read-only mode
     if (!file.open(QIODevice::ReadOnly))
         return -1;
 
@@ -148,6 +160,7 @@ int AudioHandler::getAudioChannelCount(const QString &audioPath) const
     file.read(buffer, 2);
     file.close();
 
+    // Combine the two bytes into a single 16-bit integer (little-endian)
     int channels = static_cast<unsigned char>(buffer[0]) |
                    (static_cast<unsigned char>(buffer[1]) << 8);
     return channels;
@@ -166,20 +179,25 @@ int AudioHandler::getAudioChannelCount(const QString &audioPath) const
  */
 QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
 {
+    // Abort if OpenAI API key is missing
     if (openAIApiKey.isEmpty())
     {
         qWarning() << "OpenAI API Key is empty!";
         return "";
     }
 
+    // Set up the OpenAI Whisper endpoint and request
     QUrl url("https://api.openai.com/v1/audio/transcriptions");
     QNetworkRequest request(url);
 
+    // Add authorization header using bearer token
     QString bearerToken = "Bearer " + openAIApiKey;
     request.setRawHeader("Authorization", bearerToken.toUtf8());
 
+    // Create multipart form data for the POST request
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
+    // Prepare the audio file for upload
     QFile *file = new QFile(audioPath);
     if (!file->open(QIODevice::ReadOnly))
     {
@@ -188,26 +206,31 @@ QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
         return "";
     }
 
+    // Add the audio file to the multipart body
     QHttpPart filePart;
     filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
                        QVariant("form-data; name=\"file\"; filename=\"" + QFileInfo(audioPath).fileName() + "\""));
     filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("audio/wav"));
     filePart.setBodyDevice(file);
-    file->setParent(multiPart);
+    file->setParent(multiPart); // Ensure file is cleaned up with multipart
     multiPart->append(filePart);
 
+    // Specify the model name ("whisper-1")
     QHttpPart modelPart;
     modelPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"model\""));
     modelPart.setBody("whisper-1");
     multiPart->append(modelPart);
 
+    // Send the POST request
     QNetworkReply *reply = networkManager->post(request, multiPart);
-    multiPart->setParent(reply);
+    multiPart->setParent(reply); // Cleanup when reply is finished
 
+    // Block execution until the request is done (synchronous wait)
     QEventLoop loop;
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     loop.exec();
 
+    // Handle the response
     QString response;
     if (reply->error() == QNetworkReply::NoError)
     {
@@ -215,13 +238,14 @@ QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
     }
     else
     {
-        emit badRequest(reply);
+        emit badRequest(reply); // Signal UI or logger about the failed request
         qWarning() << "Whisper request failed:" << reply->errorString();
     }
 
     reply->deleteLater();
     return response;
 }
+
 
 /**
  * @name sendToGoogleSpeechAPI
@@ -236,10 +260,12 @@ QString AudioHandler::sendToWhisperAPI(const QString &audioPath)
  */
 QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
 {
+    // Construct the Google Speech-to-Text API URL with your API key
     QUrl url("https://speech.googleapis.com/v1/speech:recognize?key=" + googleSpeechApiKey);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
+    // Load the audio file
     QFile file(audioPath);
     if (!file.open(QIODevice::ReadOnly))
     {
@@ -247,32 +273,40 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
         return "";
     }
 
+    // Read and encode audio file as base64
     QByteArray audioData = file.readAll();
     file.close();
     QString base64Audio = audioData.toBase64();
 
+    // Configure audio settings for Google's STT API
     QJsonObject config;
-    config["encoding"] = "LINEAR16";
-    config["sampleRateHertz"] = 48000;
-    config["languageCode"] = "en-CA";
-    config["audioChannelCount"] = 2;
+    config["encoding"] = "LINEAR16";            // WAV file format
+    config["sampleRateHertz"] = 48000;          // Sample rate used by your mic or recorder
+    config["languageCode"] = "en-CA";           // Canadian English
+    config["audioChannelCount"] = 2;            // Stereo audio
 
+    // Insert the encoded audio into the request
     QJsonObject audio;
     audio["content"] = base64Audio;
 
+    // Combine configuration and audio into final JSON body
     QJsonObject root;
     root["config"] = config;
     root["audio"] = audio;
 
+    // Serialize the JSON payload
     QJsonDocument doc(root);
     QByteArray jsonData = doc.toJson();
 
+    // Send the POST request
     QNetworkReply *reply = networkManager->post(request, jsonData);
 
+    // Wait synchronously for the reply to complete
     QEventLoop loop;
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     loop.exec();
 
+    // Read and return the API response
     QString response;
     if (reply->error() == QNetworkReply::NoError)
     {
@@ -280,13 +314,14 @@ QString AudioHandler::sendToGoogleSpeechAPI(const QString &audioPath)
     }
     else
     {
-        emit badRequest(reply);
+        emit badRequest(reply); // Notify system about failed request
         qWarning() << "Google request failed:" << reply->errorString();
     }
 
     reply->deleteLater();
     return response;
 }
+
 
 /**
  * @name startRecording
@@ -412,21 +447,28 @@ QTime AudioHandler::getCurrentTime() const
 void AudioHandler::requestMicrophonePermission()
 {
 #if QT_CONFIG(permissions)
+    // Create a permission object specific to microphone access
     QMicrophonePermission microphonePermission;
+
+    // Check the current status of microphone permission
     switch (qApp->checkPermission(microphonePermission))
     {
     case Qt::PermissionStatus::Undetermined:
+        // Permission hasn't been asked yet — request it
         qApp->requestPermission(microphonePermission, this, &AudioHandler::handlePermissionResponse);
         return;
     case Qt::PermissionStatus::Denied:
+        // Permission was explicitly denied by the user
         qWarning() << "Microphone permission denied!";
-        emit microphonePermissionDenied();
+        emit microphonePermissionDenied();// Notify other parts of the app
         return;
     case Qt::PermissionStatus::Granted:
+        // Permission already granted
         qInfo() << "Microphone permission granted!";
         break;
     }
 #else
+    // This block runs if the Qt permissions module is not available in the current build
     qWarning() << "⚠️ Qt permissions API is disabled!";
 #endif
 }
@@ -443,15 +485,17 @@ void AudioHandler::requestMicrophonePermission()
  */
 void AudioHandler::handlePermissionResponse()
 {
+    // Check the result of the microphone permission request
     QMicrophonePermission microphonePermission;
     if (qApp->checkPermission(microphonePermission) == Qt::PermissionStatus::Granted)
     {
-
+        // User accepted the microphone permission request
         qInfo() << "User granted microphone permission.";
         emit microphonePermissionGranted();
     }
     else
     {
+        // User denied the microphone permission request
         qInfo() << "User denied microphone permission.";
         emit microphonePermissionDenied();
     }
@@ -469,13 +513,15 @@ void AudioHandler::handlePermissionResponse()
  */
 void AudioHandler::playRecording(const QString &filePath)
 {
+    // Check if the specified audio file exists
     if (!QFile::exists(filePath))
     {
         qWarning() << "Recorded file does not exist: " << filePath;
         return;
     }
+    // Use the macOS 'afplay' command to play the audio file
     QString command = "afplay " + filePath; // macOS playback command
-    system(command.toUtf8().constData());
+    system(command.toUtf8().constData());// Execute the command via system shell
 }
 
 /**
@@ -518,9 +564,12 @@ void AudioHandler::setOpenAIApiKey(const QString &key)
 double AudioHandler::getAudioDuration(const QString &audioPath) const
 {
     QFile file(audioPath);
-    if (!file.open(QIODevice::ReadOnly))
-        return 0;
 
+    // Attempt to open the audio file
+    if (!file.open(QIODevice::ReadOnly))
+        return 0;// Return 0 on failure
+
+    // Get the total size of the file in bytes
     qint64 fileSize = file.size();
     file.close();
 
