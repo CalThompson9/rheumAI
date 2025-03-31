@@ -71,6 +71,7 @@ Summary& Summary::operator=(const Summary& original)
  */
 void Summary::clear()
 {
+    // Clear all sections of the summary
     intervalHistory.clear();
     physicalExamination.clear();
     currentStatus.clear();

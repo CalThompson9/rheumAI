@@ -53,13 +53,13 @@ void SummaryGenerator::sendRequest(Transcript &prompt)
  */
 void SummaryGenerator::handleLLMResponse(const QString &response)
 {
-
+    // Create summaries for distinct summary sections.
     summarizeIntervalHistory(response);
     summarizePhysicalExamination(response);
     summarizeCurrentStatus(response);
     summarizePlan(response);
 
-    emit summaryReady();
+    emit summaryReady(); // emit signal once all summary sections are ready to be shown to the user.
 }
 
 /**
@@ -74,11 +74,14 @@ void SummaryGenerator::handleLLMResponse(const QString &response)
 void SummaryGenerator::setSummary(const Summary &newSummary)
 {
     summary.clear(); // Clear the current summary
+
+    // Reset all summary sections using newSummary
     summary.setIntervalHistory(newSummary.getIntervalHistory());
     summary.setPhysicalExamination(newSummary.getPhysicalExamination());
     summary.setCurrentStatus(newSummary.getCurrentStatus());
     summary.setPlan(newSummary.getPlan());
-    emit summaryReady();
+
+    emit summaryReady(); // emit signal once all summary sections have been reset
 }
 
 /**
@@ -105,7 +108,7 @@ void SummaryGenerator::setSummaryText(const QString &summaryText)
     summarizeCurrentStatus(summaryText);
     summarizePlan(summaryText);
 
-    emit summaryReady();
+    emit summaryReady(); // emit signal once all summary sections have been reset
 }
 
 /**
@@ -183,12 +186,13 @@ void SummaryGenerator::summarizePlan(const QString &response)
  */
 QString SummaryGenerator::extractSectionFromResponse(const QString &response, const QString &sectionName, const QString &nextSectionName)
 {
+    // Define search parameters
     QString searchPattern = "**" + sectionName + "**";
     QString searchPatternAlt = "**" + sectionName + ":**";
-
     int startIndex = response.indexOf(searchPattern, 0, Qt::CaseInsensitive);
     int patternLength = searchPattern.length(); // Default to original pattern length
 
+    // Handle case in which there was nothing returned by response
     if (startIndex == -1)
     {
         startIndex = response.indexOf(searchPatternAlt, 0, Qt::CaseInsensitive);
@@ -203,12 +207,14 @@ QString SummaryGenerator::extractSectionFromResponse(const QString &response, co
     QString nextPattern = "**" + nextSectionName + "**";
     QString nextPatternAlt = "**" + nextSectionName + ":**";
 
+    // Define end index for text returned by response
     int endIndex = response.indexOf(nextPattern, startIndex + patternLength, Qt::CaseInsensitive);
     if (endIndex == -1)
         endIndex = response.indexOf(nextPatternAlt, startIndex + patternLength, Qt::CaseInsensitive);
     if (endIndex == -1)
         endIndex = response.length();
 
+    // Create a string representing the text returned by the response using the gathered indices
     QString extractedSection = response.mid(startIndex + patternLength, endIndex - (startIndex + patternLength)).trimmed();
 
     return extractedSection;

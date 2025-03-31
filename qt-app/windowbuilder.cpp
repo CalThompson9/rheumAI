@@ -161,6 +161,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     QPixmap logoPixmap(":/logo.png");
     lblTitle->setPixmap(logoPixmap.scaled(300, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
+    // Configure patient information structure on the window
     lblPatientName->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     lblPatientName->setContentsMargins(15, 0, 0, 0); // Optional: padding from the left
     lblPatientName->setStyleSheet("font-weight: bold; font-size: 16px; color: #555;");
@@ -169,6 +170,7 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     lblPatientName->setTextInteractionFlags(Qt::TextSelectableByMouse); // Optional, allows copying
     lblPatientName->setToolTip(lblPatientName->text());                 // Show full info on hover
 
+    // Colouring the buttons
     btnSettings->setStyleSheet(greyButtonStyle);
     btnSettings->setFixedWidth(150);
     btnSummarize->setStyleSheet(orangeButtonStyle);
@@ -176,44 +178,46 @@ void WindowBuilder::setupUI(QWidget *centralWidget,
     btnDeletePatient->setStyleSheet(redButtonStyle);
     btnArchivePatient->setStyleSheet(orangeButtonStyle);
     btnEditPatient->setStyleSheet(orangeButtonStyle);
-
     btnRecord->setStyleSheet(blueButtonStyle);
-    QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord]()
-                     {
+
+    // Connect record button clicking event to button style change
+    QObject::connect(btnRecord, &QPushButton::clicked, [btnRecord]() {
         static bool isRecording = false;
         isRecording = !isRecording;
         btnRecord->setStyleSheet(isRecording ? redButtonStyle : blueButtonStyle);
-        btnRecord->setText(isRecording ? "Stop Recording" : "Record"); });
+        btnRecord->setText(isRecording ? "Stop Recording" : "Record");
+    });
 
-    // Layouts
+    // Create app structure with layouts
+    // Main Layout is the layout which all other sections of the app adhere to
     mainLayout = new QVBoxLayout(centralWidget);
+
+    // Subsections of the main layout
     QGridLayout *topBarLayout = new QGridLayout();
     QHBoxLayout *patientControlsLayout = new QHBoxLayout();
     QHBoxLayout *summaryHeader = new QHBoxLayout();
     QHBoxLayout *recordSummarizeLayout = new QHBoxLayout();
     summarySection = new QVBoxLayout();
 
-    // Top bar layout
+    // Top bar layout with patient info, logo, and settings
     topBarLayout->addWidget(lblPatientName, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
     topBarLayout->addWidget(lblTitle, 0, 1, Qt::AlignHCenter); // Center column
     topBarLayout->addWidget(btnSettings, 0, 2, Qt::AlignRight | Qt::AlignVCenter);
     topBarLayout->setColumnStretch(0, 1);
     topBarLayout->setColumnStretch(1, 0);
     topBarLayout->setColumnStretch(2, 1);
-    // Padding on left
     topBarLayout->setContentsMargins(0, 0, 0, 0);
 
-    // Patient controls layout
+    // Patient Controls Layout contains all buttons associated with patient actions
     patientControlsLayout->addWidget(comboSelectPatient);
     patientControlsLayout->addWidget(btnAddPatient);
     patientControlsLayout->addWidget(btnEditPatient);
     patientControlsLayout->addWidget(btnArchivePatient);
     patientControlsLayout->addWidget(btnDeletePatient);
     patientControlsLayout->addWidget(toggleSwitch);
-
     patientControlsLayout->setSpacing(10);
 
-    // Summary layout header and format selection
+    // Summary layout header and format section
     summaryHeader->addWidget(summaryTitle);
     summaryTitle->setStyleSheet("font-weight: bold; font-size: 20px; color: #555;");
     summaryHeader->addWidget(selectSummaryLayout);
