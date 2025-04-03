@@ -168,10 +168,22 @@ void Settings::showSettings()
     peripheralsLayout->addWidget(peripheralsField);
     mainLayout->addLayout(peripheralsLayout);
 
+    // ========== Hide API Keys ==========
+    // Declare API key QLineEdits so they are accessible in the checkbox lambda
+    QLineEdit *llmKeyField = nullptr;
+    QLineEdit *googleAudioKeyField = nullptr;
+    QLineEdit *openaiKeyField = nullptr;
+
+    // Create a checkbox that will toggle hiding/showing the API keys.
+    QCheckBox *hideApiKeysCheckBox = new QCheckBox("Hide API Keys", settingsWindow);
+    hideApiKeysCheckBox->setChecked(true);
+    mainLayout->addWidget(hideApiKeysCheckBox);
+
     // ========== LLM API Key ==========
     QHBoxLayout *llmLayout = new QHBoxLayout();
-    QLabel *llmLabel = new QLabel("Summarizer API Key:", settingsWindow);
-    QLineEdit *llmKeyField = new QLineEdit(settingsWindow);
+    QLabel *llmLabel = new QLabel("Summarizer Key:", settingsWindow);
+    llmKeyField = new QLineEdit(settingsWindow);
+    llmKeyField->setEchoMode(QLineEdit::Password);
     llmKeyField->setText(llmKey);
     QDialogButtonBox *llmButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
@@ -195,8 +207,9 @@ void Settings::showSettings()
 
     // ========== Google Audio API Key ==========
     QHBoxLayout *audioLayout = new QHBoxLayout();
-    QLabel *audioLabel = new QLabel("Google Transcriber API Key:", settingsWindow);
-    QLineEdit *googleAudioKeyField = new QLineEdit(settingsWindow);
+    QLabel *audioLabel = new QLabel("Transcriber Key (Google):", settingsWindow);
+    googleAudioKeyField = new QLineEdit(settingsWindow);
+    googleAudioKeyField->setEchoMode(QLineEdit::Password);
     googleAudioKeyField->setText(googleSpeechApiKey);
     QDialogButtonBox *audioButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
@@ -220,8 +233,9 @@ void Settings::showSettings()
 
     // ========== OpenAI Audio API Key ==========
     QHBoxLayout *openaiLayout = new QHBoxLayout();
-    QLabel *openaiLabel = new QLabel("OpenAI Whisper API Key:", settingsWindow);
-    QLineEdit *openaiKeyField = new QLineEdit(settingsWindow);
+    QLabel *openaiLabel = new QLabel("Transcriber Key (OpenAI):", settingsWindow);
+    openaiKeyField = new QLineEdit(settingsWindow);
+    openaiKeyField->setEchoMode(QLineEdit::Password);
     openaiKeyField->setText(openAIAudioKey);
     QDialogButtonBox *openaiButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, settingsWindow);
 
@@ -241,6 +255,13 @@ void Settings::showSettings()
     });
     connect(openaiButtonBox, &QDialogButtonBox::rejected, this, [=]() {
         openaiKeyField->clear(); // Make cancel button clear the text field
+    });
+
+    // ========== Connect Hiding ==========
+    connect(hideApiKeysCheckBox, &QCheckBox::toggled, this, [=](bool checked) {
+        llmKeyField->setEchoMode(checked ? QLineEdit::Password : QLineEdit::Normal);
+        googleAudioKeyField->setEchoMode(checked ? QLineEdit::Password : QLineEdit::Normal);
+        openaiKeyField->setEchoMode(checked ? QLineEdit::Password : QLineEdit::Normal);
     });
 
     // ========== Close Settings Menu ==========
